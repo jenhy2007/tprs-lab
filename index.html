@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script type='text/javascript' nonce='Svt27PxX9QPxNo4cG80vYw==' src='https://contribution.usercontent.google.com/iudfgzc0JZsLR-gSPGo4HV4j9tpqQ0Dh-PCo2tqPnvWmDua7aCVTiIDqnWRzNAaL0Fbjgv2SR2geVp4Omy0arafEP5eOQLyo-jCTWKDvyOjyhZ4r49fhkyBu4tSxeUxxzNQgkzu2-z1ylD49e5CYK8vyPkbFnnlUQFW5ei3uecTUapxRmxEX2yFswplHQmGiRcShLTY9DeoBFdFcDjacoEzuJplgzwRisLmSMc6QYMWhaqlXCcwigfXyu5X-Etgf-toYPzG_aIKLdHpv5lvv3Kihvnco7CRvyjpRYPVBgj9gLL9cIwgXg4twthrvhAxzTZ9AykzBKLvHRtHJOC2PisSSWMYX3vFduplOIpf2ZGOZxLhJya_KP08-m5YSvGYKCnpHMpKnnOzuYs3XPiIQEaUq6qHeWg-SnNcqFamwii-fxQisbXam5H1cXSQ1o-9Vu9LZ4C_xHgK5f7jT4btOGxGlHbx6frPVe1-82_wgkUOAvtwNitlBCq-n5zisr6zvKYkxmW7wO3o5z_syZsSa3DtelmMlAf0ReHKTnWuGqCI5SR6QMDzk4HDqbb0C9tfrhrBANP9k3C7AG8qjcuLpv9ktbgDK2p5J74mAwjP4fy5UC1-VveI9a5DNjG4VM6b-xzA-fwlAay7hK681X04SZ_F9LHH6wqL2Jg7tZhXN1lEiLxcA1oIRErFaO-QizUrV3bje4PK5gMis0aaDyQ'></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI 语言实验室 • TPRS 交互书架</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --it: #1e40af;
+      --it-bg: #dbeafe;
+      --cn: #b91c1c;
+      --cn-bg: #fee2e2;
+      --tool: #b45309;
+      --tool-bg: #fef3c7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 28px 20px;
+      line-height: 1.6;
+    }
+    .container { max-width: 920px; margin: 0 auto; }
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      color: #111827;
+      margin-bottom: 6px;
+    }
+    header p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .filter-btn.active {
+      background: #111827;
+      color: #ffffff;
+      border-color: #111827;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+      gap: 20px;
+    }
+    .lesson-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 22px;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid var(--border);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+    .lesson-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    .lesson-card.pinned {
+      border: 2px solid #f59e0b;
+      background: linear-gradient(180deg, #fffbeb 0%, #ffffff 45%);
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .badge-tool { background: var(--tool-bg); color: var(--tool); }
+    .badge-it { background: var(--it-bg); color: var(--it); }
+    .badge-cn { background: var(--cn-bg); color: var(--cn); }
+    .card-title {
+      font-size: 1.18rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #f3f4f6;
+      padding-top: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .file-hint {
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: #9ca3af;
+      font-weight: 400;
+    }
+    .launch-tool { color: var(--tool); }
+    .launch-it { color: var(--it); }
+    .launch-cn { color: var(--cn); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📚 不甘退休的 AI 语言实验室</h1>
+      <p>TPRS 故事听力与高频词交互书架 • 点击卡片直接进入沉浸练习</p>
+    </header>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCards(&#39;all&#39;, this)">全部课程 (4)</button>
+      <button class="filter-btn" onclick="filterCards(&#39;tool&#39;, this)">🗂️ 高频词记录单</button>
+      <button class="filter-btn" onclick="filterCards(&#39;it&#39;, this)">🇮🇹 Italiano</button>
+      <button class="filter-btn" onclick="filterCards(&#39;cn&#39;, this)">🇨🇳 中文实验课</button>
+    </div>
+
+    <div class="grid" id="cardGrid">
+      <!-- Card 0: Vocab Bank (Pinned) -->
+      <a href="vocab_bank.html" class="lesson-card pinned" data-lang="tool">
+        <div>
+          <span class="badge badge-tool">🗂️ 核心工具 • 随时复习</span>
+          <div class="card-title">TPRS 高频词使用记录单</div>
+          <div class="card-desc">收录所有故事里的“变形金刚动词”、功能词块与 O队/A队 归属。支持语音朗读、盲听遮罩与自主录入新词。</div>
+        </div>
+        <div class="card-footer">
+          <span class="file-hint">vocab_bank.html</span>
+          <span class="launch-tool">打开记录单 →</span>
+        </div>
+      </a>
+
+            <!-- Card 1B: Italian Unit 39 Pizza -->
+      <a href="tprs_unit39_pizza.html" class="lesson-card" data-lang="it">
+        <div>
+          <span class="badge badge-it">🇮🇹 Italiano • Unit 39</span>
+          <div class="card-title">Gli Ingredienti della Pizza</div>
+          <div class="card-desc">Junior 与披萨大师 Adriano 的脑洞对话：三阶听力阶梯 + 变形金刚 X 光透视镜，攻克 li / le 与将来时。</div>
+        </div>
+        <div class="card-footer">
+          <span class="file-hint">tprs_unit39_pizza.html</span>
+          <span class="launch-it">开始听力 →</span>
+        </div>
+      </a>
+
+      <!-- Card 1: Italian Unit 39 -->
+      <a href="tprs_unit39_montagna.html" class="lesson-card" data-lang="it">
+        <div>
+          <span class="badge badge-it">🇮🇹 Italiano • Unit 39</span>
+          <div class="card-title">La Guida di Courmayeur</div>
+          <div class="card-desc">Elisa 与 Bea 的勃朗峰登山故事：三阶听力阶梯训练，重点突破 bisogna essere、provare a 与代词 la / lo / le。</div>
+        </div>
+        <div class="card-footer">
+          <span class="file-hint">tprs_unit39_montagna.html</span>
+          <span class="launch-it">开始听力 →</span>
+        </div>
+      </a>
+
+      <!-- Card 2: Chinese Lesson 1 -->
+      <a href="Chinese_Lesson1_Bobo.html" class="lesson-card" data-lang="cn">
+        <div>
+          <span class="badge badge-cn">🇨🇳 中文 TPRS • Lesson 1</span>
+          <div class="card-title">波波的秘密 (Bobo's Secret)</div>
+          <div class="card-desc">双语可理解性输入故事实验课件：支持情景插画、渐进式问答与语音朗读测试。</div>
+        </div>
+        <div class="card-footer">
+          <span class="file-hint">Chinese_Lesson1_Bobo.html</span>
+          <span class="launch-cn">打开课件 →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function filterCards(lang, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.lesson-card').forEach(card => {
+        if (lang === 'all' || card.dataset.lang === lang) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
