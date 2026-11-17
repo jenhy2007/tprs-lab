@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio TPRS: Il Cavolo e la Vernice Rosa</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            cream: '#FAF7F0',
+            olive: {
+              100: '#E7EDE0',
+              300: '#BDCFAC',
+              600: '#5A7545',
+              800: '#344725'
+            },
+            terracotta: {
+              100: '#FDEEE9',
+              500: '#D96A43',
+              600: '#B9502B'
+            },
+            blush: {
+              100: '#FCE7F0',
+              300: '#F7ADC9',
+              500: '#EA578D',
+              600: '#D1326E'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom garden animated elements */
+    @keyframes bob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-3deg); }
+      75% { transform: rotate(3deg); }
+    }
+    @keyframes sprayMist {
+      0% { opacity: 0; transform: scale(0.6) translateX(0); }
+      50% { opacity: 0.9; }
+      100% { opacity: 0; transform: scale(1.3) translateX(30px); }
+    }
+    .anim-bob { animation: bob 3.5s ease-in-out infinite; }
+    .anim-wiggle:hover { animation: wiggle 0.4s ease-in-out infinite; }
+    .spray-particle {
+      animation: sprayMist 1.2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+    }
+    .cabbage-glow {
+      filter: drop-shadow(0 4px 10px rgba(90, 117, 69, 0.25));
+    }
+  </style>
+</head>
+<body class="bg-[#FAF6EE] text-gray-800 font-sans min-h-screen flex flex-col antialiased selection:bg-blush-300 selection:text-blush-600">
+
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur-md border-b border-olive-100 sticky top-0 z-40 px-4 py-3">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-2xl bg-olive-100 flex items-center justify-center text-xl shadow-inner">
+          🥬
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-olive-800 leading-tight">Laboratorio TPRS Interattivo</h1>
+          <p class="text-xs text-olive-600 font-medium">Unità 107 · La vernice rosa e il cavolo</p>
+        </div>
+      </div>
+      <!-- Mode Badge & Audio Toggle -->
+      <div class="flex items-center space-x-2">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-terracotta-100 text-terracotta-600">
+          <span class="w-2 h-2 rounded-full bg-terracotta-500 mr-1.5 animate-pulse"></span>
+          Metodo TPRS (R.I.C.H.)
+        </span>
+        <button id="ttsTestBtn" class="p-2 rounded-xl bg-olive-100 text-olive-800 hover:bg-olive-300 transition text-sm flex items-center gap-1" title="Ascolta pronuncia italiana">
+          <span>🔊</span>
+          <span class="hidden sm:inline text-xs font-semibold">Test Audio</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-5xl mx-auto px-4 py-6 w-full flex-1 flex flex-col gap-8">
+
+    <!-- Top Section: Interactive Animated Scene -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-olive-100 relative overflow-hidden">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-gray-100 gap-2">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-terracotta-500">Scena Dinamica & Interattiva</span>
+          <h2 class="text-xl font-extrabold text-gray-800">Il Giardino delle Verdure (Tocca i Personaggi!)</h2>
+        </div>
+        <p class="text-xs text-gray-500 italic">💡 Fai clic sulla bomboletta, su Sara, sul cavolo o su Bea per ascoltare i suoni e le reazioni.</p>
+      </div>
+
+      <!-- Interactive SVG Canvas Area -->
+      <div class="relative w-full aspect-[16/9] max-h-[380px] bg-gradient-to-b from-[#EBF3E8] to-[#F5EFE6] rounded-2xl mt-4 flex items-center justify-center overflow-hidden border border-olive-100/60 shadow-inner select-none">
+        
+        <!-- Background Garden Elements -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 450" preserveAspectRatio="none">
+          <!-- Sky / Soft clouds -->
+          <circle cx="120" cy="60" r="35" fill="white" fill-opacity="0.6"/>
+          <circle cx="160" cy="55" r="45" fill="white" fill-opacity="0.6"/>
+          <circle cx="680" cy="80" r="40" fill="white" fill-opacity="0.5"/>
+          <!-- Hills / Garden mounds -->
+          <path d="M-50,450 C200,320 400,420 850,330 L850,450 Z" fill="#D3E4CA" fill-opacity="0.6"/>
+          <path d="M-50,450 C300,380 550,360 850,450 Z" fill="#A4C497" fill-opacity="0.4"/>
+          <!-- Little garden fence -->
+          <g stroke="#CBBBA0" stroke-width="3" opacity="0.6">
+            <line x1="80" y1="360" x2="80" y2="420" />
+            <line x1="130" y1="355" x2="130" y2="420" />
+            <line x1="180" y1="365" x2="180" y2="420" />
+            <line x1="60" y1="380" x2="200" y2="380" />
+            <line x1="60" y1="400" x2="200" y2="400" />
+          </g>
+        </svg>
+
+        <!-- Interactive SVG Character Stage -->
+        <svg viewBox="0 0 800 450" class="w-full h-full relative z-10">
+          
+          <!-- SARA (Left Side, holding spray paint) -->
+          <g id="saraGroup" class="cursor-pointer group anim-bob" transform="translate(180, 160)" onclick="interact('sara')">
+            <!-- Aura click hint on hover -->
+            <circle cx="60" cy="110" r="95" class="fill-transparent group-hover:fill-blush-100/50 transition-all"/>
+            
+            <!-- Sara Hair -->
+            <path d="M30,55 C20,20 90,10 95,50 C105,70 100,100 95,115 C75,120 40,110 30,55 Z" fill="#6A4B3A"/>
+            <!-- Sara Face -->
+            <ellipse cx="60" cy="65" rx="24" ry="26" fill="#FCD7BD"/>
+            <!-- Cute eyes looking right at the cabbage -->
+            <circle cx="68" cy="62" r="3.5" fill="#3D291F"/>
+            <circle cx="79" cy="62" r="3.5" fill="#3D291F"/>
+            <!-- Cheerful smile -->
+            <path d="M68,75 Q74,83 80,75" stroke="#3D291F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Blush -->
+            <circle cx="64" cy="72" r="4" fill="#FFA5A5" opacity="0.6"/>
+            <circle cx="82" cy="72" r="4" fill="#FFA5A5" opacity="0.6"/>
+            <!-- Sara Body / Yellow chic dress -->
+            <path d="M42,92 L78,92 L94,195 L26,195 Z" fill="#FED156"/>
+            <path d="M42,92 L78,92 L72,130 L48,130 Z" fill="#F8B837" opacity="0.4"/>
+            <!-- Sara Right Arm extending holding spray -->
+            <path d="M72,105 Q105,108 120,95" stroke="#FCD7BD" stroke-width="12" stroke-linecap="round" fill="none"/>
+            
+            <!-- Spray Paint Can (Vernice Spray Rosa) -->
+            <g id="sprayCanGroup" class="anim-wiggle" transform="translate(118, 70)" onclick="event.stopPropagation(); interact('spray')">
+              <!-- Can Body -->
+              <rect x="0" y="15" width="22" height="42" rx="4" fill="#EA578D"/>
+              <rect x="3" y="25" width="16" height="15" rx="2" fill="#FFFFFF" opacity="0.9"/>
+              <text x="5" y="36" font-size="7" font-weight="bold" fill="#EA578D">ROSA</text>
+              <!-- Can Cap & Nozzle -->
+              <rect x="5" y="8" width="12" height="7" rx="2" fill="#C2185B"/>
+              <rect x="13" y="3" width="6" height="5" fill="#880E4F"/>
+              <!-- Spray Nozzle opening -->
+              <circle cx="19" cy="5" r="1.5" fill="#FFF"/>
+            </g>
+
+            <!-- Pink Spray Particles shooting toward center -->
+            <g id="sprayMist" class="opacity-0 transition-opacity duration-300" transform="translate(142, 68)">
+              <circle cx="10" cy="5" r="4" fill="#F7ADC9" class="spray-particle" style="animation-delay: 0s;"/>
+              <circle cx="24" cy="2" r="6" fill="#EA578D" class="spray-particle" style="animation-delay: 0.15s;"/>
+              <circle cx="38" cy="9" r="8" fill="#FCE7F0" class="spray-particle" style="animation-delay: 0.3s;"/>
+              <circle cx="50" cy="5" r="7" fill="#F7ADC9" class="spray-particle" style="animation-delay: 0.45s;"/>
+            </g>
+
+            <!-- Sara Tag -->
+            <rect x="30" y="202" width="60" height="20" rx="10" fill="#FFFFFF" class="shadow-sm"/>
+            <text x="60" y="216" font-size="11" font-weight="bold" text-anchor="middle" fill="#5A7545">SARA</text>
+          </g>
+
+          <!-- THE CABBAGE (IL CAVOLO) In the Middle -->
+          <g id="cabbageGroup" class="cursor-pointer group" transform="translate(370, 240)" onclick="interact('cabbage')">
+            <!-- Hover highlight -->
+            <circle cx="30" cy="30" r="45" class="fill-transparent group-hover:fill-olive-300/40 transition"/>
+            <!-- Dirt mound -->
+            <ellipse cx="30" cy="52" rx="36" ry="9" fill="#8D6E63" opacity="0.7"/>
+            
+            <!-- Outer Big Green Leaves -->
+            <path d="M5,40 C-15,10 20,-10 30,10 C40,-10 75,10 55,40 C45,55 15,55 5,40 Z" fill="#6DA34D"/>
+            <!-- Inner Leaves -->
+            <path d="M12,35 C-2,15 22,2 30,16 C38,2 62,15 48,35 C38,48 20,48 12,35 Z" fill="#88C466"/>
+            <!-- Cabbage Heart -->
+            <circle cx="30" cy="28" r="17" fill="#A1DB7C" class="cabbage-glow"/>
+            <!-- Leaf veins -->
+            <path d="M30,35 Q29,20 30,14 M22,28 Q30,26 38,24" stroke="#C2F09F" stroke-width="2" fill="none" stroke-linecap="round"/>
+            
+            <!-- Pink Paint Splatter overlay (changes state) -->
+            <g id="pinkSplatter" class="transition-all duration-500 transform scale-0 origin-center" transform="translate(18, 16)">
+              <path d="M10,0 C16,4 22,-2 20,8 C26,10 24,18 18,16 C16,22 8,20 6,14 C-1,14 2,4 10,0 Z" fill="#EA578D" opacity="0.88"/>
+              <circle cx="3" cy="2" r="2" fill="#EA578D"/>
+              <circle cx="22" cy="18" r="2.5" fill="#EA578D"/>
+            </g>
+
+            <!-- Cabbage Tag -->
+            <rect x="0" y="62" width="60" height="18" rx="9" fill="#FFFFFF" class="shadow-sm"/>
+            <text x="30" y="75" font-size="10" font-weight="bold" text-anchor="middle" fill="#344725">IL CAVOLO</text>
+          </g>
+
+          <!-- BEA (Right Side, defensively protecting the garden) -->
+          <g id="beaGroup" class="cursor-pointer group anim-bob" style="animation-delay: 1.5s;" transform="translate(490, 155)" onclick="interact('bea')">
+            <!-- Aura on hover -->
+            <circle cx="65" cy="115" r="95" class="fill-transparent group-hover:fill-terracotta-100/60 transition-all"/>
+            
+            <!-- Bea Ponytail Hair -->
+            <path d="M75,25 C115,20 110,80 100,105 C85,110 50,110 40,55 C40,25 65,20 75,25 Z" fill="#2C1B18"/>
+            <path d="M98,60 C125,70 130,105 115,120 C105,120 95,95 98,60 Z" fill="#2C1B18"/>
+            <!-- Bea Face -->
+            <ellipse cx="65" cy="65" rx="23" ry="25" fill="#FFE0B2"/>
+            <!-- Worried/Defensive eyes looking at Sara -->
+            <circle cx="53" cy="62" r="3.5" fill="#2C1B18"/>
+            <circle cx="64" cy="62" r="3.5" fill="#2C1B18"/>
+            <!-- Worried mouth ("No!") -->
+            <path id="beaMouth" d="M52,78 Q60,71 68,78" stroke="#2C1B18" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="50" cy="71" r="3.5" fill="#FFAB91" opacity="0.6"/>
+            <!-- Bea Body: Apron / Gardener attire -->
+            <path d="M45,92 L85,92 L100,195 L30,195 Z" fill="#5A7545"/>
+            <!-- Terracotta inner shirt -->
+            <path d="M52,92 L78,92 L78,125 L52,125 Z" fill="#D96A43"/>
+            <!-- Bea Defensive Hands (Gesturing "Stop!") -->
+            <g id="beaHands" transform="translate(0,0)" class="transition-transform duration-300">
+              <path d="M52,110 Q32,100 24,115" stroke="#FFE0B2" stroke-width="11" stroke-linecap="round" fill="none"/>
+              <circle cx="20" cy="116" r="7" fill="#FFE0B2"/>
+              <!-- Wooden fork / Gardener spade -->
+              <line x1="20" y1="90" x2="20" y2="150" stroke="#8D6E63" stroke-width="4" stroke-linecap="round"/>
+              <path d="M14,86 L26,86 L23,100 L17,100 Z" fill="#9E9E9E"/>
+            </g>
+
+            <!-- Bea Tag -->
+            <rect x="35" y="202" width="60" height="20" rx="10" fill="#FFFFFF" class="shadow-sm"/>
+            <text x="65" y="216" font-size="11" font-weight="bold" text-anchor="middle" fill="#B9502B">BEA</text>
+          </g>
+
+          <!-- Speech bubble dynamic container -->
+          <g id="speechBubble" class="opacity-0 transition-all duration-300 pointer-events-none" transform="translate(240, 40)">
+            <rect x="0" y="0" width="320" height="65" rx="16" fill="#FFFFFF" stroke="#D96A43" stroke-width="2" filter="drop-shadow(0 6px 12px rgba(0,0,0,0.08))"/>
+            <polygon points="160,65 150,78 175,65" fill="#FFFFFF"/>
+            <polygon points="160,65 150,78 175,65" stroke="#D96A43" stroke-width="2" fill="#FFFFFF"/>
+            <text id="speechBubbleText" x="160" y="38" font-size="13" font-weight="bold" text-anchor="middle" fill="#2C1B18">
+              "A me piace mangiare il cavolo!"
+            </text>
+          </g>
+        </svg>
+
+        <!-- Toast micro-reaction label -->
+        <div id="visualToast" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/95 px-4 py-1.5 rounded-full text-xs font-bold text-gray-700 shadow-md border border-gray-200 pointer-events-none transition-all duration-300 opacity-0 translate-y-2">
+          Feedback
+        </div>
+      </div>
+    </section>
+
+    <!-- TPRS STEP 1: Establish Meaning (Vocabolario & Strutture) -->
+    <section class="bg-white rounded-3xl p-6 shadow-sm border border-olive-100">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 rounded-xl bg-olive-100 text-olive-800 font-extrabold flex items-center justify-center text-sm">
+          1
+        </span>
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-olive-600">Fase 1 · Stabilire il Significato (Establish Meaning)</span>
+          <h3 class="text-lg font-bold text-gray-800">I 3 Mattoncini Fondamentali della Storia</h3>
+        </div>
+      </div>
+      <p class="text-sm text-gray-600 mb-6">
+        Ascolta e familiarizza con queste 3 formule chiave. Nessun cambio arbitrario di parole: riutilizziamo sempre queste!
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Structure 1 -->
+        <div class="p-4 rounded-2xl bg-olive-100/50 border border-olive-100 hover:border-olive-300 transition group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-olive-600 uppercase">Struttura A</span>
+              <button onclick="speakItalian('ha una vernice spray')" class="p-1.5 rounded-lg bg-white shadow-sm text-olive-800 hover:scale-105 transition" title="Ascolta">
+                🔊
+              </button>
+            </div>
+            <h4 class="text-base font-extrabold text-olive-800 mb-1">ha una vernice</h4>
+            <p class="text-xs text-gray-600 mb-2 font-medium">中文：有一罐喷漆 (Sara possiede la vernice)</p>
+          </div>
+          <div class="pt-2 border-t border-olive-200/50 text-[11px] text-olive-700 italic">
+            🪝 <b>Memory Hook</b>: Sara ha la bomboletta in mano per colorare il mondo.
+          </div>
+        </div>
+
+        <!-- Structure 2 -->
+        <div class="p-4 rounded-2xl bg-blush-100/50 border border-blush-300/40 hover:border-blush-500 transition group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-blush-600 uppercase">Struttura B</span>
+              <button onclick="speakItalian('vuole dipingere il cavolo')" class="p-1.5 rounded-lg bg-white shadow-sm text-blush-600 hover:scale-105 transition" title="Ascolta">
+                🔊
+              </button>
+            </div>
+            <h4 class="text-base font-extrabold text-blush-600 mb-1">vuole dipingere</h4>
+            <p class="text-xs text-gray-600 mb-2 font-medium">中文：想要涂色 / 想要喷漆 (vuole colorare)</p>
+          </div>
+          <div class="pt-2 border-t border-blush-300/40 text-[11px] text-blush-600 italic">
+            🪝 <b>Memory Hook</b>: Sara vuole un cavolo rosa shock per Instagram.
+          </div>
+        </div>
+
+        <!-- Structure 3 -->
+        <div class="p-4 rounded-2xl bg-terracotta-100/60 border border-terracotta-500/30 hover:border-terracotta-500 transition group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-terracotta-600 uppercase">Struttura C (Inversione)</span>
+              <button onclick="speakItalian('a lei piace mangiare')" class="p-1.5 rounded-lg bg-white shadow-sm text-terracotta-600 hover:scale-105 transition" title="Ascolta">
+                🔊
+              </button>
+            </div>
+            <h4 class="text-base font-extrabold text-terracotta-600 mb-1">a lei piace mangiare</h4>
+            <p class="text-xs text-gray-600 mb-2 font-medium">中文：她喜欢吃 (吃东西使她愉快)</p>
+          </div>
+          <div class="pt-2 border-t border-terracotta-500/30 text-[11px] text-terracotta-600 italic">
+            🪝 <b>Memory Hook</b>: “A lei piace” (带 A 的封装) — Bea non mangia vernice!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TPRS STEP 2: Circling Questions (Domande a Spirale) -->
+    <section class="bg-white rounded-3xl p-6 shadow-sm border border-olive-100">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 rounded-xl bg-terracotta-100 text-terracotta-600 font-extrabold flex items-center justify-center text-sm">
+          2
+        </span>
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-terracotta-500">Fase 2 · Circling Interattivo (Co-create the Story)</span>
+          <h3 class="text-lg font-bold text-gray-800">Le Domande a Spirale (3 Livelli di Circling)</h3>
+        </div>
+      </div>
+      <p class="text-sm text-gray-600 mb-6">
+        Rispondi con un tocco. Non c'è ansia di errore: rinforziamo l'orecchio usando la stessa frase!
+      </p>
+
+      <!-- Circling Question Tabs / Carousel -->
+      <div class="space-y-6">
+        
+        <!-- Circling Question 1: Yes/No -->
+        <div class="p-5 rounded-2xl bg-[#FBF9F5] border border-gray-200">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-olive-600 tracking-wider">1. Domanda Sì/No (Conferma Base)</span>
+            <button onclick="speakItalian('Sara ha una vernice spray rosa?')" class="text-xs text-gray-500 hover:text-gray-800 flex items-center gap-1">
+              🔊 <span>Ascolta domanda</span>
+            </button>
+          </div>
+          <p class="text-base font-bold text-gray-800 mb-3">
+            «Sara ha una vernice spray rosa?»
+          </p>
+          <div class="flex flex-wrap gap-3" id="q1Options">
+            <button onclick="checkCircling(1, true, this)" class="px-5 py-2.5 rounded-xl border-2 border-olive-600/30 hover:border-olive-600 bg-white font-semibold text-sm transition">
+              Sì, Sara ha la vernice rosa.
+            </button>
+            <button onclick="checkCircling(1, false, this)" class="px-5 py-2.5 rounded-xl border-2 border-gray-200 hover:border-gray-400 bg-white font-semibold text-sm transition">
+              No, Sara ha una mela.
+            </button>
+          </div>
+          <div id="q1Feedback" class="mt-3 text-xs p-3 rounded-xl hidden"></div>
+        </div>
+
+        <!-- Circling Question 2: Either / Or -->
+        <div class="p-5 rounded-2xl bg-[#FBF9F5] border border-gray-200">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-terracotta-500 tracking-wider">2. Domanda a Scelta (Either / Or)</span>
+            <button onclick="speakItalian('Sara vuole dipingere o vuole mangiare il cavolo?')" class="text-xs text-gray-500 hover:text-gray-800 flex items-center gap-1">
+              🔊 <span>Ascolta domanda</span>
+            </button>
+          </div>
+          <p class="text-base font-bold text-gray-800 mb-3">
+            «Sara vuole dipingere il cavolo o vuole mangiare il cavolo?»
+          </p>
+          <div class="flex flex-wrap gap-3" id="q2Options">
+            <button onclick="checkCircling(2, true, this)" class="px-5 py-2.5 rounded-xl border-2 border-olive-600/30 hover:border-olive-600 bg-white font-semibold text-sm transition">
+              Vuole dipingere il cavolo!
+            </button>
+            <button onclick="checkCircling(2, false, this)" class="px-5 py-2.5 rounded-xl border-2 border-gray-200 hover:border-gray-400 bg-white font-semibold text-sm transition">
+              Vuole mangiare il cavolo con la forchetta.
+            </button>
+          </div>
+          <div id="q2Feedback" class="mt-3 text-xs p-3 rounded-xl hidden"></div>
+        </div>
+
+        <!-- Circling Question 3: Grammar Switch Check -->
+        <div class="p-5 rounded-2xl bg-[#FBF9F5] border border-gray-200">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-blush-600 tracking-wider">3. Domanda Aperta & Switch Sintattico</span>
+            <button onclick="speakItalian('A Bea piace l\'idea della vernice?')" class="text-xs text-gray-500 hover:text-gray-800 flex items-center gap-1">
+              🔊 <span>Ascolta domanda</span>
+            </button>
+          </div>
+          <p class="text-base font-bold text-gray-800 mb-3">
+            «A Bea piace l'idea della vernice spray sul suo cavolo?»
+          </p>
+          <div class="flex flex-wrap gap-3" id="q3Options">
+            <button onclick="checkCircling(3, true, this)" class="px-5 py-2.5 rounded-xl border-2 border-olive-600/30 hover:border-olive-600 bg-white font-semibold text-sm transition">
+              No! A lei non piace la vernice, le piace mangiare le verdure.
+            </button>
+            <button onclick="checkCircling(3, false, this)" class="px-5 py-2.5 rounded-xl border-2 border-gray-200 hover:border-gray-400 bg-white font-semibold text-sm transition">
+              Sì, lei piace mangiare vernice rosa.
+            </button>
+          </div>
+          <div id="q3Feedback" class="mt-3 text-xs p-3 rounded-xl hidden"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TPRS STEP 3: Scaffolding Reading (La Scala della Lettura) -->
+    <section class="bg-white rounded-3xl p-6 shadow-sm border border-olive-100">
+      <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-xl bg-blush-100 text-blush-600 font-extrabold flex items-center justify-center text-sm">
+            3
+          </span>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-blush-600">Fase 3 · Lettura a Scaletta (Scaffolding Embedded Reading)</span>
+            <h3 class="text-lg font-bold text-gray-800">I 3 Gradini di Comprensione Espansa</h3>
+          </div>
+        </div>
+        <!-- Level Switcher Buttons -->
+        <div class="inline-flex p-1 bg-gray-100 rounded-2xl">
+          <button id="lvlBtn1" onclick="setScaffoldLevel(1)" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-white shadow-sm text-olive-800">
+            Livello 1: Ossa
+          </button>
+          <button id="lvlBtn2" onclick="setScaffoldLevel(2)" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-gray-600 hover:text-gray-900">
+            Livello 2: Dettagli
+          </button>
+          <button id="lvlBtn3" onclick="setScaffoldLevel(3)" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-gray-600 hover:text-gray-900">
+            Livello 3: Storia Piena
+          </button>
+        </div>
+      </div>
+
+      <!-- Scaffolding Display Card -->
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-cream to-white border border-olive-200/70 shadow-inner min-h-[140px] flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span id="scaffoldBadge" class="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-olive-100 text-olive-800">
+              Livello 1: Frasi Scheletro (主谓宾骨架)
+            </span>
+            <button onclick="speakScaffoldText()" class="text-xs text-olive-800 font-bold hover:underline flex items-center gap-1">
+              🔊 <span>Leggi Frase</span>
+            </button>
+          </div>
+          <p id="scaffoldItalianText" class="text-lg sm:text-xl font-bold text-gray-800 leading-relaxed transition-all duration-300">
+            Sara ha una vernice spray. Sara vuole dipingere il cavolo. A Bea non piace l'idea.
+          </p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-olive-100 flex items-center justify-between text-xs text-gray-500">
+          <span id="scaffoldTranslation">
+            中文理解：萨拉有一罐喷漆。萨拉想要给卷心菜上色。贝阿不喜欢这个想法。
+          </span>
+          <span id="scaffoldWordCount" class="font-semibold text-olive-600">14 parole</span>
+        </div>
+      </div>
+
+      <!-- Interactive Stepper visual indicator -->
+      <div class="flex items-center justify-between mt-4 px-2">
+        <div class="flex-1 flex items-center">
+          <div id="dot1" class="w-7 h-7 rounded-full bg-olive-600 text-white flex items-center justify-center text-xs font-bold">1</div>
+          <div id="bar1" class="flex-1 h-1.5 bg-gray-200 mx-2 rounded-full transition-all duration-500"></div>
+          <div id="dot2" class="w-7 h-7 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-xs font-bold transition-all duration-500">2</div>
+          <div id="bar2" class="flex-1 h-1.5 bg-gray-200 mx-2 rounded-full transition-all duration-500"></div>
+          <div id="dot3" class="w-7 h-7 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-xs font-bold transition-all duration-500">3</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL STEP: Visual Evidence Quiz (Verifica & Feedback) -->
+    <section class="bg-white rounded-3xl p-6 shadow-sm border border-olive-100">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 font-extrabold flex items-center justify-center text-sm">
+          ✓
+        </span>
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-purple-600">Verifica Finale · Comprensione Intuitiva</span>
+          <h3 class="text-lg font-bold text-gray-800">Test delle Evidenze Visive (Nessuna trappola mnemonica)</h3>
+        </div>
+      </div>
+      <p class="text-sm text-gray-600 mb-6">
+        Testa la tua comprensione della storia con queste 2 domande basate sui fatti dell'orto:
+      </p>
+
+      <div class="space-y-6">
+        <!-- Quiz Item 1 -->
+        <div class="p-5 rounded-2xl bg-olive-100/30 border border-olive-200/50">
+          <p class="text-sm font-bold text-gray-800 mb-3">
+            Q1. Qual è la prova visiva del piano bizzarro di Sara nel giardino?
+          </p>
+          <div class="space-y-2">
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-200 hover:border-olive-600 cursor-pointer transition text-sm">
+              <input type="radio" name="quiz1" value="wrong" onchange="answerQuiz(1, false)" class="text-olive-600 focus:ring-olive-600">
+              <span>Ha portato un piatto con olio, sale e forchetta.</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-200 hover:border-olive-600 cursor-pointer transition text-sm">
+              <input type="radio" name="quiz1" value="correct" onchange="answerQuiz(1, true)" class="text-olive-600 focus:ring-olive-600">
+              <span>Ha in mano una bomboletta di vernice spray rosa shock.</span>
+            </label>
+          </div>
+          <div id="quizFeedback1" class="mt-3 text-xs hidden p-3 rounded-xl font-medium"></div>
+        </div>
+
+        <!-- Quiz Item 2 -->
+        <div class="p-5 rounded-2xl bg-terracotta-100/30 border border-terracotta-500/20">
+          <p class="text-sm font-bold text-gray-800 mb-3">
+            Q2. Perché diciamo «A Bea non piace la vernice» e non «Bea non piace la vernice»?
+          </p>
+          <div class="space-y-2">
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-200 hover:border-terracotta-500 cursor-pointer transition text-sm">
+              <input type="radio" name="quiz2" value="correct" onchange="answerQuiz(2, true)" class="text-terracotta-600 focus:ring-terracotta-500">
+              <span>Perché il soggetto che produce l'effetto è la vernice; Bea è la persona che riceve il piacere (serve la preposizione "A").</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-200 hover:border-terracotta-500 cursor-pointer transition text-sm">
+              <input type="radio" name="quiz2" value="wrong" onchange="answerQuiz(2, false)" class="text-terracotta-600 focus:ring-terracotta-500">
+              <span>Perché "Bea" è una parola che finisce con vocale quindi deve obbligatoriamente avere "A".</span>
+            </label>
+          </div>
+          <div id="quizFeedback2" class="mt-3 text-xs hidden p-3 rounded-xl font-medium"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lab Notebook / Summary Card -->
+    <section class="bg-gradient-to-br from-olive-800 to-[#2A3B1E] text-white rounded-3xl p-6 shadow-md">
+      <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+        <h3 class="text-base font-bold flex items-center gap-2">
+          <span>📓</span> Note del Laboratorio per «Non rassegnarsi alla pensione: AI Language Lab»
+        </h3>
+        <span class="text-xs bg-olive-600/60 px-3 py-1 rounded-full text-olive-100 font-mono">
+          Protocollo TPRS v2.4
+        </span>
+      </div>
+      <p class="text-xs text-olive-100 leading-relaxed mb-4">
+        Questa architettura realizza la visione dell'insegnante: il <b>70% di terreno familiare</b> (cavolo, Sara, Bea), il <b>20% di espansione sintattica graduale</b>, e il <b>10% di $i+1$</b>. La memoria visiva e il feedback tattile eliminano completamente il blocco del "filtro affettivo" (Krashen).
+      </p>
+      <div class="flex flex-wrap gap-2 pt-2 border-t border-olive-700/60 text-[11px] text-olive-300">
+        <span class="bg-white/10 px-2.5 py-1 rounded-lg">✓ Zero Literariness</span>
+        <span class="bg-white/10 px-2.5 py-1 rounded-lg">✓ Strict Word Recycling</span>
+        <span class="bg-white/10 px-2.5 py-1 rounded-lg">✓ Dual-Coding Visual Hooks</span>
+        <span class="bg-white/10 px-2.5 py-1 rounded-lg">✓ Zero Affective Filter</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 text-xs text-gray-500 border-t border-olive-100">
+    Laboratorio Sperimentale di Acquisizione Linguistica TPRS · Creato con passione per l'autoapprendimento attivo
+  </footer>
+
+  <!-- JavaScript Logic: Audio Synth, Speech, and TPRS State Engine -->
+  <script>
+    // 1. Web Audio API Simple Sound Synth (Safe in all browsers, zero external audio URLs)
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playTone(type, freq, duration, gainVal = 0.15) {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gainNode.gain.setValueAtTime(gainVal, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {
+        console.warn('Audio Tone error:', e);
+      }
+    }
+
+    // Lively synthesized sounds for interactions
+    function soundSpray() {
+      try {
+        const ctx = getAudioContext();
+        // White noise buffer for spray can hiss
+        const bufferSize = ctx.sampleRate * 0.4;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'highpass';
+        filter.frequency.value = 1800;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.38);
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start();
+      } catch (e) {
+        playTone('sine', 440, 0.2);
+      }
+    }
+
+    function soundPopSuccess() {
+      playTone('triangle', 523.25, 0.1, 0.1); // C5
+      setTimeout(() => playTone('triangle', 659.25, 0.18, 0.12), 80); // E5
+    }
+
+    function soundGentleNotice() {
+      playTone('sine', 349.23, 0.15, 0.1); // F4
+      setTimeout(() => playTone('sine', 392.00, 0.2, 0.1), 120); // G4
+    }
+
+    // 2. Web Speech Synthesis for Natural Italian Pronunciation
+    function speakItalian(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'it-IT';
+      utterance.rate = 0.9; // clear, comfortable speed for learners
+      utterance.pitch = 1.05;
+      
+      // Look for preferred Italian voice if present
+      const voices = window.speechSynthesis.getVoices();
+      const itVoice = voices.find(v => v.lang.startsWith('it'));
+      if (itVoice) {
+        utterance.voice = itVoice;
+      }
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Handle initial voice loading on chrome
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        // pre-warm voices
+      };
+    }
+
+    document.getElementById('ttsTestBtn').addEventListener('click', () => {
+      speakItalian('Ciao! Questo è il laboratorio di italiano con il metodo TPRS.');
+      showToast('🔊 Audio italiano attivato');
+    });
+
+    // 3. Interactive Scene State & Actions
+    let isPinkCabbage = false;
+
+    function showToast(msg) {
+      const toast = document.getElementById('visualToast');
+      toast.textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2500);
+    }
+
+    function interact(target) {
+      const speech = document.getElementById('speechBubble');
+      const speechText = document.getElementById('speechBubbleText');
+      const sprayMist = document.getElementById('sprayMist');
+      const pinkSplatter = document.getElementById('pinkSplatter');
+      const beaHands = document.getElementById('beaHands');
+
+      if (target === 'spray' || target === 'sara') {
+        soundSpray();
+        // Activate spray animation
+        sprayMist.classList.remove('opacity-0');
+        setTimeout(() => sprayMist.classList.add('opacity-0'), 1200);
+
+        // Turn cabbage pink
+        isPinkCabbage = true;
+        pinkSplatter.classList.remove('scale-0');
+        pinkSplatter.classList.add('scale-100');
+
+        speechText.textContent = 'Sara: "Guarda! Il cavolo adesso è rosa e artistico!"';
+        speech.classList.remove('opacity-0');
+        showToast('🎨 Sara spruzza la vernice rosa sul cavolo!');
+        speakItalian('Sara spruzza la vernice rosa sul cavolo.');
+
+      } else if (target === 'cabbage') {
+        soundPopSuccess();
+        if (isPinkCabbage) {
+          showToast('🥬 Il cavolo ha la vernice rosa! Bea lo difende!');
+          speakItalian('Il cavolo è coperto di vernice rosa.');
+        } else {
+          showToast('🥬 Un cavolo verde sano e biologico dell\'orto.');
+          speakItalian('Il cavolo verde di Bea.');
+        }
+
+      } else if (target === 'bea') {
+        soundGentleNotice();
+        // Bea reacts defensively
+        beaHands.style.transform = 'translate(-6px, -4px) rotate(-4deg)';
+        setTimeout(() => { beaHands.style.transform = 'translate(0,0)'; }, 600);
+
+        speechText.textContent = 'Bea: "No! A me non piace la vernice! Mi piace mangiarlo!"';
+        speech.classList.remove('opacity-0');
+        showToast('🛑 Bea: "A me non piace mangiare la vernice!"');
+        speakItalian('A Bea non piace la vernice spray. Le piace mangiare le verdure.');
+      }
+    }
+
+    // 4. Circling Questions Verification
+    function checkCircling(qNum, isCorrect, btnEl) {
+      const feedbackEl = document.getElementById(`q${qNum}Feedback`);
+      feedbackEl.classList.remove('hidden');
+
+      if (isCorrect) {
+        soundPopSuccess();
+        btnEl.classList.add('bg-olive-100', 'border-olive-600', 'text-olive-800');
+        if (qNum === 1) {
+          feedbackEl.className = 'mt-3 text-xs p-3 rounded-xl bg-olive-100 text-olive-800 font-semibold';
+          feedbackEl.innerHTML = '✨ <b>Esatto!</b> Sara ha una vernice spray rosa. (耳音强化成功！)';
+          speakItalian('Esatto! Sara ha una vernice spray rosa.');
+        } else if (qNum === 2) {
+          feedbackEl.className = 'mt-3 text-xs p-3 rounded-xl bg-olive-100 text-olive-800 font-semibold';
+          feedbackEl.innerHTML = '✨ <b>Bravissima!</b> Sara non vuole cucinarlo, vuole solo dipingerlo di rosa!';
+          speakItalian('Bravissima! Vuole dipingerlo di rosa!');
+        } else if (qNum === 3) {
+          feedbackEl.className = 'mt-3 text-xs p-3 rounded-xl bg-olive-100 text-olive-800 font-semibold';
+          feedbackEl.innerHTML = '✨ <b>Perfetto!</b> Hai usato «A lei non piace... perché le piace mangiare». Interruttore azzeccato al 100%!';
+          speakItalian('Perfetto! A lei non piace la vernice spray!');
+        }
+      } else {
+        soundGentleNotice();
+        btnEl.classList.add('bg-terracotta-100', 'border-terracotta-500', 'text-terracotta-600');
+        feedbackEl.className = 'mt-3 text-xs p-3 rounded-xl bg-terracotta-100 text-terracotta-600 font-medium';
+        if (qNum === 3) {
+          feedbackEl.innerHTML = '💡 <b>Attenzione al cambio!</b> In italiano diciamo «<b>A lei</b> piace...» (non *lei piace*). La verdura piace <b>a Bea</b>!';
+        } else {
+          feedbackEl.innerHTML = '💡 <b>Riascolta con calma:</b> Guarda la bomboletta rosa nelle mani di Sara!';
+        }
+      }
+    }
+
+    // 5. Scaffolding Ladder Reading Data & State
+    const scaffoldLevels = {
+      1: {
+        badge: 'Livello 1: Frasi Scheletro (主谓宾骨架)',
+        badgeClass: 'bg-olive-100 text-olive-800',
+        text: 'Sara ha una vernice spray rosa. Sara vuole dipingere il cavolo. A Bea non piace l\'idea.',
+        chinese: '中文理解：萨拉有一罐粉色喷漆。萨拉想给卷心菜涂色。贝阿不喜欢这个想法。',
+        words: '15 parole'
+      },
+      2: {
+        badge: 'Livello 2: Dettagli e Espansione (增加细节与修饰)',
+        badgeClass: 'bg-terracotta-100 text-terracotta-600',
+        text: 'Nel giardino, Sara ha una vernice spray rosa brillante. Sara vuole dipingere il cavolo verde per una foto, ma a Bea non piace questa idea.',
+        chinese: '中文理解：在花园里，萨拉有一罐闪亮的粉色喷漆。萨拉想为了拍照把绿卷心菜喷上颜色，但贝阿不喜欢这个主意。',
+        words: '26 parole'
+      },
+      3: {
+        badge: 'Livello 3: Storia Completa con "Perché" (逻辑因果复合句)',
+        badgeClass: 'bg-blush-100 text-blush-600',
+        text: 'Nel giardino verde, Sara ha una vernice spray rosa e vuole dipingere il cavolo, ma a Bea non piace l\'idea della vernice perché a lei piace mangiare le verdure sane.',
+        chinese: '中文理解：在绿色的菜园里，萨拉拿着粉色喷漆想把卷心菜涂成粉色，但贝阿绝不喜欢喷漆的主意，因为她真正喜欢的是吃健康新鲜的蔬菜！',
+        words: '33 parole'
+      }
+    };
+
+    let currentScaffoldLevel = 1;
+
+    function setScaffoldLevel(lvl) {
+      currentScaffoldLevel = lvl;
+      soundPopSuccess();
+      const data = scaffoldLevels[lvl];
+
+      // Update text
+      document.getElementById('scaffoldBadge').textContent = data.badge;
+      document.getElementById('scaffoldBadge').className = `text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full ${data.badgeClass}`;
+      document.getElementById('scaffoldItalianText').textContent = data.text;
+      document.getElementById('scaffoldTranslation').textContent = data.chinese;
+      document.getElementById('scaffoldWordCount').textContent = data.words;
+
+      // Update top button styles
+      [1, 2, 3].forEach(n => {
+        const btn = document.getElementById(`lvlBtn${n}`);
+        if (n === lvl) {
+          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-white shadow-sm text-olive-800';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-gray-600 hover:text-gray-900';
+        }
+      });
+
+      // Update stepper dots
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById(`dot${i}`);
+        if (i <= lvl) {
+          dot.classList.add('bg-olive-600', 'text-white');
+          dot.classList.remove('bg-gray-200', 'text-gray-600');
+        } else {
+          dot.classList.remove('bg-olive-600', 'text-white');
+          dot.classList.add('bg-gray-200', 'text-gray-600');
+        }
+      }
+      document.getElementById('bar1').className = `flex-1 h-1.5 mx-2 rounded-full transition-all duration-500 ${lvl >= 2 ? 'bg-olive-600' : 'bg-gray-200'}`;
+      document.getElementById('bar2').className = `flex-1 h-1.5 mx-2 rounded-full transition-all duration-500 ${lvl >= 3 ? 'bg-olive-600' : 'bg-gray-200'}`;
+    }
+
+    function speakScaffoldText() {
+      const text = scaffoldLevels[currentScaffoldLevel].text;
+      speakItalian(text);
+    }
+
+    // 6. Visual Evidence Quiz
+    function answerQuiz(qNum, isCorrect) {
+      const fb = document.getElementById(`quizFeedback${qNum}`);
+      fb.classList.remove('hidden');
+
+      if (isCorrect) {
+        soundPopSuccess();
+        fb.className = 'mt-3 text-xs p-3 rounded-xl bg-olive-100 text-olive-800 font-bold';
+        if (qNum === 1) {
+          fb.innerHTML = '✅ <b>Verifica superata!</b> La prova tangibile nel disegno è proprio la bomboletta spray rosa che Sara tiene in mano.';
+        } else {
+          fb.innerHTML = '✅ <b>Pienamente compreso!</b> Hai dominato il meccanismo del verbo <i>piacere</i>: l\'oggetto piace <b>A</b> qualcuno.';
+        }
+      } else {
+        soundGentleNotice();
+        fb.className = 'mt-3 text-xs p-3 rounded-xl bg-terracotta-100 text-terracotta-600 font-semibold';
+        if (qNum === 1) {
+          fb.innerHTML = '🔍 Guarda di nuovo la mano destra di Sara nel disegno in alto: c\'è la scritta "ROSA" sulla bomboletta!';
+        } else {
+          fb.innerHTML = '💡 Ricorda la regola dell\'interruttore: se usi <i>piacere</i>, la persona non è il soggetto, ma chi riceve l\'effetto (quindi obbligatoriamente <b>A Bea</b> o <b>Le</b>).';
+        }
+      }
+    }
+
+    // Window load initialization
+    window.onload = function () {
+      // Warm up audio context on first user click anywhere
+      document.body.addEventListener('click', function initAudio() {
+        getAudioContext();
+        document.body.removeEventListener('click', initAudio);
+      }, { once: true });
+    };
+  </script>
+</body>
+</html>
