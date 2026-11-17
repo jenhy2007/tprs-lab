@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script type='text/javascript' nonce='nT1smhR4cqdYUcKEgNg3KQ==' src='https://contribution.usercontent.google.com/RmxBO23y2kyLutVZTFfae5o-NInMNzZugUrYmab046YEZxmCLxe0LqhhzBw8DO55ZKKg2JgeWi8t-inHaAbmiFhyMvrsA_166ofXyNm-8jlfwawtXgLO-vBT7Gmqx3CzA7sKzK10uEF03FzbOFD8Kr1Vl43Jv0VhY2jH5n6w_j65qMlFymWmxmaxqIhvn-KtMaipbUKy8uuGStKS6BK6PUq4jsNzLP42Bm-EWhgQu6o8FBWOte7olYRk7lnjSm3DAuN4PTJ-Z_6jyFtFTLQtKxfHttnqOWi2AlKo5J4l7DmldsL47JVmiZSEW1Z3LJYeRhcXSjPIfDSWEMk8iLZNQPLzpFX9oWMv3st1vO01GtEp9zUsAgtJyRLRVTJJ-MMg4tHuijXUmbgbqfnKEKAdpocfJC768vdvmU_L4zp0KZ1hYN8gNf2RcmvqCcxx_on1llOr9xd3RyO0Vm18zjjoB7j-Ua1JXcra4YEKaczh_i77SFohMuNHwqz3lBSO5nTEuTcdO2TpwyW-SV6aNmH0HBs35YVYk-S-OY1STKJSlN13ZuIy9L7XFfel1cMGputWMZKf2Rrzb9b8KN0DJ5sCPJ7ovP3J9SCbzHehduyvEg76pgFuLOWBuSXz8m3-PJxYWj-2uGSJ_sMqL34eltGVOsNJLXQArZomJleGYPjLd4tFvheqtAHfaZbTGQg17tSrwpb5TYNKqKfF3lLmkLYnts8OEQ'></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TPRS 高频词使用记录单 | Vocab Bank</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --it-primary: #1e40af;
+      --it-light: #dbeafe;
+      --team-o: #0369a1;
+      --team-o-bg: #e0f2fe;
+      --team-a: #be123c;
+      --team-a-bg: #ffe4e6;
+      --shape: #b45309;
+      --shape-bg: #fef3c7;
+      --chunk: #15803d;
+      --chunk-bg: #dcfce7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    /* Top Nav */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .back-btn {
+      text-decoration: none;
+      color: var(--it-primary);
+      background: var(--it-light);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: transform 0.15s;
+    }
+    .back-btn:hover { transform: translateX(-2px); }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn:hover { background: #f3f4f6; }
+    .btn-primary {
+      background: var(--it-primary);
+      color: #fff;
+      border-color: var(--it-primary);
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-active {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      color: #92400e;
+    }
+
+    /* Header */
+    header {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      border-left: 6px solid var(--it-primary);
+    }
+    header h1 { font-size: 1.55rem; margin-bottom: 6px; color: #111827; }
+    header p { color: var(--muted); font-size: 0.95rem; }
+
+    /* Filter Tabs */
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .filter-pill {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .filter-pill.active {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+
+    /* Add Form Drawer */
+    .add-panel {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+    .add-panel.open { display: block; }
+    .add-panel h3 { font-size: 1.05rem; margin-bottom: 12px; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .form-grid input, .form-grid select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    /* Cards List */
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 16px;
+    }
+    .vocab-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s;
+    }
+    .vocab-card:hover { transform: translateY(-2px); }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .tag-shape { background: var(--shape-bg); color: var(--shape); }
+    .tag-chunk { background: var(--chunk-bg); color: var(--chunk); }
+    .tag-o { background: var(--team-o-bg); color: var(--team-o); }
+    .tag-a { background: var(--team-a-bg); color: var(--team-a); }
+
+    .unit-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .word-main {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .speak-btn {
+      background: #eff6ff;
+      border: none;
+      color: var(--it-primary);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .speak-btn:hover { background: #dbeafe; }
+
+    .root-note {
+      font-size: 0.85rem;
+      color: #4b5563;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .meaning-box {
+      background: #f9fafb;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 10px;
+      transition: filter 0.2s;
+    }
+    body.blind-mode .meaning-box {
+      filter: blur(6px);
+      user-select: none;
+      cursor: pointer;
+    }
+    body.blind-mode .meaning-box:hover {
+      filter: blur(0);
+    }
+
+    .context-box {
+      font-size: 0.86rem;
+      color: #374151;
+      border-top: 1px dashed var(--border);
+      padding-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .context-text { font-style: italic; }
+
+    .stats-bar {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <a href="index.html" class="back-btn">← 返回书架 (index.html)</a>
+      <div class="controls">
+        <button class="btn" id="toggleBlindBtn" onclick="toggleBlindMode()">🙈 盲听自测（隐藏中文）</button>
+        <button class="btn btn-primary" onclick="toggleAddPanel()">＋ 录入新词</button>
+        <button class="btn" onclick="exportData()">💾 导出备份</button>
+      </div>
+    </div>
+
+    <header>
+      <h1>🗂️ TPRS 高频词与“变形金刚”使用记录单</h1>
+      <p>不背死板语法表，只记声音面孔、词块语境与 O队/A队 归属。点击 🔊 直接听原音，开启“盲听自测”可随时抽查！</p>
+    </header>
+
+    <!-- Add Word Panel -->
+    <div class="add-panel" id="addPanel">
+      <h3>➕ 添加新单元高频词（自动保存在本机浏览器）</h3>
+      <div class="form-grid">
+        <input type="text" id="inUnit" placeholder="所属单元 (如 Unit 40)"/>
+        <select id="inCategory">
+          <option value="shape">变形金刚动词 (Shape-Shifter)</option>
+          <option value="chunk">高频词块 (Chunk)</option>
+          <option value="team-o">O 队名词/代词 (阳性 il/lo)</option>
+          <option value="team-a">A 队名词/代词 (阴性 la)</option>
+        </select>
+        <input type="text" id="inWord" placeholder="意大利语词块 / 变形面孔"/>
+        <input type="text" id="inRoot" placeholder="词根/变形提示 (如 PENS- 想)"/>
+        <input type="text" id="inMeaning" placeholder="中文核心意思"/>
+        <input type="text" id="inContext" placeholder="故事原句例句"/>
+      </div>
+      <button class="btn btn-primary" onclick="addWord()">确认保存到记录单</button>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="filters">
+      <button class="filter-pill active" onclick="setFilter(&#39;all&#39;, this)">全部档案</button>
+      <button class="filter-pill" onclick="setFilter(&#39;shape&#39;, this)">🤖 变形金刚动词</button>
+      <button class="filter-pill" onclick="setFilter(&#39;chunk&#39;, this)">🧱 核心功能词块</button>
+      <button class="filter-pill" onclick="setFilter(&#39;team-o&#39;, this)">🔵 O 队 (il / lo)</button>
+      <button class="filter-pill" onclick="setFilter(&#39;team-a&#39;, this)">🔴 A 队 (la)</button>
+    </div>
+
+    <!-- Vocab Grid -->
+    <div class="vocab-grid" id="vocabGrid"></div>
+
+    <div class="stats-bar" id="statsBar"></div>
+  </div>
+
+  <script>
+    const defaultVocab = [
+      {
+        unit: "Unit 39 • 披萨食材",
+        category: "team-o",
+        word: "i peperoni → Li taglio / li metto",
+        root: "O 队复数 (-i) • 宾语代词 li (它们)",
+        meaning: "甜椒们 → 我切它们 / 我放它们",
+        context: "I peperoni sono perfetti. Li taglio a pezzi piccoli e li metto sopra."
+      },
+      {
+        unit: "Unit 39 • 披萨食材",
+        category: "team-a",
+        word: "le cose → metterle",
+        root: "A 队复数 (-e) • 宾语代词 le (它们)",
+        meaning: "东西们 → 放它们",
+        context: "Se le cose cuociono alla stessa temperatura, possiamo metterle sulla pizza?"
+      },
+      {
+        unit: "Unit 39 • 披萨食材",
+        category: "shape",
+        word: "vanno bene (andare)",
+        root: "V- 移动家族 (andare = 去/运行)",
+        meaning: "它们很搭 / 很合适",
+        context: "Usiamo sempre certi ingredienti perché vanno bene insieme."
+      },
+      {
+        unit: "Unit 39 • 披萨食材",
+        category: "shape",
+        word: "viene (venire)",
+        root: "V- 移动家族 (venire = 来)",
+        meaning: "它来自……",
+        context: "La pizza ha una tradizione di mille anni. Viene dall'Italia!"
+      },
+      {
+        unit: "Unit 39 • 披萨食材",
+        category: "shape",
+        word: "parlerò / avremo / sarai",
+        root: "将来时重音尾巴 (-ò 我将 / -emo 我们将 / -ai 你将)",
+        meaning: "我将交谈 / 我们将拥有 / 你将成为",
+        context: "Parlerò con Adriano. Forse un giorno avremo pizze nuove e sarai tu l'innovatore!"
+      },
+      {
+        unit: "Unit 39 • 披萨食材",
+        category: "chunk",
+        word: "se ci penso / chi lo sa?",
+        root: "口语高频反应词块",
+        meaning: "如果我想想这事 / 谁知道呢？",
+        context: "Hmm... se ci penso, esistono già le pizze dolci. Chi lo sa?"
+      },
+      {
+        unit: "Unit 39 • 披萨争论",
+        category: "shape",
+        word: "penso / pensi / pensano",
+        root: "词根 PENS- (pensare = 想/认为)",
+        meaning: "我觉得 / 你觉得 / 他们觉得",
+        context: "Io penso che la pizza sia buona. Tu cosa ne pensi?"
+      },
+      {
+        unit: "Unit 39 • 山地向导",
+        category: "shape",
+        word: "sono / sei / è / siamo",
+        root: "S- 家族 (essere = 是/在)",
+        meaning: "我是 / 你是 / 他(她)是 / 我们是",
+        context: "Elisa è una guida alpina. Bea non è esperta."
+      },
+      {
+        unit: "Unit 39 • 通用高频",
+        category: "shape",
+        word: "vado / vai / va / vanno",
+        root: "V- 移动家族 (andare = 去)",
+        meaning: "我去 / 你去 / 他(她)去 / 他们去",
+        context: "Bea va a Courmayeur per vedere il Monte Bianco."
+      },
+      {
+        unit: "Unit 39 • 通用高频",
+        category: "shape",
+        word: "faccio / fai / fa",
+        root: "FACC-/FA- 家族 (fare = 做/拍摄)",
+        meaning: "我做 / 你做 / 他(她)做",
+        context: "Fa molte foto sulla montagna."
+      },
+      {
+        unit: "Unit 39 • 山地向导",
+        category: "chunk",
+        word: "bisogna essere ...",
+        root: "功能句型块 (bisognare)",
+        meaning: "必须成为…… / 需要保持……",
+        context: "In montagna bisogna essere molto prudenti."
+      },
+      {
+        unit: "Unit 39 • 山地向导",
+        category: "chunk",
+        word: "provare a + 动词",
+        root: "动作尝试块 (provo / prova)",
+        meaning: "尝试去……",
+        context: "Bea prova a usare la corda, ma lo fa male."
+      },
+      {
+        unit: "Unit 39 • 山地向导",
+        category: "team-a",
+        word: "la corda → la usa",
+        root: "A 队阴性 (-a) • 宾语代词 la (它)",
+        meaning: "绳子 → 她用它",
+        context: "Bea prende la corda e la usa male."
+      },
+      {
+        unit: "Unit 39 • 披萨争论",
+        category: "team-a",
+        word: "la pizza → la mangio",
+        root: "A 队阴性 (-a) • 宾语代词 la (它)",
+        meaning: "披萨 → 我吃它",
+        context: "Amo la pizza e la mangio ogni venerdì!"
+      },
+      {
+        unit: "Unit 39 • 山地向导",
+        category: "team-o",
+        word: "il lavoro → lo faccio",
+        root: "O 队阳性 (-o) • 宾语代词 lo (它/这件事)",
+        meaning: "工作 → 我做它",
+        context: "È un lavoro difficile, ma Elisa lo fa bene."
+      },
+      {
+        unit: "Unit 39 • 山地向导",
+        category: "team-a",
+        word: "le foto → le ha fatte",
+        root: "A 队复数 (le) • 过去时性数一致 (-e)",
+        meaning: "照片们 → 她把它们拍下来了",
+        context: "Bea ha visto le montagne e le ha fatte molte foto."
+      }
+    ];
+
+    let vocabList = JSON.parse(localStorage.getItem("tprs_vocab_bank_v2")) || defaultVocab;
+    let currentFilter = "all";
+
+    function saveVocab() {
+      localStorage.setItem("tprs_vocab_bank_v2", JSON.stringify(vocabList));
+    }
+
+    function speakItalian(text) {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const cleanText = text.replace(/→/g, ",").replace(/\//g, ",");
+      const utter = new SpeechSynthesisUtterance(cleanText);
+      utter.lang = "it-IT";
+      utter.rate = 0.9;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function getCategoryMeta(cat) {
+      switch(cat) {
+        case "shape": return { label: "🤖 变形金刚", cls: "tag-shape" };
+        case "chunk": return { label: "🧱 功能词块", cls: "tag-chunk" };
+        case "team-o": return { label: "🔵 O队 (il/lo)", cls: "tag-o" };
+        case "team-a": return { label: "🔴 A队 (la)", cls: "tag-a" };
+        default: return { label: "词条", cls: "tag-chunk" };
+      }
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById("vocabGrid");
+      grid.innerHTML = "";
+      const filtered = currentFilter === "all"
+        ? vocabList
+        : vocabList.filter(item => item.category === currentFilter);
+
+      filtered.forEach((item) => {
+        const meta = getCategoryMeta(item.category);
+        const card = document.createElement("div");
+        card.className = "vocab-card";
+        card.innerHTML = `
+          <div>
+            <div class="card-top">
+              <span class="tag ${meta.cls}">${meta.label}</span>
+              <span class="unit-label">${item.unit}</span>
+            </div>
+            <div class="word-main">
+              <span>${item.word}</span>
+              <button class="speak-btn" title="朗读词块" onclick="speakItalian('${item.word.replace(/'/g, "\'")}')">🔊</button>
+            </div>
+            <div class="root-note">${item.root}</div>
+            <div class="meaning-box" title="盲听模式下悬停可偷看">${item.meaning}</div>
+          </div>
+          <div class="context-box">
+            <span class="context-text">“${item.context}”</span>
+            <button class="speak-btn" title="朗读例句" onclick="speakItalian('${item.context.replace(/'/g, "\'")}')">▶️</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      document.getElementById("statsBar").textContent =
+        `当前显示 ${filtered.length} 条记录（总计已收录 ${vocabList.length} 条高频词档案）`;
+    }
+
+    function setFilter(cat, btn) {
+      currentFilter = cat;
+      document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      renderGrid();
+    }
+
+    function toggleBlindMode() {
+      document.body.classList.toggle("blind-mode");
+      const btn = document.getElementById("toggleBlindBtn");
+      const isBlind = document.body.classList.contains("blind-mode");
+      btn.classList.toggle("btn-active", isBlind);
+      btn.textContent = isBlind ? "👁️ 显示中文意思" : "🙈 盲听自测（隐藏中文）";
+    }
+
+    function toggleAddPanel() {
+      document.getElementById("addPanel").classList.toggle("open");
+    }
+
+    function addWord() {
+      const unit = document.getElementById("inUnit").value.trim() || "Unit 40";
+      const category = document.getElementById("inCategory").value;
+      const word = document.getElementById("inWord").value.trim();
+      const root = document.getElementById("inRoot").value.trim() || "实战高频记录";
+      const meaning = document.getElementById("inMeaning").value.trim();
+      const context = document.getElementById("inContext").value.trim() || word;
+
+      if (!word || !meaning) {
+        alert("请至少填写“意大利语词块”和“中文核心意思”哦！");
+        return;
+      }
+
+      vocabList.unshift({ unit, category, word, root, meaning, context });
+      saveVocab();
+      renderGrid();
+
+      document.getElementById("inWord").value = "";
+      document.getElementById("inRoot").value = "";
+      document.getElementById("inMeaning").value = "";
+      document.getElementById("inContext").value = "";
+      toggleAddPanel();
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(vocabList, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "TPRS_Vocab_Bank_Backup.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    renderGrid();
+  </script>
+</body>
+</html>

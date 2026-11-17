@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Panda Bobo & Boba Tea</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #059669;
+      --accent: #f59e0b;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --pinyin: #d97706;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); padding: 16px; display: flex; justify-content: center; }
+    .container { max-width: 760px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
+    
+    header { text-align: center; padding: 6px 0; }
+    header h1 { font-size: 1.5rem; color: var(--primary); margin-bottom: 4px; }
+    header p { color: var(--muted); font-size: 0.9rem; }
+
+    .card { background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 16px; }
+    
+    .scene-box {
+      position: relative; background: #ecfdf5; border-radius: 12px;
+      overflow: hidden; height: 240px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: 2px dashed #a7f3d0; touch-action: manipulation;
+    }
+    .click-hint {
+      position: absolute; bottom: 8px; background: rgba(255,255,255,0.92);
+      padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; color: var(--primary); font-weight: 600; pointer-events: none;
+    }
+    
+    .speech-bubble {
+      position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+      background: white; border: 2px solid var(--primary); border-radius: 12px;
+      padding: 8px 16px; font-size: 1rem; font-weight: bold; color: var(--text);
+      display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; text-align: center;
+    }
+
+    /* SVG Animations */
+    .bobo-ear-left { animation: earWiggle 3s infinite ease-in-out; transform-origin: 130px 105px; }
+    .bobo-ear-right { animation: earWiggle 3s infinite ease-in-out 0.5s; transform-origin: 190px 105px; }
+    .tea-straw { animation: strawBob 2s infinite ease-in-out; }
+    .bird-wing { animation: flap 0.8s infinite alternate ease-in-out; transform-origin: 310px 140px; }
+    @keyframes earWiggle { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(6deg); } }
+    @keyframes strawBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @keyframes flap { 0% { transform: rotate(0deg); } 100% { transform: rotate(-25deg); } }
+
+    /* Steps Navigation */
+    .steps-nav { display: flex; gap: 6px; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 14px; }
+    .step-btn { flex: 1; background: none; border: none; font-size: 0.85rem; font-weight: 600; color: var(--muted); padding: 8px 6px; border-radius: 8px; cursor: pointer; text-align: center; }
+    .step-btn.active { background: #d1fae5; color: var(--primary); }
+
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+
+    /* Target Structures */
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: #fff; cursor: pointer; position: relative; }
+    .vocab-cn { font-size: 1.35rem; font-weight: bold; color: var(--primary); }
+    .vocab-py { color: var(--pinyin); font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
+    .vocab-en { font-size: 0.85rem; color: var(--muted); }
+    .play-badge { position: absolute; top: 12px; right: 12px; font-size: 1.1rem; }
+
+    /* Circling */
+    .circling-box { display: flex; flex-direction: column; gap: 12px; }
+    .q-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+    .q-title { font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
+    .options { display: flex; gap: 8px; flex-wrap: wrap; }
+    .opt-btn { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 0.9rem; }
+    .opt-btn.correct { background: #d1fae5; border-color: var(--primary); color: var(--primary); font-weight: bold; }
+    .opt-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #ef4444; }
+    .feedback-msg { margin-top: 8px; font-size: 0.85rem; display: none; }
+
+    /* Ladder Buttons */
+    .ladder-nav-container { display: flex; gap: 8px; margin: 12px 0; }
+    .ladder-lvl-btn {
+      flex: 1; padding: 10px 6px; border-radius: 8px; border: 2px solid var(--border);
+      background: #f8fafc; cursor: pointer; text-align: center;
+    }
+    .ladder-lvl-btn.active { background: #ecfdf5; border-color: var(--primary); }
+    .ladder-lvl-title { font-size: 0.85rem; font-weight: bold; color: var(--text); display: block; }
+    .ladder-lvl-btn.active .ladder-lvl-title { color: var(--primary); }
+    .ladder-lvl-desc { font-size: 0.7rem; color: var(--muted); margin-top: 2px; display: block; }
+
+    .text-display {
+      background: #f8fafc; border-left: 4px solid var(--primary); padding: 14px;
+      border-radius: 0 8px 8px 0; font-size: 1.15rem; line-height: 1.7; margin-top: 10px;
+    }
+    .pinyin-sub { color: var(--pinyin); font-size: 0.85rem; display: block; margin-bottom: 4px; }
+    .en-sub { color: var(--muted); font-size: 0.9rem; display: block; border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Panda Bobo & Boba Tea (波波和奶茶)</h1>
+    <p>Zero-Anxiety Chinese TPRS • Lesson 1</p>
+  </header>
+
+  <div class="card">
+    <div class="scene-box" id="sceneBox">
+      <div class="speech-bubble" id="speechBubble"></div>
+      
+      <svg width="340" height="200" viewBox="0 0 380 220">
+        <ellipse cx="190" cy="210" rx="180" ry="30" fill="#a7f3d0" />
+        
+        <!-- Bobo -->
+        <g id="pandaGroup">
+          <ellipse cx="160" cy="165" rx="50" ry="40" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <ellipse cx="125" cy="165" rx="14" ry="24" fill="#1e293b" transform="rotate(20 125 165)" />
+          <ellipse cx="195" cy="165" rx="14" ry="24" fill="#1e293b" transform="rotate(-20 195 165)" />
+          <circle cx="160" cy="115" r="38" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <circle class="bobo-ear-left" cx="130" cy="85" r="14" fill="#1e293b" />
+          <circle class="bobo-ear-right" cx="190" cy="85" r="14" fill="#1e293b" />
+          <ellipse cx="145" cy="112" rx="9" ry="12" fill="#1e293b" transform="rotate(-15 145 112)" />
+          <ellipse cx="175" cy="112" rx="9" ry="12" fill="#1e293b" transform="rotate(15 175 112)" />
+          <circle cx="146" cy="112" r="3" fill="#ffffff" />
+          <circle cx="174" cy="112" r="3" fill="#ffffff" />
+          <ellipse cx="160" cy="124" rx="5" ry="3" fill="#1e293b" />
+          <path d="M 155 130 Q 160 135 165 130" stroke="#1e293b" stroke-width="2.5" fill="none" />
+        </g>
+
+        <!-- Boba Tea -->
+        <g id="teaGroup">
+          <rect x="145" y="145" width="30" height="42" rx="4" fill="#fed7aa" stroke="#78350f" stroke-width="2" />
+          <circle cx="152" cy="178" r="3" fill="#451a03" />
+          <circle cx="160" cy="176" r="3" fill="#451a03" />
+          <circle cx="168" cy="179" r="3" fill="#451a03" />
+          <line class="tea-straw" x1="160" y1="130" x2="160" y2="155" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" />
+        </g>
+
+        <!-- Bird -->
+        <g id="birdGroup">
+          <ellipse cx="300" cy="140" rx="16" ry="12" fill="#38bdf8" />
+          <circle cx="312" cy="132" r="8" fill="#38bdf8" />
+          <polygon points="320,132 328,135 320,138" fill="#f59e0b" />
+          <circle cx="314" cy="130" r="1.5" fill="#0f172a" />
+          <path class="bird-wing" d="M 295 138 Q 302 125 310 138" stroke="#0284c7" stroke-width="3" fill="none" />
+        </g>
+      </svg>
+      <div class="click-hint">👉 Tap Bobo, Tea, or Bird!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="steps-nav">
+      <button class="step-btn active" onclick="switchStep(1)">Step 1: Words</button>
+      <button class="step-btn" onclick="switchStep(2)">Step 2: Circling</button>
+      <button class="step-btn" onclick="switchStep(3)">Step 3: Ladder</button>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step-content active" id="step1">
+      <p style="margin-bottom:10px; color:var(--muted); font-size:0.85rem;">Tap any card to listen:</p>
+      <div class="vocab-grid">
+        <div class="vocab-card" onclick="speakText('有')">
+          <div class="vocab-cn">有</div>
+          <div class="vocab-py">yǒu</div>
+          <div class="vocab-en">has / to have</div>
+          <span class="play-badge">🔊</span>
+        </div>
+        <div class="vocab-card" onclick="speakText('想喝')">
+          <div class="vocab-cn">想喝</div>
+          <div class="vocab-py">xiǎng hē</div>
+          <div class="vocab-en">wants to drink</div>
+          <span class="play-badge">🔊</span>
+        </div>
+        <div class="vocab-card" onclick="speakText('喜欢')">
+          <div class="vocab-cn">喜欢</div>
+          <div class="vocab-py">xǐhuan</div>
+          <div class="vocab-en">to like / enjoy</div>
+          <span class="play-badge">🔊</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-content" id="step2">
+      <div class="circling-box">
+        <div class="q-card">
+          <div class="q-title">1. Shéi yǒu nǎichá? (谁有奶茶? - Who has the tea?)</div>
+          <div class="options">
+            <button class="opt-btn" onclick="checkAnswer(this, true, 'Correct! Bobo yǒu nǎichá.')">波波 (Bobo)</button>
+            <button class="opt-btn" onclick="checkAnswer(this, false, 'The bird doesn\'t have the tea!')">小鸟 (Xiǎoniǎo)</button>
+          </div>
+          <div class="feedback-msg"></div>
+        </div>
+        <div class="q-card">
+          <div class="q-title">2. Bobo xiǎng hē shénme? (波波想喝什么?)</div>
+          <div class="options">
+            <button class="opt-btn" onclick="checkAnswer(this, false, 'No, Bobo doesn\'t want water!')">水 (Water)</button>
+            <button class="opt-btn" onclick="checkAnswer(this, true, 'Yes! Bobo xiǎng hē nǎichá!')">奶茶 (Boba Tea)</button>
+          </div>
+          <div class="feedback-msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-content" id="step3">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.85rem; color:var(--muted);">3 building-block levels:</span>
+        <button onclick="speakCurrentLadder()" style="background:none; border:none; color:var(--primary); font-weight:bold; cursor:pointer;">🔊 Listen</button>
+      </div>
+
+      <div class="ladder-nav-container">
+        <button class="ladder-lvl-btn active" id="btnLvl1" onclick="selectLadderLevel(1)">
+          <span class="ladder-lvl-title">Level 1</span>
+          <span class="ladder-lvl-desc">Skeleton (6 words)</span>
+        </button>
+        <button class="ladder-lvl-btn" id="btnLvl2" onclick="selectLadderLevel(2)">
+          <span class="ladder-lvl-title">Level 2</span>
+          <span class="ladder-lvl-desc">+ Details</span>
+        </button>
+        <button class="ladder-lvl-btn" id="btnLvl3" onclick="selectLadderLevel(3)">
+          <span class="ladder-lvl-title">Level 3</span>
+          <span class="ladder-lvl-desc">+ Conflict</span>
+        </button>
+      </div>
+      
+      <div class="text-display" id="ladderText"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let audioCtx = null;
+  function initAudio() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  function playPop() {
+    try {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(680, audioCtx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.12);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.12);
+    } catch(e) {}
+  }
+
+  // Pre-load and select modern natural neural voices
+  let cachedVoice = null;
+  function findBestChineseVoice() {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices || voices.length === 0) return null;
+
+    // Filter all Chinese voices (Mandarin preferred)
+    const zhVoices = voices.filter(v => v.lang.includes('zh') || v.lang.includes('cmn'));
+    if (zhVoices.length === 0) return null;
+
+    // Prioritize natural neural voices (Edge: Xiaoxiao/Yunxi Natural; Chrome/Pixel: Google 普通话)
+    const naturalVoice = zhVoices.find(v => 
+      v.name.includes('Natural') || 
+      v.name.includes('Google') || 
+      v.name.includes('Xiaoxiao') || 
+      v.name.includes('Yunxi') ||
+      v.name.includes('Premium')
+    );
+
+    return naturalVoice || zhVoices[0];
+  }
+
+  function initVoices() {
+    cachedVoice = findBestChineseVoice();
+  }
+
+  if ('speechSynthesis' in window) {
+    initVoices();
+    window.speechSynthesis.onvoiceschanged = () => {
+      initVoices();
+    };
+  }
+
+  function speakText(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-CN';
+    u.rate = 0.88; // Slightly relaxed pace for pristine comprehension
+
+    if (!cachedVoice) {
+      cachedVoice = findBestChineseVoice();
+    }
+    if (cachedVoice) {
+      u.voice = cachedVoice;
+    }
+
+    window.speechSynthesis.speak(u);
+  }
+
+  const speechBubble = document.getElementById('speechBubble');
+  let bubbleTimer = null;
+
+  function showBubble(cn, py, en) {
+    playPop();
+    speakText(cn);
+    speechBubble.innerHTML = `<div>${cn}</div><div style="font-size:0.75rem; color:var(--pinyin); font-weight:normal;">${py} (${en})</div>`;
+    speechBubble.style.display = 'block';
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => { speechBubble.style.display = 'none'; }, 2600);
+  }
+
+  // Event handlers with touch audio unlocking
+  document.getElementById('teaGroup').addEventListener('click', () => {
+    showBubble('我想喝！', 'Wǒ xiǎng hē!', 'I want to drink!');
+  });
+  document.getElementById('pandaGroup').addEventListener('click', () => {
+    showBubble('我喜欢奶茶！', 'Wǒ xǐhuan nǎichá!', 'I like tea!');
+  });
+  document.getElementById('birdGroup').addEventListener('click', () => {
+    showBubble('我也想喝！', 'Wǒ yě xiǎng hē!', 'Me too!');
+  });
+
+  function switchStep(idx) {
+    initAudio();
+    document.querySelectorAll('.step-btn').forEach((b, i) => b.classList.toggle('active', i === idx - 1));
+    document.querySelectorAll('.step-content').forEach((c, i) => c.classList.toggle('active', i === idx - 1));
+  }
+
+  function checkAnswer(btn, isCorrect, msg) {
+    initAudio();
+    const parent = btn.closest('.q-card');
+    parent.querySelectorAll('.opt-btn').forEach(b => b.className = 'opt-btn');
+    btn.className = 'opt-btn ' + (isCorrect ? 'correct' : 'wrong');
+    const fb = parent.querySelector('.feedback-msg');
+    fb.style.display = 'block';
+    fb.style.color = isCorrect ? 'var(--primary)' : '#ef4444';
+    fb.innerText = msg;
+    if (isCorrect) playPop();
+  }
+
+  let currentLadderIdx = 1;
+  const ladderData = [
+    {
+      cn: "波波有奶茶。波波想喝。",
+      py: "Bōbo yǒu nǎichá. Bōbo xiǎng hē.",
+      en: "Bobo has boba tea. Bobo wants to drink."
+    },
+    {
+      cn: "波波有一杯大奶茶。波波很想喝奶茶。",
+      py: "Bōbo yǒu yì bēi dà nǎichá. Bōbo hěn xiǎng hē nǎichá.",
+      en: "Bobo has a big boba tea. Bobo really wants to drink boba tea."
+    },
+    {
+      cn: "波波有奶茶。小鸟也想喝，但是波波不给，因为波波最喜欢奶茶！",
+      py: "Bōbo yǒu nǎichá. Xiǎoniǎo yě xiǎng hē, dànshì Bōbo bù gěi, yīnwèi Bōbo zuì xǐhuan nǎichá!",
+      en: "Bobo has boba tea. The bird also wants to drink, but Bobo says no because Bobo likes boba tea best!"
+    }
+  ];
+
+  function selectLadderLevel(lvl) {
+    initAudio();
+    currentLadderIdx = lvl;
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById('btnLvl' + i).classList.toggle('active', i === lvl);
+    }
+    const d = ladderData[lvl - 1];
+    document.getElementById('ladderText').innerHTML = `
+      <span class="pinyin-sub">${d.py}</span>
+      <strong>${d.cn}</strong>
+      <span class="en-sub">${d.en}</span>
+    `;
+  }
+  selectLadderLevel(1);
+
+  function speakCurrentLadder() {
+    speakText(ladderData[currentLadderIdx - 1].cn);
+  }
+</script>
+
+</body>
+</html>

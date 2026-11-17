@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Unit 39: Le guide di montagna a Courmayeur</title>
+  <style>
+    :root {
+      --bg: #f0f9ff;
+      --card-bg: #ffffff;
+      --primary: #0369a1;
+      --accent: #ea580c;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --sub: #0284c7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); padding: 16px; display: flex; justify-content: center; }
+    .container { max-width: 780px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
+    
+    header { text-align: center; padding: 6px 0; }
+    header h1 { font-size: 1.45rem; color: var(--primary); margin-bottom: 4px; }
+    header p { color: var(--muted); font-size: 0.9rem; }
+
+    .card { background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 16px; }
+
+    /* Interactive Alpine Stage */
+    .scene-box {
+      position: relative; background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 65%, #f8fafc 100%);
+      border-radius: 12px; overflow: hidden; height: 250px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: 2px solid #7dd3fc; touch-action: manipulation;
+    }
+    .click-hint {
+      position: absolute; bottom: 8px; background: rgba(255,255,255,0.94);
+      padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; color: var(--primary); font-weight: 600; pointer-events: none;
+    }
+    .speech-bubble {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      background: white; border: 2px solid var(--primary); border-radius: 12px;
+      padding: 8px 14px; font-size: 0.95rem; font-weight: bold; color: var(--text);
+      display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.12); z-index: 10; text-align: center; max-width: 90%;
+    }
+    .flash-overlay {
+      position: absolute; inset: 0; background: white; opacity: 0; pointer-events: none; transition: opacity 0.15s;
+    }
+
+    /* Animations */
+    .rope-swing { animation: swing 3s infinite ease-in-out; transform-origin: 245px 145px; }
+    @keyframes swing { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(8deg); } }
+
+    /* Audio Toolbar */
+    .audio-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; background: #f8fafc; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); }
+    .tool-btn {
+      padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); background: white;
+      font-size: 0.82rem; font-weight: 600; color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .tool-btn.active { background: #e0f2fe; border-color: var(--primary); color: var(--primary); }
+
+    /* Steps Navigation */
+    .steps-nav { display: flex; gap: 6px; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 14px; }
+    .step-btn { flex: 1; background: none; border: none; font-size: 0.85rem; font-weight: 600; color: var(--muted); padding: 8px 6px; border-radius: 8px; cursor: pointer; text-align: center; }
+    .step-btn.active { background: #e0f2fe; color: var(--primary); }
+
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+
+    /* Memory Hooks */
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: #fff; cursor: pointer; position: relative; transition: border-color 0.2s; }
+    .vocab-card:hover { border-color: var(--primary); }
+    .vocab-it { font-size: 1.15rem; font-weight: bold; color: var(--primary); margin-bottom: 3px; }
+    .vocab-en { font-size: 0.85rem; color: var(--text); font-weight: 600; margin-bottom: 4px; }
+    .vocab-hook { font-size: 0.78rem; color: var(--muted); line-height: 1.4; background: #f8fafc; padding: 6px 8px; border-radius: 6px; }
+    .play-badge { position: absolute; top: 10px; right: 10px; font-size: 1rem; }
+
+    /* Circling Q&A */
+    .circling-box { display: flex; flex-direction: column; gap: 12px; }
+    .q-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+    .q-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .q-title { font-weight: 600; font-size: 0.95rem; }
+    .blur-text { filter: blur(6px); user-select: none; transition: filter 0.2s; }
+    .options { display: flex; gap: 8px; flex-wrap: wrap; }
+    .opt-btn { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 0.88rem; }
+    .opt-btn.correct { background: #dcfce7; border-color: #16a34a; color: #15803d; font-weight: bold; }
+    .opt-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+    .feedback-msg { margin-top: 8px; font-size: 0.84rem; display: none; }
+
+    /* 3-Button Scaffolding Ladder */
+    .ladder-nav-container { display: flex; gap: 8px; margin: 10px 0; }
+    .ladder-lvl-btn {
+      flex: 1; padding: 10px 6px; border-radius: 8px; border: 2px solid var(--border);
+      background: #f8fafc; cursor: pointer; text-align: center;
+    }
+    .ladder-lvl-btn.active { background: #e0f2fe; border-color: var(--primary); }
+    .ladder-lvl-title { font-size: 0.85rem; font-weight: bold; color: var(--text); display: block; }
+    .ladder-lvl-btn.active .ladder-lvl-title { color: var(--primary); }
+    .ladder-lvl-desc { font-size: 0.72rem; color: var(--muted); margin-top: 2px; display: block; }
+
+    .text-display {
+      background: #f8fafc; border-left: 4px solid var(--primary); padding: 14px;
+      border-radius: 0 8px 8px 0; font-size: 1.08rem; line-height: 1.7; margin-top: 10px;
+    }
+    .en-sub { color: var(--muted); font-size: 0.88rem; display: block; border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 8px; }
+  </style>
+<script type='text/javascript' nonce='OMVscNKd1n0/sc7NGC1YYQ==' src='https://contribution.usercontent.google.com/9J83g6F6itvxiKJkQLNGLT3HikkOVxwNP3C0Nx5DK2SUcVsNSgo4k1PR9gXl8bCDCWLLB3yKDnxGFFYkf1u0K_tajdAY0-jyT3s4HRwdUDqYAj0JhcQFu0rf7tQx2pkrhet1xXjv_Yo_ZM3uHEvH7hEwy6lWmE931mCB1TAHyhdwpWGRf-RQFNiBPFiSbz_hdOA-HvM-swiP-l691OuaVDq6xjLdfJoEenMNT9LIzMRbN2-Dvvntk8hbgBwc3VxOtbgtQOOCZvduEHr79OEUM8btCSdc4ieyvG0crIgMrxTYxYqO4mRuBdNVMD-w0qdjotpp0P2DScAOa3yVYaU983WtPuXX4oovRQqs4IXz6Yk34yv5yl3bkEcFkpi18GEa92ZqEOW_Ilnn0mfEQ2RuP-oSrELuEyvRcJMjjOgyWA2BIV9T_gva9aoQxHDTDYEYD60v9uCq1hMzwICOgN9ieIM2gUQbnQfM4lc1O8em0O9L2mp7m7JTfRxoxub91FoLd22Kfd8N26uhCvPNOQcSh_T6elEgqdhfq-cy_uRrR5lAnAmeOV42SorLZCU5bBKHs5n8AHy93idcZbTqdFTwHGYnZs3zVguBQoP3wIDA7jKdZKxeTdolE31TuoBncCIZF4pAyYE8S18e6b4D47-EgArSkJfiXj-GgPIO0acb3t_gHlxItNCFuWXTzkvjgJrNEBUa1jJ5rxompUx0gP6KOw90F1q40bDdzzMx3v6Y'></script></head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Le avventure di Bea: Courmayeur</h1>
+    <p>Italian TPRS Listening Lab • Section 4, Unit 39</p>
+  </header>
+
+  <!-- Interactive Alpine Stage -->
+  <div class="card">
+    <div class="scene-box" id="sceneBox">
+      <div class="flash-overlay" id="flashOverlay"></div>
+      <div class="speech-bubble" id="speechBubble"></div>
+
+      <svg width="360" height="210" viewbox="0 0 380 220">
+        <!-- Mont Blanc Peaks -->
+        <polygon points="20,190 120,45 220,190" fill="#cbd5e1"/>
+        <polygon points="120,45 92,86 112,78 125,92 146,83" fill="#ffffff"/>
+        <polygon points="150,190 265,30 370,190" fill="#94a3b8"/>
+        <polygon points="265,30 232,78 255,70 272,86 296,74" fill="#ffffff"/>
+        <!-- Alpine Meadow -->
+        <ellipse cx="190" cy="205" rx="190" ry="28" fill="#86efac"/>
+
+        <!-- Character 1: Elisa (Mountain Guide) -->
+        <g id="elisaGroup" style="cursor:pointer;">
+          <rect x="92" y="128" width="36" height="48" rx="10" fill="#ea580c"/>
+          <circle cx="110" cy="108" r="16" fill="#fed7aa"/>
+          <!-- Helmet -->
+          <path d="M 94 106 Q 110 86 126 106 Z" fill="#0284c7"/>
+          <circle cx="105" cy="108" r="2" fill="#0f172a"/>
+          <circle cx="115" cy="108" r="2" fill="#0f172a"/>
+          <path d="M 106 115 Q 110 119 114 115" stroke="#0f172a" stroke-width="2" fill="none"/>
+          <text x="110" y="192" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">Elisa</text>
+        </g>
+
+        <!-- Character 2: Bea (Taking Photos) -->
+        <g id="beaGroup" style="cursor:pointer;">
+          <rect x="172" y="132" width="34" height="44" rx="10" fill="#0369a1"/>
+          <circle cx="189" cy="112" r="15" fill="#fed7aa"/>
+          <circle cx="184" cy="112" r="2" fill="#0f172a"/>
+          <circle cx="194" cy="112" r="2" fill="#0f172a"/>
+          <!-- Camera -->
+          <rect x="179" y="136" width="20" height="14" rx="3" fill="#1e293b"/>
+          <circle cx="189" cy="143" r="4" fill="#38bdf8"/>
+          <text x="189" y="192" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">Bea</text>
+        </g>
+
+        <!-- Prop 1: Climbing Rope (La Corda) -->
+        <g id="ropeGroup" class="rope-swing" style="cursor:pointer;">
+          <ellipse cx="245" cy="155" rx="14" ry="20" fill="none" stroke="#d97706" stroke-width="5"/>
+          <ellipse cx="249" cy="155" rx="14" ry="20" fill="none" stroke="#f59e0b" stroke-width="3"/>
+          <text x="247" y="192" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">La Corda</text>
+        </g>
+
+        <!-- Prop 2: Polaroid Photos (Le Foto) -->
+        <g id="photosGroup" style="cursor:pointer;">
+          <rect x="295" y="135" width="26" height="32" rx="2" fill="#ffffff" stroke="#64748b" stroke-width="1.5" transform="rotate(-10 308 151)"/>
+          <rect x="298" y="138" width="20" height="18" fill="#38bdf8" transform="rotate(-10 308 151)"/>
+          <rect x="312" y="138" width="26" height="32" rx="2" fill="#ffffff" stroke="#64748b" stroke-width="1.5" transform="rotate(12 325 154)"/>
+          <rect x="315" y="141" width="20" height="18" fill="#0284c7" transform="rotate(12 325 154)"/>
+          <text x="315" y="192" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">Le Foto</text>
+        </g>
+      </svg>
+
+      <div class="click-hint">👉 Tap Elisa, Bea, La Corda, or Le Foto!</div>
+    </div>
+  </div>
+
+  <!-- TPRS Learning Steps -->
+  <div class="card">
+    <div class="steps-nav">
+      <button class="step-btn active" onclick="switchStep(1)">Step 1: Hooks</button>
+      <button class="step-btn" onclick="switchStep(2)">Step 2: Listening Q&A</button>
+      <button class="step-btn" onclick="switchStep(3)">Step 3: 3-Tier Story</button>
+    </div>
+
+    <!-- Step 1: Memory Hooks -->
+    <div class="step-content active" id="step1">
+      <p style="margin-bottom:10px; color:var(--muted); font-size:0.85rem;">Tap each card to hear the structure in context:</p>
+      <div class="vocab-grid">
+        <div class="vocab-card" onclick="speakItalian(&#39;Per fare questo lavoro bisogna essere molto coraggiosi.&#39;)">
+          <div class="vocab-it">bisogna essere</div>
+          <div class="vocab-en">one needs to be / it is necessary to be</div>
+          <div class="vocab-hook">🪝 <strong>Hook:</strong> Impersonal rule—no subject needed! Just <em>bisogna</em> + infinitive.</div>
+          <span class="play-badge">🔊</span>
+        </div>
+        <div class="vocab-card" onclick="speakItalian(&#39;Ho provato a usare una corda.&#39;)">
+          <div class="vocab-it">provare a + infinito</div>
+          <div class="vocab-en">to try to do something</div>
+          <div class="vocab-hook">🪝 <strong>Hook:</strong> Always step onto the little stone <strong>"a"</strong> before trying an action.</div>
+          <span class="play-badge">🔊</span>
+        </div>
+        <div class="vocab-card" onclick="speakItalian(&#39;Ho visto delle foto incredibili. Elisa le ha fatte.&#39;)">
+          <div class="vocab-it">le ha fatte</div>
+          <div class="vocab-en">she took them (the photos)</div>
+          <div class="vocab-hook">🪝 <strong>Hook:</strong> <em>le</em> = feminine plural ("them" for <em>le foto</em>), so <em>fatte</em> ends in <strong>-e</strong>!</div>
+          <span class="play-badge">🔊</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Listening-First Circling Q&A -->
+    <div class="step-content" id="step2">
+      <div class="audio-bar">
+        <button class="tool-btn" id="btnHideQA" onclick="toggleHideQA()">🙈 Nascondi Testo (Pure Listening)</button>
+        <button class="tool-btn active" id="btnRateQA1" onclick="setRate(1.0)">1.0x</button>
+        <button class="tool-btn" id="btnRateQA08" onclick="setRate(0.8)">0.8x Slow</button>
+      </div>
+
+      <div class="circling-box">
+        <div class="q-card">
+          <div class="q-header">
+            <div class="q-title qa-text">1. Dove è andata Bea la settimana scorsa?</div>
+            <button class="tool-btn" onclick="speakItalian(&#39;Dove è andata Bea la settimana scorsa?&#39;)">🔊 Listen</button>
+          </div>
+          <div class="options">
+            <button class="opt-btn" onclick="checkAnswer(this, true, &#39;Esatto! È andata a Courmayeur, vicino al Monte Bianco.&#39;)">A Courmayeur</button>
+            <button class="opt-btn" onclick="checkAnswer(this, false, &#39;No, non è andata a Roma!&#39;)">A Roma</button>
+          </div>
+          <div class="feedback-msg"></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-header">
+            <div class="q-title qa-text">2. Bea usa bene la corda o la usa male?</div>
+            <button class="tool-btn" onclick="speakItalian(&#39;Bea usa bene la corda o la usa male?&#39;)">🔊 Listen</button>
+          </div>
+          <div class="options">
+            <button class="opt-btn" onclick="checkAnswer(this, false, &#39;Non è facile! Non la usa bene.&#39;)">La usa bene</button>
+            <button class="opt-btn" onclick="checkAnswer(this, true, &#39;Giusto! Lo fa male, ma è divertente provare.&#39;)">La usa male</button>
+          </div>
+          <div class="feedback-msg"></div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-header">
+            <div class="q-title qa-text">3. Chi ha fatto le foto incredibili delle montagne?</div>
+            <button class="tool-btn" onclick="speakItalian(&#39;Chi ha fatto le foto incredibili delle montagne?&#39;)">🔊 Listen</button>
+          </div>
+          <div class="options">
+            <button class="opt-btn" onclick="checkAnswer(this, true, &#39;Sì! Elisa le ha fatte durante le sue escursioni.&#39;)">Elisa le ha fatte</button>
+            <button class="opt-btn" onclick="checkAnswer(this, false, &#39;No, Bea ha solo visto le foto!&#39;)">Bea le ha fatte</button>
+          </div>
+          <div class="feedback-msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: 3-Button Scaffolding Ladder -->
+    <div class="step-content" id="step3">
+      <div class="audio-bar">
+        <button class="tool-btn" onclick="speakCurrentLadder()">🔊 Ascolta (Play)</button>
+        <button class="tool-btn" id="btnHideStory" onclick="toggleHideStory()">🙈 Nascondi Testo</button>
+        <button class="tool-btn active" id="btnRateSt1" onclick="setRate(1.0)">1.0x</button>
+        <button class="tool-btn" id="btnRateSt08" onclick="setRate(0.8)">0.8x Slow</button>
+      </div>
+
+      <div class="ladder-nav-container">
+        <button class="ladder-lvl-btn active" id="btnLvl1" onclick="selectLadderLevel(1)">
+          <span class="ladder-lvl-title">Level 1</span>
+          <span class="ladder-lvl-desc">Core Skeleton</span>
+        </button>
+        <button class="ladder-lvl-btn" id="btnLvl2" onclick="selectLadderLevel(2)">
+          <span class="ladder-lvl-title">Level 2</span>
+          <span class="ladder-lvl-desc">+ Details & Action</span>
+        </button>
+        <button class="ladder-lvl-btn" id="btnLvl3" onclick="selectLadderLevel(3)">
+          <span class="ladder-lvl-title">Level 3</span>
+          <span class="ladder-lvl-desc">Full Episode Text</span>
+        </button>
+      </div>
+
+      <div class="text-display" id="ladderText"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let audioCtx = null;
+  let speechRate = 1.0;
+  let hideQA = false;
+  let hideStory = false;
+
+  function initAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  function playTone(freqStart, freqEnd, duration, type = 'sine') {
+    try {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freqStart, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(freqEnd, audioCtx.currentTime + duration);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
+  }
+
+  function triggerCameraFlash() {
+    playTone(900, 300, 0.08, 'square');
+    const flash = document.getElementById('flashOverlay');
+    flash.style.opacity = '0.85';
+    setTimeout(() => { flash.style.opacity = '0'; }, 140);
+  }
+
+  // Italian Neural Voice Selector
+  let cachedItVoice = null;
+  function findItalianVoice() {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices();
+    const itVoices = voices.filter(v => v.lang.includes('it'));
+    if (itVoices.length === 0) return null;
+    return itVoices.find(v => v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Elsa') || v.name.includes('Isabella')) || itVoices[0];
+  }
+
+  if ('speechSynthesis' in window) {
+    cachedItVoice = findItalianVoice();
+    window.speechSynthesis.onvoiceschanged = () => { cachedItVoice = findItalianVoice(); };
+  }
+
+  function speakItalian(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'it-IT';
+    u.rate = speechRate;
+    if (!cachedItVoice) cachedItVoice = findItalianVoice();
+    if (cachedItVoice) u.voice = cachedItVoice;
+    window.speechSynthesis.speak(u);
+  }
+
+  function setRate(r) {
+    speechRate = r;
+    document.querySelectorAll('#btnRateQA1, #btnRateSt1').forEach(b => b.classList.toggle('active', r === 1.0));
+    document.querySelectorAll('#btnRateQA08, #btnRateSt08').forEach(b => b.classList.toggle('active', r === 0.8));
+  }
+
+  // Interactive Stage Events
+  const speechBubble = document.getElementById('speechBubble');
+  let bubbleTimer = null;
+
+  function showSceneBubble(it, en) {
+    speakItalian(it);
+    speechBubble.innerHTML = `<div>${it}</div><div style="font-size:0.78rem; color:var(--sub); font-weight:normal;">${en}</div>`;
+    speechBubble.style.display = 'block';
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => { speechBubble.style.display = 'none'; }, 3200);
+  }
+
+  document.getElementById('elisaGroup').addEventListener('click', () => {
+    playTone(400, 620, 0.14);
+    showSceneBubble('Per fare questo lavoro bisogna essere molto coraggiosi!', 'To do this job one needs to be very brave!');
+  });
+
+  document.getElementById('beaGroup').addEventListener('click', () => {
+    triggerCameraFlash();
+    showSceneBubble('Preferisco guardare le montagne dal basso!', 'I prefer to look at the mountains from below!');
+  });
+
+  document.getElementById('ropeGroup').addEventListener('click', () => {
+    playTone(220, 480, 0.16, 'triangle');
+    showSceneBubble('Ho provato a usare una corda. Non è facile!', 'I tried to use a rope. It is not easy!');
+  });
+
+  document.getElementById('photosGroup').addEventListener('click', () => {
+    playTone(520, 780, 0.12);
+    showSceneBubble('Ho visto delle foto incredibili. Elisa le ha fatte!', 'I saw incredible photos. Elisa took them!');
+  });
+
+  function switchStep(idx) {
+    initAudio();
+    document.querySelectorAll('.step-btn').forEach((b, i) => b.classList.toggle('active', i === idx - 1));
+    document.querySelectorAll('.step-content').forEach((c, i) => c.classList.toggle('active', i === idx - 1));
+  }
+
+  function toggleHideQA() {
+    hideQA = !hideQA;
+    document.getElementById('btnHideQA').classList.toggle('active', hideQA);
+    document.querySelectorAll('.qa-text').forEach(el => el.classList.toggle('blur-text', hideQA));
+  }
+
+  function checkAnswer(btn, isCorrect, msg) {
+    initAudio();
+    const parent = btn.closest('.q-card');
+    parent.querySelectorAll('.opt-btn').forEach(b => b.className = 'opt-btn');
+    btn.className = 'opt-btn ' + (isCorrect ? 'correct' : 'wrong');
+    const fb = parent.querySelector('.feedback-msg');
+    fb.style.display = 'block';
+    fb.style.color = isCorrect ? '#15803d' : '#b91c1c';
+    fb.innerText = msg;
+    if (isCorrect) playTone(440, 660, 0.12);
+  }
+
+  // 3-Tier Scaffolding Ladder Data
+  let currentLadderIdx = 1;
+  const ladderData = [
+    {
+      it: "La settimana scorsa Bea è andata a Courmayeur e ha parlato con Elisa. Elisa è una guida di montagna. Bea ha provato a usare una corda, ma non è facile.",
+      en: "Last week Bea went to Courmayeur and spoke with Elisa. Elisa is a mountain guide. Bea tried to use a rope, but it isn't easy."
+    },
+    {
+      it: "La settimana scorsa Bea è andata a Courmayeur, vicino al Monte Bianco. Lì ha parlato con Elisa, una guida molto esperta che lavora da dieci anni. Per fare questo lavoro bisogna essere coraggiosi. Bea ha visto delle foto incredibili: Elisa le ha fatte durante le sue escursioni!",
+      en: "Last week Bea went to Courmayeur, near Mont Blanc. There she spoke with Elisa, a very experienced guide who has worked for ten years. To do this job one must be brave. Bea saw incredible photos: Elisa took them during her excursions!"
+    },
+    {
+      it: "Io sono Bea, e oggi parleremo delle guide di montagna nelle Alpi italiane. La settimana scorsa sono andata a Courmayeur, una città piccola vicino al Monte Bianco. Lì ho parlato con Elisa, una guida di montagna molto esperta. Elisa lavora come guida da dieci anni. Per fare questo lavoro bisogna essere molto coraggiosi. Elisa mi ha mostrato il suo equipaggiamento. Ho provato a usare una corda. Non è facile! Lo faccio male, ma è divertente provare. Ho visto delle foto incredibili delle montagne. Elisa le ha fatte durante le sue escursioni. Elisa è davvero coraggiosa. Io preferisco guardare le montagne dal basso! Ma forse un giorno proverò a scalare una montagna piccola. Chi lo sa?",
+      en: "Full Episode Transcript (Unit 39: Le guide di montagna a Courmayeur)"
+    }
+  ];
+
+  function renderLadder() {
+    const d = ladderData[currentLadderIdx - 1];
+    const blurClass = hideStory ? 'blur-text' : '';
+    document.getElementById('ladderText').innerHTML = `
+      <div class="${blurClass}"><strong>${d.it}</strong></div>
+      <span class="en-sub ${blurClass}">${d.en}</span>
+    `;
+  }
+
+  function selectLadderLevel(lvl) {
+    initAudio();
+    currentLadderIdx = lvl;
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById('btnLvl' + i).classList.toggle('active', i === lvl);
+    }
+    renderLadder();
+  }
+
+  function toggleHideStory() {
+    hideStory = !hideStory;
+    document.getElementById('btnHideStory').classList.toggle('active', hideStory);
+    renderLadder();
+  }
+
+  function speakCurrentLadder() {
+    speakItalian(ladderData[currentLadderIdx - 1].it);
+  }
+
+  selectLadderLevel(1);
+</script>
+
+</body>
+</html>
