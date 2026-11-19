@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="it">
+<head><script type='text/javascript' nonce='SPNP947zHtiqfycA2YD1cw==' src='https://contribution.usercontent.google.com/JmAM7tHEkmLfzIYbzotM6swW-zZXbqkYqUZPMoR0Mpuj4z-JpI7fPkILzavxs0rx3jimZqI-f3VbvB2YG8M5D20hiyEhc2ai_3eNF6hTVcT_XpvpRE-d2WgPHmf-XDWCCgYGZjji8wRuRRQksdoHe-9O3yqeMTXwaGfJAQe-P-Ik2rJMEM9-p-t6cIlvgmWetUxY448SALt9w9OUHlB_ahoxwddr7y-bWs4ySf4boSW_WmnBbiPqRRrnP469g1Bz0B2FQpM0pJSPGFxCufc0XIbX3VxI93M51vRP2IlT56SRcWp2fju5-MOszWlflgBS53d9w79rfH4vP3P-ikhzBrcE-Wcv8RNCMdT0MsCKcDXoHv4T1hWc_bVk9NmgDTgUDsMivye97H6WT4kFUkAVneFJPfsxRWdGQ4lWpB-A6niW8OyaoJsdB4trEWkfARR15A-29LpfNeagKvEsVfE54OymNouDlrTGGVHHjXUhwZvqfWcJxYrni9uJDVS3jTHNXWbUhOYRoPBDAIlX0LwdnZoHOIllr0Q4VrqrZ4oNdu0onvMcrKBpj6HQHAfj7WWIBZ_2Wm7hhX0TKF98xw1hLaSCQ0QxDvFvdKVnbVv0YvGa7GNruR1GoW9YTOY4tnViR4COaqRsm00YCnpRwSJ-j0wtbA5YuZ77uCZdtoyJYtp2AVi210EcQzcwzKAPettt3lby-uyGMEgQpxtnXu3jIBqkIgcIQJBIkefMtg'></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unit 40 · Le domande di Junior (Track A Spiral TPRS)</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --primary: #1f6feb;
+      --primary-soft: #eef5ff;
+      --accent: #0969da;
+      --text: #1f2328;
+      --muted: #59636e;
+      --border: #d0d7de;
+      --success: #1a7f37;
+      --success-soft: #dafbe1;
+      --warn: #9a6700;
+      --warn-soft: #fff8c5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding-bottom: 60px;
+    }
+    header {
+      background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+      color: #fff;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    header h1 {
+      margin: 4px 0 6px;
+      font-size: 1.55rem;
+    }
+    header p {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.92;
+    }
+    .nav-bar {
+      max-width: 860px;
+      margin: 14px auto 0;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .back-link {
+      text-decoration: none;
+      color: #2d6a4f;
+      font-weight: 600;
+      font-size: 0.92rem;
+      background: #fff;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .controls-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { background: #f0f3f6; }
+    .btn.active {
+      background: #2d6a4f;
+      color: #fff;
+      border-color: #2d6a4f;
+    }
+    .container {
+      max-width: 860px;
+      margin: 16px auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .section-title {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 1.18rem;
+      color: #1b4332;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #eaeef2;
+      padding-bottom: 8px;
+    }
+    .hook-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    .hook-item {
+      background: #f8faf9;
+      border: 1px solid #dce6e0;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .hook-it {
+      font-weight: 700;
+      font-size: 1.04rem;
+      color: #1b4332;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .hook-en {
+      font-size: 0.9rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .hook-note {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .speak-btn {
+      border: none;
+      background: #e6f2ec;
+      color: #1b4332;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+    .speak-btn:hover {
+      background: #cde5d8;
+      transform: scale(1.06);
+    }
+    .version-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .version-tag {
+      background: #e6f2ec;
+      color: #1b4332;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+    .play-all-btn {
+      background: #2d6a4f;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .play-all-btn:hover { background: #1b4332; }
+    .line {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: #fbfcfd;
+      border: 1px solid #eef1f4;
+    }
+    .line.new-spiral {
+      border-left: 4px solid #2d6a4f;
+      background: #f6fbf8;
+    }
+    .line-text { flex: 1; }
+    .it-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      transition: filter 0.2s ease;
+    }
+    .en-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 2px;
+      transition: filter 0.2s ease;
+    }
+    /* Blind listening masks */
+    body.mask-en .en-text {
+      filter: blur(5px);
+      user-select: none;
+      cursor: pointer;
+    }
+    body.mask-en .en-text:hover { filter: none; }
+    body.mask-all .it-text,
+    body.mask-all .en-text {
+      filter: blur(6px);
+      user-select: none;
+      cursor: pointer;
+    }
+    body.mask-all .line:hover .it-text,
+    body.mask-all .line:hover .en-text {
+      filter: none;
+    }
+    .xray-box {
+      background: var(--warn-soft);
+      border: 1px solid #eed888;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .xray-box h4 {
+      margin: 0 0 6px;
+      color: #6e4b00;
+      font-size: 0.98rem;
+    }
+    .xray-box p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #3b2e00;
+    }
+    .speed-select {
+      padding: 5px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">UNIT 40 · TRACK A · SPIRAL TPRS LAB</div>
+    <h1>Le domande di Junior: Perché papà è così drammatico?</h1>
+    <p>Italiano + English Bilingual Scaffolding · Family Health &amp; Indirect Pronouns (gli / le / ti)</p>
+  </header>
+
+  <div class="nav-bar">
+    <a href="index.html" class="back-link">← Bookshelf (书架)</a>
+    <div class="controls-bar">
+      <select id="rateSelect" class="speed-select" title="Speech Rate">
+        <option value="0.75">🐢 0.75x Slow</option>
+        <option value="0.9" selected="">🎧 0.90x Clear</option>
+        <option value="1.0">⚡ 1.00x Normal</option>
+      </select>
+      <button class="btn active" id="modeFull" onclick="setMask(&#39;full&#39;)">👁️ Full Text</button>
+      <button class="btn" id="modeMaskEn" onclick="setMask(&#39;mask-en&#39;)">🙈 Hide English</button>
+      <button class="btn" id="modeMaskAll" onclick="setMask(&#39;mask-all&#39;)">🎧 Blind Listen</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- PART 1: ESTABLISH MEANING -->
+    <section class="card">
+      <h2 class="section-title">Part 1 · Establish Meaning (核心引擎词块锚定)</h2>
+      <p style="font-size:0.9rem; color:var(--muted); margin-top:0;">
+        先听熟这 4 个推动全篇的“引擎词块”与英语同源词挂钩（Cognate Anchors），不背孤立生词表：
+      </p>
+      <div class="hook-grid">
+        <div class="hook-item">
+          <div class="hook-it">
+            <span>essere drammatico / stare malissimo</span>
+            <button class="speak-btn" onclick="speakText(&#39;essere drammatico, stare malissimo&#39;)">🔊</button>
+          </div>
+          <div class="hook-en">to be dramatic / to feel terrible</div>
+          <div class="hook-note">🔗 Cognate: <b>dramatic</b>；<i>malissimo</i> = <i>mal</i> (bad) + <i>-issimo</i> (super/very)</div>
+        </div>
+
+        <div class="hook-item">
+          <div class="hook-it">
+            <span>il raffreddore / mal di testa / mal di gola</span>
+            <button class="speak-btn" onclick="speakText(&#39;il raffreddore, mal di testa, mal di gola&#39;)">🔊</button>
+          </div>
+          <div class="hook-en">a cold / headache / sore throat</div>
+          <div class="hook-note">💡 <i>freddo</i> = cold (受凉感冒)；<i>gola</i> = 喝水“咕噜”响的喉咙</div>
+        </div>
+
+        <div class="hook-item">
+          <div class="hook-it">
+            <span>avere bisogno di riposo per guarire</span>
+            <button class="speak-btn" onclick="speakText(&#39;avere bisogno di riposo per guarire&#39;)">🔊</button>
+          </div>
+          <div class="hook-en">to need rest in order to recover</div>
+          <div class="hook-note">🔗 Cognate: <i>riposo</i> ↔ <b>repose / rest</b>；<i>guarire</i> = 康复变好</div>
+        </div>
+
+        <div class="hook-item">
+          <div class="hook-it">
+            <span>Perché non gli dico...?</span>
+            <button class="speak-btn" onclick="speakText(&#39;Perché non gli dico la stessa cosa?&#39;)">🔊</button>
+          </div>
+          <div class="hook-en">Why don't I tell him...?</div>
+          <div class="hook-note">🎯 核心代词：<b>gli</b> = to him (对爸爸说)；对比 <b>le</b> = to her (对妈妈说)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERSION 1 -->
+    <section class="card" id="v1">
+      <div class="version-header">
+        <div>
+          <span class="version-tag">VERSION 1 · 极简骨架版 (6 Lines)</span>
+          <span style="font-size:0.85rem; color:var(--muted); margin-left:8px;">砍掉所有复杂长句，只建立画面</span>
+        </div>
+        <button class="play-all-btn" onclick="playSection(&#39;v1&#39;)">▶ Play V1</button>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Io sono Junior e oggi ho una domanda sulla salute.</div>
+          <div class="en-text">I am Junior and today I have a question about health.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Giorgia è una farmacista e aiuta le persone malate ogni giorno.</div>
+          <div class="en-text">Giorgia is a pharmacist and helps sick people every day.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Mio papà è molto drammatico quando è malato!</div>
+          <div class="en-text">My dad is very dramatic when he is sick!</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Con un piccolo raffreddore, lui sta a letto tutto il giorno.</div>
+          <div class="en-text">With a small cold, he stays in bed all day.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Dice che sta malissimo, ma guarda la televisione e mangia il gelato!</div>
+          <div class="en-text">He says he feels terrible, but he watches TV and eats ice cream!</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Io, con il raffreddore, vado a scuola e gioco!</div>
+          <div class="en-text">I, with a cold, go to school and play!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERSION 2 -->
+    <section class="card" id="v2">
+      <div class="version-header">
+        <div>
+          <span class="version-tag">VERSION 2 · 螺旋扩写版 (Spiral +30%)</span>
+          <span style="font-size:0.85rem; color:var(--muted); margin-left:8px;">绿边为新增句子：加入 Giorgia 的解释与 “gli dico”</span>
+        </div>
+        <button class="play-all-btn" onclick="playSection(&#39;v2&#39;)">▶ Play V2</button>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Giorgia, perché mio papà è così drammatico quando è malato?</div>
+          <div class="en-text">Giorgia, why is my dad so dramatic when he is sick?</div>
+        </div>
+      </div>
+
+      <div class="line new-spiral">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Quando gli adulti lavorano molto, il corpo ha bisogno di più riposo per guarire.</div>
+          <div class="en-text">When adults work a lot, the body needs more rest to recover.</div>
+        </div>
+      </div>
+
+      <div class="line new-spiral">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">I bambini hanno molta energia e guariscono più velocemente.</div>
+          <div class="en-text">Children have a lot of energy and recover more quickly.</div>
+        </div>
+      </div>
+
+      <div class="line new-spiral">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Quando io ho mal di testa, la maestra dice: "Bevi un po' d'acqua e ti passerà!"</div>
+          <div class="en-text">When I have a headache, the teacher says: "Drink a little water and it will pass!"</div>
+        </div>
+      </div>
+
+      <div class="line new-spiral">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Perché non gli dico la stessa cosa a papà?</div>
+          <div class="en-text">Why don't I tell Dad the same thing? (lit. tell him the same thing to Dad)</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Mio papà dice che sta malissimo, ma poi guarda la televisione tutto il giorno mangiando gelato!</div>
+          <div class="en-text">My dad says he feels terrible, but then he watches TV all day eating ice cream!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERSION 3 -->
+    <section class="card" id="v3">
+      <div class="version-header">
+        <div>
+          <span class="version-tag">VERSION 3 · 完整电台解密版 (Full Story &amp; Warm Twist)</span>
+          <span style="font-size:0.85rem; color:var(--muted); margin-left:8px;">攻克原文抽象词 + 暖心大反转</span>
+        </div>
+        <button class="play-all-btn" onclick="playSection(&#39;v3&#39;)">▶ Play V3</button>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Il riposo è importante per guarire! E il gelato può aiutare con il mal di gola.</div>
+          <div class="en-text">Rest is important to recover! And ice cream can help with a sore throat.</div>
+        </div>
+      </div>
+
+      <div class="line new-spiral">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Guardare la televisione non è una medicina, ma rilassarsi aiuta il corpo a combattere il raffreddore.</div>
+          <div class="en-text">Watching TV is not a medicine, but relaxing helps the body fight the cold.</div>
+        </div>
+      </div>
+
+      <div class="line new-spiral">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Il tuo papà si preoccupa anche di non trasmetterti il raffreddore, quindi sta lontano e riposa.</div>
+          <div class="en-text">Your dad also worries about not passing the cold to you, so he stays away and rests.</div>
+        </div>
+      </div>
+
+      <div class="line new-spiral">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Oh, non ci avevo pensato! Quindi papà mi protegge quando sta a letto?</div>
+          <div class="en-text">Oh, I hadn't thought of that! So Dad protects me when he stays in bed?</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Esatto! E quando riposa bene, guarisce più velocemente e può tornare a giocare con te!</div>
+          <div class="en-text">Exactly! And when he rests well, he recovers faster and can come back to play with you!</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Ora capisco! Il riposo è importante per tutti, grandi e piccoli!</div>
+          <div class="en-text">Now I understand! Rest is important for everyone, big and small!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART 3: POP-UP GRAMMAR X-RAY -->
+    <section class="card">
+      <h2 class="section-title">Part 3 · Pop-up Grammar X-Ray (5 秒快闪语法透视)</h2>
+
+      <div class="xray-box">
+        <h4>1. 为什么说 "Perché non <u>gli</u> dico la stessa cosa a papà?"</h4>
+        <p>
+          • <b>gli</b> = <b>to him</b>（对他 / 给爸爸）。意大利语口语里经常把代词 <b>gli</b> 和后面的 <b>a papà</b> 放在一起用，起到强调作用（“为什么我不<strong>对他</strong>——对爸爸——说同样的话？”）。<br>
+          • 对比记忆：如果换成对妈妈说，就把 <b>gli</b> 换成 <b>le</b>（<i>Perché non <b>le</b> dico...?</i>）。
+        </p>
+      </div>
+
+      <div class="xray-box">
+        <h4>2. "Bevi un po' d'acqua e <u>ti</u> passerà!" (喝点水，它就会离开你 / 会好的！)</h4>
+        <p>
+          • <b>passerà</b> 是 <i>passare</i>（过去、消退）的将来时，主语是隐含的“头疼（il mal di testa）”。<br>
+          • <b>ti</b> = to you（对你而言），合起来就是“头疼对你而言会消退的” = “很快就会好的”。
+        </p>
+      </div>
+
+      <div class="xray-box">
+        <h4>3. "non trasmetter<u>ti</u> il raffreddore" (不把感冒传染<u>给你</u>)</h4>
+        <p>
+          • 动词原形 <i>trasmettere</i>（🔗 Cognate: <b>transmit</b> 传播/传染）遇到代词 <b>ti</b>（to you）时，去掉词尾的 <i>-e</i>，直接把 <b>ti</b> 粘在尾巴上：<i>trasmettere + ti</i> &rarr; <b>trasmetterti</b>！<br>
+          • 同样规律：<i>aiutar<b>ti</b></i>（帮你）、<i>dir<b>gli</b></i>（告诉他）。
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let italianVoice = null;
+
+    function loadVoices() {
+      const voices = window.speechSynthesis.getVoices();
+      italianVoice = voices.find(v => v.lang === 'it-IT' && v.name.includes('Google'))
+                  || voices.find(v => v.lang.startsWith('it'))
+                  || null;
+    }
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    function speakText(text, onEndCallback = null) {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'it-IT';
+      if (italianVoice) utter.voice = italianVoice;
+      utter.rate = parseFloat(document.getElementById('rateSelect').value) || 0.9;
+      if (onEndCallback) utter.onend = onEndCallback;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function speakLine(btn) {
+      const lineDiv = btn.closest('.line');
+      const itText = lineDiv.querySelector('.it-text').innerText;
+      speakText(itText);
+    }
+
+    function playSection(sectionId) {
+      window.speechSynthesis.cancel();
+      const lines = Array.from(document.querySelectorAll(`#${sectionId} .line .it-text`))
+                         .map(el => el.innerText);
+      let idx = 0;
+      function next() {
+        if (idx >= lines.length) return;
+        const currentText = lines[idx++];
+        speakText(currentText, () => {
+          setTimeout(next, 450);
+        });
+      }
+      next();
+    }
+
+    function setMask(mode) {
+      document.body.classList.remove('mask-en', 'mask-all');
+      document.getElementById('modeFull').classList.remove('active');
+      document.getElementById('modeMaskEn').classList.remove('active');
+      document.getElementById('modeMaskAll').classList.remove('active');
+
+      if (mode === 'mask-en') {
+        document.body.classList.add('mask-en');
+        document.getElementById('modeMaskEn').classList.add('active');
+      } else if (mode === 'mask-all') {
+        document.body.classList.add('mask-all');
+        document.getElementById('modeMaskAll').classList.add('active');
+      } else {
+        document.getElementById('modeFull').classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>
