@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="it">
+<head><script type='text/javascript' nonce='fBZPIymFEQ9psV1238Qc6A==' src='https://contribution.usercontent.google.com/4BWDR23gvS06RHTdTzoBiEQz-T6syaCOOPa_CT8JZRMXysKUel6BJ3b1M1rzIE_WECyFXsIwrCqr-b7KgO7R7Boc82NDrDY2PD0AW7FgT1Lhohx9JE0XpnWCW_55ODf-6A6UEdMmuiZfl7zAebkd2b_SSdeApy7KwtSMei9nNzkuMojsbdkbG_QkMbFaG0daTSWaEXzupyr08UdzQUMCCYSVWC1KfPO7J_qHUJaBpCuPAjuKG6uq1qhw9uL9JkWsWj4jCRgnBYHo21pFCs1_eIiXRMUgZkFsnGdU0tCM__P7-F472mn7FoqXNEl0fyx3tb9q4ke1aVTsODVhWNPFSypDNyLSC_wHc37j7HlnnjTBIx_dxEGNgHiF9DxdUPZ-j8qfL0LpnO-GDcy63T-Ll-xr10iiYPLsa8aWG6XarHsNyFKagx74eiOOUvdAwC_wGYTWjGLRVObZqIOywLufmcqQMQjA-7LKr0EP9IKR0QwKWyzC-VY7YTKkx5gkn66Uq-oYy_uiynpiWi57Eo4xQ_8yA40Yf0F1cWuPP82MTY1gu2KkyxY4X9y8EWkMWY-cyMlAV4wEuurqcjhKMC3ZF0bEnVsA79xjCvtKScdUBHQc39UKzYLAHC2m4Nyx9qdQtCEYtycBR06GmeNjBvDP185HlprgaerRcOpRpmigLE-mviQojR1mZHSIpPfCYMrKN2ZFYFZVHEY9fSVrC4zxEHKCiH0o7uvXYawF758u5Q'></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Foundations · Units 1–5 Survival Mash-Up (TPRS Maintenance Deck)</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --accent: #0969da;
+      --text: #1f2328;
+      --muted: #59636e;
+      --border: #d0d7de;
+      --theme: #2d6a4f;
+      --theme-dark: #1b4332;
+      --theme-soft: #e6f2ec;
+      --warm-soft: #fff8e6;
+      --warm-border: #f0d78c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding-bottom: 60px;
+    }
+    header {
+      background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+      color: #fff;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    header h1 {
+      margin: 4px 0 6px;
+      font-size: 1.55rem;
+    }
+    header p {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.92;
+    }
+    .nav-bar {
+      max-width: 860px;
+      margin: 14px auto 0;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .back-link {
+      text-decoration: none;
+      color: var(--theme);
+      font-weight: 600;
+      font-size: 0.92rem;
+      background: #fff;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .controls-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { background: #f0f3f6; }
+    .btn.active {
+      background: var(--theme);
+      color: #fff;
+      border-color: var(--theme);
+    }
+    .speed-select {
+      padding: 5px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      background: #fff;
+    }
+    .container {
+      max-width: 860px;
+      margin: 16px auto;
+      padding: 0 16px;
+    }
+    .coffee-banner {
+      background: var(--warm-soft);
+      border: 1px solid var(--warm-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .coffee-banner h3 {
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+      color: #6e4b00;
+    }
+    .coffee-banner p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: #5c4300;
+    }
+    .coffee-btn {
+      background: #9a6700;
+      color: #fff;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .coffee-btn:hover { background: #7a5200; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .section-title {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 1.18rem;
+      color: var(--theme-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #eaeef2;
+      padding-bottom: 8px;
+    }
+    .version-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .version-tag {
+      background: var(--theme-soft);
+      color: var(--theme-dark);
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+    .play-all-btn {
+      background: var(--theme);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .play-all-btn:hover { background: var(--theme-dark); }
+    .speak-btn {
+      border: none;
+      background: var(--theme-soft);
+      color: var(--theme-dark);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+    .speak-btn:hover {
+      background: #cde5d8;
+      transform: scale(1.06);
+    }
+    .line {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: #fbfcfd;
+      border: 1px solid #eef1f4;
+    }
+    .line-text { flex: 1; }
+    .it-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      transition: filter 0.2s ease;
+    }
+    .en-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 2px;
+      transition: filter 0.2s ease;
+    }
+    body.mask-en .en-text {
+      filter: blur(5px);
+      user-select: none;
+      cursor: pointer;
+    }
+    body.mask-en .en-text:hover { filter: none; }
+    body.mask-all .it-text,
+    body.mask-all .en-text {
+      filter: blur(6px);
+      user-select: none;
+      cursor: pointer;
+    }
+    body.mask-all .line:hover .it-text,
+    body.mask-all .line:hover .en-text {
+      filter: none;
+    }
+    .pov-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .pov-tab {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .pov-tab.active {
+      background: var(--theme-dark);
+      color: #fff;
+      border-color: var(--theme-dark);
+    }
+    .pov-panel { display: none; }
+    .pov-panel.active { display: block; }
+    .chunk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+    .chunk-pill {
+      background: #f8faf9;
+      border: 1px solid #dce6e0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">FOUNDATIONS · UNITS 1–5 MAINTENANCE DECK</div>
+    <h1>Survival Mash-Up: Un Caffè, Un Treno e Una Famiglia!</h1>
+    <p>Italiano + English Bilingual Loop · Core Bricks (essere, avere, andare, prendere, vorrei)</p>
+  </header>
+
+  <div class="nav-bar">
+    <a href="index.html" class="back-link">← Bookshelf (书架)</a>
+    <div class="controls-bar">
+      <select id="rateSelect" class="speed-select" title="Speech Rate">
+        <option value="0.85">🐢 0.85x Relaxed</option>
+        <option value="1.0" selected="">☕ 1.00x Natural</option>
+        <option value="1.15">⚡ 1.15x Native</option>
+      </select>
+      <button class="btn active" id="modeFull" onclick="setMask(&#39;full&#39;)">👁️ Full Text</button>
+      <button class="btn" id="modeMaskEn" onclick="setMask(&#39;mask-en&#39;)">🙈 Hide English</button>
+      <button class="btn" id="modeMaskAll" onclick="setMask(&#39;mask-all&#39;)">🎧 Blind Listen</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- MORNING COFFEE HANDS-FREE AUTO-PLAY -->
+    <div class="coffee-banner">
+      <div>
+        <h3>☕ Morning Coffee 5-Minute Blind Loop</h3>
+        <p>Hit play once to listen hands-free through all 3 survival scenes at natural speed.</p>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="coffee-btn" onclick="playAllScenes()">▶ Play All Scenes</button>
+        <button class="btn" onclick="stopAudio()">⏹ Stop</button>
+      </div>
+    </div>
+
+    <!-- SCENE 1: AL BAR -->
+    <section class="card scene-block" id="scene1">
+      <div class="version-header">
+        <div>
+          <span class="version-tag">SCENE 1 · AL BAR (Ordering &amp; Polite Register)</span>
+          <span style="font-size:0.85rem; color:var(--muted); margin-left:8px;">vorrei / prendere / Lei vs. tu</span>
+        </div>
+        <button class="play-all-btn" onclick="playSection(&#39;scene1&#39;)">▶ Play Scene 1</button>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Buongiorno! Scusi, Lei parla inglese? No? Perfetto, parlo un po' d'italiano!</div>
+          <div class="en-text">Good morning! Excuse me, do you (formal) speak English? No? Perfect, I speak a little Italian!</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Vorrei un cappuccino caldo e un cornetto alla crema, per favore.</div>
+          <div class="en-text">I would like a hot cappuccino and a cream croissant, please.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Mio marito invece prende sempre un caffè espresso e un bicchiere d'acqua.</div>
+          <div class="en-text">My husband instead always gets an espresso coffee and a glass of water.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Quanto costa tutto? Cinque euro? Ecco a Lei, grazie mille!</div>
+          <div class="en-text">How much does everything cost? Five euros? Here you are (formal), thanks a lot!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 2: IN VIAGGIO & DIREZIONI -->
+    <section class="card scene-block" id="scene2">
+      <div class="version-header">
+        <div>
+          <span class="version-tag">SCENE 2 · IN VIAGGIO (Travel, Directions &amp; Time)</span>
+          <span style="font-size:0.85rem; color:var(--muted); margin-left:8px;">dov'è / andare / avere fretta</span>
+        </div>
+        <button class="play-all-btn" onclick="playSection(&#39;scene2&#39;)">▶ Play Scene 2</button>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Scusa, sai dov'è la stazione dei treni? Abbiamo un treno per Firenze alle dieci!</div>
+          <div class="en-text">Excuse me (informal), do you know where the train station is? We have a train to Florence at ten!</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Vai sempre dritto fino alla piazza grande, poi gira a sinistra vicino alla farmacia.</div>
+          <div class="en-text">Go straight ahead up to the big square, then turn left near the pharmacy.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Non abbiamo la macchina oggi, quindi andiamo a piedi con due valigie pesanti.</div>
+          <div class="en-text">We don't have the car today, so we are going on foot with two heavy suitcases.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Che fortuna! Arriviamo al binario tre giusto in tempo.</div>
+          <div class="en-text">What luck! We arrive at platform three right on time.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 3: FAMIGLIA & ROUTINE -->
+    <section class="card scene-block" id="scene3">
+      <div class="version-header">
+        <div>
+          <span class="version-tag">SCENE 3 · FAMIGLIA E CASA (Origin, Family &amp; Daily Joy)</span>
+          <span style="font-size:0.85rem; color:var(--muted); margin-left:8px;">essere di / vivere / piacere</span>
+        </div>
+        <button class="play-all-btn" onclick="playSection(&#39;scene3&#39;)">▶ Play Scene 3</button>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">Ciao! Io sono di Cleveland, ma oggi sono in vacanza in Italia con la mia famiglia.</div>
+          <div class="en-text">Hi! I am from Cleveland, but today I am on vacation in Italy with my family.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">I nostri figli vivono in un'altra città, ma ci chiamano ogni domenica sera.</div>
+          <div class="en-text">Our sons live in another city, but they call us every Sunday evening.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">La mattina ci piace camminare nel parco e guardare gli uccelli sugli alberi.</div>
+          <div class="en-text">In the morning we like to walk in the park and watch the birds in the trees.</div>
+        </div>
+      </div>
+
+      <div class="line">
+        <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+        <div class="line-text">
+          <div class="it-text">La sera cuciniamo la pasta fresca insieme e beviamo un buon bicchiere di vino rosso.</div>
+          <div class="en-text">In the evening we cook fresh pasta together and drink a good glass of red wine.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TPRS POV TIME-TRAVEL SHIFT -->
+    <section class="card">
+      <h2 class="section-title">TPRS Time-Travel Drill · POV Shift (Oggi vs. Ieri)</h2>
+      <p style="font-size:0.9rem; color:var(--muted); margin-top:0;">
+        Keep the exact same Units 1–5 vocabulary, and switch the time frame between <b>Present (Oggi)</b> and <b>Past (Ieri)</b>:
+      </p>
+      <div class="pov-tabs">
+        <button class="pov-tab active" onclick="switchPov(&#39;oggi&#39;, this)">☀️ Oggi (Present Tense)</button>
+        <button class="pov-tab" onclick="switchPov(&#39;ieri&#39;, this)">🕰️ Ieri (Past Tense · Passato Prossimo)</button>
+      </div>
+
+      <div id="pov-oggi" class="pov-panel active">
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Oggi io vado al bar, prendo un caffè e parlo con il barista.</div>
+            <div class="en-text">Today I go to the café, get a coffee, and speak with the barista.</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Poi noi compriamo il pane fresco e torniamo a casa a piedi.</div>
+            <div class="en-text">Then we buy fresh bread and return home on foot.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pov-ieri" class="pov-panel">
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Ieri io sono andata al bar, ho preso un caffè e ho parlato con il barista.</div>
+            <div class="en-text">Yesterday I went (fem.) to the café, got a coffee, and spoke with the barista.</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Poi noi abbiamo comprato il pane fresco e siamo tornati a casa a piedi.</div>
+            <div class="en-text">Then we bought fresh bread and returned home on foot.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CORE SURVIVAL BRICKS -->
+    <section class="card">
+      <h2 class="section-title">Units 1–5 High-Frequency Survival Bricks (Quick Tap)</h2>
+      <div class="chunk-grid">
+        <div class="chunk-pill">
+          <div>
+            <div style="font-weight:700; color:var(--theme-dark);">Vorrei...</div>
+            <div style="font-size:0.82rem; color:var(--muted);">I would like...</div>
+          </div>
+          <button class="speak-btn" onclick="speakText(&#39;Vorrei un caffè, per favore.&#39;)">🔊</button>
+        </div>
+        <div class="chunk-pill">
+          <div>
+            <div style="font-weight:700; color:var(--theme-dark);">Dov'è...?</div>
+            <div style="font-size:0.82rem; color:var(--muted);">Where is...?</div>
+          </div>
+          <button class="speak-btn" onclick="speakText(&#39;Scusi, dov’è la stazione?&#39;)">🔊</button>
+        </div>
+        <div class="chunk-pill">
+          <div>
+            <div style="font-weight:700; color:var(--theme-dark);">Quanto costa?</div>
+            <div style="font-size:0.82rem; color:var(--muted);">How much does it cost?</div>
+          </div>
+          <button class="speak-btn" onclick="speakText(&#39;Quanto costa questo libro?&#39;)">🔊</button>
+        </div>
+        <div class="chunk-pill">
+          <div>
+            <div style="font-weight:700; color:var(--theme-dark);">Sono di...</div>
+            <div style="font-size:0.82rem; color:var(--muted);">I am from...</div>
+          </div>
+          <button class="speak-btn" onclick="speakText(&#39;Sono di Cleveland, negli Stati Uniti.&#39;)">🔊</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let italianVoice = null;
+    let isPlayingSequence = false;
+
+    function loadVoices() {
+      const voices = window.speechSynthesis.getVoices();
+      italianVoice = voices.find(v => v.lang === 'it-IT' && v.name.includes('Google'))
+                  || voices.find(v => v.lang.startsWith('it'))
+                  || null;
+    }
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    function stopAudio() {
+      isPlayingSequence = false;
+      window.speechSynthesis.cancel();
+    }
+
+    function speakText(text, onEndCallback = null) {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'it-IT';
+      if (italianVoice) utter.voice = italianVoice;
+      utter.rate = parseFloat(document.getElementById('rateSelect').value) || 1.0;
+      if (onEndCallback) utter.onend = onEndCallback;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function speakLine(btn) {
+      isPlayingSequence = false;
+      const lineDiv = btn.closest('.line');
+      const itText = lineDiv.querySelector('.it-text').innerText;
+      speakText(itText);
+    }
+
+    function playLinesList(lines) {
+      stopAudio();
+      isPlayingSequence = true;
+      let idx = 0;
+      function next() {
+        if (!isPlayingSequence || idx >= lines.length) {
+          isPlayingSequence = false;
+          return;
+        }
+        const currentText = lines[idx++];
+        speakText(currentText, () => {
+          if (isPlayingSequence) setTimeout(next, 500);
+        });
+      }
+      next();
+    }
+
+    function playSection(sectionId) {
+      const lines = Array.from(document.querySelectorAll(`#${sectionId} .line .it-text`))
+                         .map(el => el.innerText);
+      playLinesList(lines);
+    }
+
+    function playAllScenes() {
+      const lines = Array.from(document.querySelectorAll('.scene-block .line .it-text'))
+                         .map(el => el.innerText);
+      playLinesList(lines);
+    }
+
+    function switchPov(mode, btn) {
+      document.querySelectorAll('.pov-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.pov-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('pov-' + mode).classList.add('active');
+    }
+
+    function setMask(mode) {
+      document.body.classList.remove('mask-en', 'mask-all');
+      document.getElementById('modeFull').classList.remove('active');
+      document.getElementById('modeMaskEn').classList.remove('active');
+      document.getElementById('modeMaskAll').classList.remove('active');
+
+      if (mode === 'mask-en') {
+        document.body.classList.add('mask-en');
+        document.getElementById('modeMaskEn').classList.add('active');
+      } else if (mode === 'mask-all') {
+        document.body.classList.add('mask-all');
+        document.getElementById('modeMaskAll').classList.add('active');
+      } else {
+        document.getElementById('modeFull').classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>
