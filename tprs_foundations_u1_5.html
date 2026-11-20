@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="it">
-<head><script type='text/javascript' nonce='fBZPIymFEQ9psV1238Qc6A==' src='https://contribution.usercontent.google.com/4BWDR23gvS06RHTdTzoBiEQz-T6syaCOOPa_CT8JZRMXysKUel6BJ3b1M1rzIE_WECyFXsIwrCqr-b7KgO7R7Boc82NDrDY2PD0AW7FgT1Lhohx9JE0XpnWCW_55ODf-6A6UEdMmuiZfl7zAebkd2b_SSdeApy7KwtSMei9nNzkuMojsbdkbG_QkMbFaG0daTSWaEXzupyr08UdzQUMCCYSVWC1KfPO7J_qHUJaBpCuPAjuKG6uq1qhw9uL9JkWsWj4jCRgnBYHo21pFCs1_eIiXRMUgZkFsnGdU0tCM__P7-F472mn7FoqXNEl0fyx3tb9q4ke1aVTsODVhWNPFSypDNyLSC_wHc37j7HlnnjTBIx_dxEGNgHiF9DxdUPZ-j8qfL0LpnO-GDcy63T-Ll-xr10iiYPLsa8aWG6XarHsNyFKagx74eiOOUvdAwC_wGYTWjGLRVObZqIOywLufmcqQMQjA-7LKr0EP9IKR0QwKWyzC-VY7YTKkx5gkn66Uq-oYy_uiynpiWi57Eo4xQ_8yA40Yf0F1cWuPP82MTY1gu2KkyxY4X9y8EWkMWY-cyMlAV4wEuurqcjhKMC3ZF0bEnVsA79xjCvtKScdUBHQc39UKzYLAHC2m4Nyx9qdQtCEYtycBR06GmeNjBvDP185HlprgaerRcOpRpmigLE-mviQojR1mZHSIpPfCYMrKN2ZFYFZVHEY9fSVrC4zxEHKCiH0o7uvXYawF758u5Q'></script>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Foundations · Units 1–5 Survival Mash-Up (TPRS Maintenance Deck)</title>
   <style>
     :root {
@@ -228,6 +228,13 @@
       margin-top: 2px;
       transition: filter 0.2s ease;
     }
+    .slot-highlight {
+      background: #fff3cd;
+      color: #6e4b00;
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-weight: 700;
+    }
     body.mask-en .en-text {
       filter: blur(5px);
       user-select: none;
@@ -266,6 +273,8 @@
     }
     .pov-panel { display: none; }
     .pov-panel.active { display: block; }
+    .slot-panel { display: none; }
+    .slot-panel.active { display: block; }
     .chunk-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -295,12 +304,12 @@
     <div class="controls-bar">
       <select id="rateSelect" class="speed-select" title="Speech Rate">
         <option value="0.85">🐢 0.85x Relaxed</option>
-        <option value="1.0" selected="">☕ 1.00x Natural</option>
+        <option value="1.0" selected>☕ 1.00x Natural</option>
         <option value="1.15">⚡ 1.15x Native</option>
       </select>
-      <button class="btn active" id="modeFull" onclick="setMask(&#39;full&#39;)">👁️ Full Text</button>
-      <button class="btn" id="modeMaskEn" onclick="setMask(&#39;mask-en&#39;)">🙈 Hide English</button>
-      <button class="btn" id="modeMaskAll" onclick="setMask(&#39;mask-all&#39;)">🎧 Blind Listen</button>
+      <button class="btn active" id="modeFull" onclick="setMask('full')">👁️ Full Text</button>
+      <button class="btn" id="modeMaskEn" onclick="setMask('mask-en')">🙈 Hide English</button>
+      <button class="btn" id="modeMaskAll" onclick="setMask('mask-all')">🎧 Blind Listen</button>
     </div>
   </div>
 
@@ -324,7 +333,7 @@
           <span class="version-tag">SCENE 1 · AL BAR (Ordering &amp; Polite Register)</span>
           <span style="font-size:0.85rem; color:var(--muted); margin-left:8px;">vorrei / prendere / Lei vs. tu</span>
         </div>
-        <button class="play-all-btn" onclick="playSection(&#39;scene1&#39;)">▶ Play Scene 1</button>
+        <button class="play-all-btn" onclick="playSection('scene1')">▶ Play Scene 1</button>
       </div>
 
       <div class="line">
@@ -367,7 +376,7 @@
           <span class="version-tag">SCENE 2 · IN VIAGGIO (Travel, Directions &amp; Time)</span>
           <span style="font-size:0.85rem; color:var(--muted); margin-left:8px;">dov'è / andare / avere fretta</span>
         </div>
-        <button class="play-all-btn" onclick="playSection(&#39;scene2&#39;)">▶ Play Scene 2</button>
+        <button class="play-all-btn" onclick="playSection('scene2')">▶ Play Scene 2</button>
       </div>
 
       <div class="line">
@@ -410,7 +419,7 @@
           <span class="version-tag">SCENE 3 · FAMIGLIA E CASA (Origin, Family &amp; Daily Joy)</span>
           <span style="font-size:0.85rem; color:var(--muted); margin-left:8px;">essere di / vivere / piacere</span>
         </div>
-        <button class="play-all-btn" onclick="playSection(&#39;scene3&#39;)">▶ Play Scene 3</button>
+        <button class="play-all-btn" onclick="playSection('scene3')">▶ Play Scene 3</button>
       </div>
 
       <div class="line">
@@ -446,6 +455,127 @@
       </div>
     </section>
 
+    <!-- TPRS SINGLE-SLOT SUBSTITUTION DRILL: S + V + O -->
+    <section class="card">
+      <h2 class="section-title">TPRS Single-Slot Drill · Subject + Verb + Object (主 + 谓 + 宾)</h2>
+      <p style="font-size:0.9rem; color:var(--muted); margin-top:0;">
+        Lock two slots in place and vary <b>only one slot at a time</b> to build automatic sentence reflexes:
+      </p>
+      <div class="pov-tabs">
+        <button class="pov-tab active" onclick="switchSlot('subj', this)">1️⃣ Change Subject (换主语)</button>
+        <button class="pov-tab" onclick="switchSlot('verb', this)">2️⃣ Change Verb (换动词)</button>
+        <button class="pov-tab" onclick="switchSlot('obj', this)">3️⃣ Change Object (换宾语)</button>
+      </div>
+
+      <!-- SLOT 1: SUBJECT -->
+      <div id="slot-subj" class="slot-panel active">
+        <div style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.85rem; color:var(--theme-dark); font-weight:600;">Locked: <i>[prendere] un caffè al bar</i></span>
+          <button class="play-all-btn" onclick="playSection('slot-subj')">▶ Play Slot 1</button>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text"><span class="slot-highlight">Io prendo</span> un caffè caldo al bar.</div>
+            <div class="en-text">I get a hot coffee at the café.</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text"><span class="slot-highlight">Mio marito prende</span> un caffè caldo al bar.</div>
+            <div class="en-text">My husband gets a hot coffee at the café.</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text"><span class="slot-highlight">Noi prendiamo</span> un caffè caldo al bar.</div>
+            <div class="en-text">We get a hot coffee at the café.</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text"><span class="slot-highlight">I nostri amici prendono</span> un caffè caldo al bar.</div>
+            <div class="en-text">Our friends get a hot coffee at the café.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLOT 2: VERB -->
+      <div id="slot-verb" class="slot-panel">
+        <div style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.85rem; color:var(--theme-dark); font-weight:600;">Locked: <i>Io + [Verb] + un caffè italiano</i></span>
+          <button class="play-all-btn" onclick="playSection('slot-verb')">▶ Play Slot 2</button>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Io <span class="slot-highlight">vorrei</span> un caffè italiano.</div>
+            <div class="en-text">I would like an Italian coffee.</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Io <span class="slot-highlight">compro</span> un caffè italiano.</div>
+            <div class="en-text">I buy an Italian coffee.</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Io <span class="slot-highlight">preparo</span> un caffè italiano.</div>
+            <div class="en-text">I prepare/make an Italian coffee.</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Io <span class="slot-highlight">bevo</span> un caffè italiano.</div>
+            <div class="en-text">I drink an Italian coffee.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLOT 3: OBJECT -->
+      <div id="slot-obj" class="slot-panel">
+        <div style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.85rem; color:var(--theme-dark); font-weight:600;">Locked: <i>Io prendo + [Object] + per favore</i></span>
+          <button class="play-all-btn" onclick="playSection('slot-obj')">▶ Play Slot 3</button>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Io prendo <span class="slot-highlight">un cappuccino caldo</span>, per favore.</div>
+            <div class="en-text">I'll have a hot cappuccino, please. (masc. singular)</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Io prendo <span class="slot-highlight">una pizza margherita</span>, per favore.</div>
+            <div class="en-text">I'll have a Margherita pizza, please. (fem. singular)</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Io prendo <span class="slot-highlight">un biglietto per Firenze</span>, per favore.</div>
+            <div class="en-text">I'll take a ticket to Florence, please.</div>
+          </div>
+        </div>
+        <div class="line">
+          <button class="speak-btn" onclick="speakLine(this)">🔊</button>
+          <div class="line-text">
+            <div class="it-text">Io prendo <span class="slot-highlight">due cornetti dolci</span>, per favore.</div>
+            <div class="en-text">I'll have two sweet croissants, please. (plural)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- TPRS POV TIME-TRAVEL SHIFT -->
     <section class="card">
       <h2 class="section-title">TPRS Time-Travel Drill · POV Shift (Oggi vs. Ieri)</h2>
@@ -453,8 +583,8 @@
         Keep the exact same Units 1–5 vocabulary, and switch the time frame between <b>Present (Oggi)</b> and <b>Past (Ieri)</b>:
       </p>
       <div class="pov-tabs">
-        <button class="pov-tab active" onclick="switchPov(&#39;oggi&#39;, this)">☀️ Oggi (Present Tense)</button>
-        <button class="pov-tab" onclick="switchPov(&#39;ieri&#39;, this)">🕰️ Ieri (Past Tense · Passato Prossimo)</button>
+        <button class="pov-tab active" onclick="switchPov('oggi', this)">☀️ Oggi (Present Tense)</button>
+        <button class="pov-tab" onclick="switchPov('ieri', this)">🕰️ Ieri (Past Tense · Passato Prossimo)</button>
       </div>
 
       <div id="pov-oggi" class="pov-panel active">
@@ -501,28 +631,28 @@
             <div style="font-weight:700; color:var(--theme-dark);">Vorrei...</div>
             <div style="font-size:0.82rem; color:var(--muted);">I would like...</div>
           </div>
-          <button class="speak-btn" onclick="speakText(&#39;Vorrei un caffè, per favore.&#39;)">🔊</button>
+          <button class="speak-btn" onclick="speakText('Vorrei un caffè, per favore.')">🔊</button>
         </div>
         <div class="chunk-pill">
           <div>
             <div style="font-weight:700; color:var(--theme-dark);">Dov'è...?</div>
             <div style="font-size:0.82rem; color:var(--muted);">Where is...?</div>
           </div>
-          <button class="speak-btn" onclick="speakText(&#39;Scusi, dov’è la stazione?&#39;)">🔊</button>
+          <button class="speak-btn" onclick="speakText('Scusi, dov’è la stazione?')">🔊</button>
         </div>
         <div class="chunk-pill">
           <div>
             <div style="font-weight:700; color:var(--theme-dark);">Quanto costa?</div>
             <div style="font-size:0.82rem; color:var(--muted);">How much does it cost?</div>
           </div>
-          <button class="speak-btn" onclick="speakText(&#39;Quanto costa questo libro?&#39;)">🔊</button>
+          <button class="speak-btn" onclick="speakText('Quanto costa questo libro?')">🔊</button>
         </div>
         <div class="chunk-pill">
           <div>
             <div style="font-weight:700; color:var(--theme-dark);">Sono di...</div>
             <div style="font-size:0.82rem; color:var(--muted);">I am from...</div>
           </div>
-          <button class="speak-btn" onclick="speakText(&#39;Sono di Cleveland, negli Stati Uniti.&#39;)">🔊</button>
+          <button class="speak-btn" onclick="speakText('Sono di Cleveland, negli Stati Uniti.')">🔊</button>
         </div>
       </div>
     </section>
@@ -593,10 +723,19 @@
     }
 
     function switchPov(mode, btn) {
-      document.querySelectorAll('.pov-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.pov-panel').forEach(p => p.classList.remove('active'));
+      const card = btn.closest('.card');
+      card.querySelectorAll('.pov-tab').forEach(t => t.classList.remove('active'));
+      card.querySelectorAll('.pov-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('pov-' + mode).classList.add('active');
+    }
+
+    function switchSlot(mode, btn) {
+      const card = btn.closest('.card');
+      card.querySelectorAll('.pov-tab').forEach(t => t.classList.remove('active'));
+      card.querySelectorAll('.slot-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('slot-' + mode).classList.add('active');
     }
 
     function setMask(mode) {
