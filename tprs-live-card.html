@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script type='text/javascript' nonce='7oHc4MjC1KwgRYJ1x3mQfQ==' src='https://contribution.usercontent.google.com/erpfPBoV4tOJ8yV8fBBpkJhVuChDZfMNPqtrqkhEIg6hSQtEv6SCrg9WBXJmRw1GVTSK7Hq9lT41lcaooI4FMVJ-FpS4gcDEQQS5098MtQNKyzxSOMq9rUBIe_lAyP50SqJeHdvjDjMBBO4LDeoQfN_pUQ3OWJOaRHSTs0Y-uFjxr7YbSHjot9DlXNf3LWPfTHWbzT0Ek7-NT2z7SQYevZeimC1qvAA8CnAu8g8sd2R-4rB-RJ5hDARdP_rkXN735U7FWO0FLKLwF60-gltj9UGKXGAnwCdrLM8P9KxWcS2ZUltJWL2l2MUh7iKYVIBxzChu-a-QL3hVgEoIQKW9GhV7BOMECpdjfiayAAb4kWIvC_mIt8IqYquHCgJlIb2XYKdzMVOD8zs6g9nwV9mtAWyVXnbqhnIUJJDxNsikPSR_Dy20sHHGP6y8IF6Jyfod5BH4-mnyBOXmfE93kurUXnjwXpqPqb9boNG29RNdH3O0bIj3064Spy_UDv_UHGrlksrlPocP7sbNAhyMtxLdV9qLFWr1XXcT7NLSGwQdd7CKhY7n5e8auOMLeXIjPanJsfU6Ua3EAzkeiJu36tnoEU8RD1edLTPTHCm9pLnNAXxO9x7K3cU56BaEH8txrY97sCn0e1kVeOdH9Z_TBTYfgbEyU1CLpzwChYm42MDXmXYs9xEKzlvlyToOAoOXxLEAJJK1aowoUzZ7kvB1S0AjPNBplXv1ioVc'></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TPRS Live Card · 对话大伞</title>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --card-bg: #ffffff;
+      --text-main: #2d312e;
+      --text-muted: #6e736f;
+      --accent: #4a7c59;
+      --accent-hover: #3b6347;
+      --accent-soft: #eef4f0;
+      --warm: #d97742;
+      --warm-soft: #fdf3ed;
+      --border: #e5e1d8;
+      --shadow: 0 8px 24px rgba(45, 49, 46, 0.06);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px 56px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .top-nav {
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .header {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .umbrella-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      background: #f4f1ea;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .umbrella-box {
+      background: var(--accent-soft);
+      border: 1px solid #d5e3da;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .umbrella-stem {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .active-sentence {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .active-meaning {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: #f5f2eb;
+    }
+
+    .slots-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .slots-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .slot-chip {
+      background: #fcfbf9;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 13px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .slot-chip:hover {
+      border-color: var(--accent);
+      background: #fff;
+      transform: translateY(-1px);
+    }
+
+    .slot-it {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .slot-zh {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .log-form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .log-form input {
+      flex: 1;
+      min-width: 210px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fcfbf9;
+      outline: none;
+    }
+
+    .log-form input:focus {
+      border-color: var(--accent);
+      background: #fff;
+    }
+
+    .transcript-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .log-item {
+      background: #fcfbf9;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .log-text {
+      font-weight: 600;
+    }
+
+    .log-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text-main);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-nav">
+      <a href="index.html" class="back-link">← 返回实验室主页</a>
+      <span style="font-size: 12.5px; color: var(--text-muted);">2–4 词超短起手 · 单槽替换</span>
+    </div>
+
+    <header class="header">
+      <div class="badge">☂️ TPRS Umbrella · 核心大伞板</div>
+      <h1>TPRS Live Card · 对话大伞</h1>
+      <p class="subtitle">只换一个词（Single-Slot Substitution），听准发音、轻松跟读，把短句记进实时对话记录。</p>
+    </header>
+
+    <section class="section-card">
+      <div class="section-title">
+        <span>1. 选择今天的大伞句型 (Umbrella Frame)</span>
+      </div>
+      <div class="umbrella-tabs" id="umbrellaTabs"></div>
+
+      <div class="umbrella-box">
+        <div class="umbrella-stem" id="stemLabel"></div>
+        <div class="active-sentence" id="activeSentence"></div>
+        <div class="active-meaning" id="activeMeaning"></div>
+        <div class="action-row">
+          <button type="button" class="btn-primary" id="speakBtn">🔊 慢速朗读</button>
+          <button type="button" class="btn-secondary" id="logCurrentBtn">+ 记入今日对话</button>
+        </div>
+      </div>
+
+      <div class="slots-label">点击下方任意一个词块进行“单槽替换”：</div>
+      <div class="slots-grid" id="slotsGrid"></div>
+    </section>
+
+    <section class="section-card">
+      <div class="section-title">
+        <span>2. 今日对话记录 (Live Transcript)</span>
+        <button type="button" class="btn-secondary" id="clearLogBtn" style="padding: 5px 10px; font-size: 12px;">清空记录</button>
+      </div>
+
+      <form class="log-form" id="customLogForm">
+        <input type="text" id="customSentenceInput" placeholder="自己说出的短句（如：Sono stata al concerto.）" required=""/>
+        <button type="submit" class="btn-primary">记录短句</button>
+      </form>
+
+      <div class="transcript-list" id="transcriptList"></div>
+    </section>
+
+    <div class="footer-bar">
+      <span>记录保存在当前浏览器本地</span>
+      <button type="button" class="btn-secondary" id="exportBtn">📋 复制 Markdown 记录 (贴入 NotebookLM)</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">已复制！</div>
+
+  <script>
+    const LOG_KEY = 'tprs_live_transcript_v1';
+
+    const UMBRELLAS = [
+      {
+        id: 'u1',
+        name: 'Sto + 动作 (-ando/-endo)',
+        stem: '主干：Sto ... (我现在正在……)',
+        build: (slot) => ({
+          it: `Sto ${slot.it}.`,
+          zh: `我现在正在${slot.zh}。`
+        }),
+        slots: [
+          { it: 'bevendo il caffè', zh: '喝咖啡' },
+          { it: 'guardando il giardino', zh: '看花园' },
+          { it: 'ascoltando la musica', zh: '听音乐' },
+          { it: 'cucinando', zh: '做饭' },
+          { it: 'leggendo', zh: '看书' },
+          { it: 'riposando', zh: '休息' }
+        ]
+      },
+      {
+        id: 'u2',
+        name: 'Sono stata + 地点 (女生过去时)',
+        stem: '主干：Sono stata ... (我去过 / 我在……)',
+        build: (slot) => ({
+          it: `Sono stata ${slot.it}.`,
+          zh: `我去了 / 我在${slot.zh}。`
+        }),
+        slots: [
+          { it: 'al concerto', zh: '音乐会' },
+          { it: 'in giardino', zh: '花园里' },
+          { it: 'in piscina', zh: '游泳池' },
+          { it: 'al museo', zh: '博物馆' },
+          { it: 'a casa', zh: '家里' },
+          { it: 'al parco', zh: '公园里' }
+        ]
+      },
+      {
+        id: 'u3',
+        name: 'Vado + 目的地 (日常去向)',
+        stem: '主干：Vado ... (我去……)',
+        build: (slot) => ({
+          it: `Vado ${slot.it}.`,
+          zh: `我去${slot.zh}。`
+        }),
+        slots: [
+          { it: 'in giardino', zh: '花园' },
+          { it: 'a camminare', zh: '散步' },
+          { it: 'a nuotare', zh: '游泳' },
+          { it: 'al mercato', zh: '市场/超市' },
+          { it: 'a dormire', zh: '睡觉' }
+        ]
+      },
+      {
+        id: 'u4',
+        name: 'Mi piace + 事物 (表达喜欢)',
+        stem: '主干：Mi piace ... (我喜欢……)',
+        build: (slot) => ({
+          it: `Mi piace ${slot.it}.`,
+          zh: `我喜欢${slot.zh}。`
+        }),
+        slots: [
+          { it: 'la musica', zh: '音乐' },
+          { it: 'il caffè', zh: '咖啡' },
+          { it: 'il giardino', zh: '花园' },
+          { it: 'questa canzone', zh: '这首歌' },
+          { it: 'il concerto', zh: '这场音乐会' }
+        ]
+      }
+    ];
+
+    let currentUmbrella = UMBRELLAS[0];
+    let currentSlot = UMBRELLAS[0].slots[0];
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function speakItalian(text) {
+      if (!('speechSynthesis' in window)) {
+        showToast('当前浏览器不支持语音朗读');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'it-IT';
+      utter.rate = 0.85;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function renderTabs() {
+      const container = document.getElementById('umbrellaTabs');
+      container.innerHTML = '';
+      UMBRELLAS.forEach((u) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'tab-btn' + (u.id === currentUmbrella.id ? ' active' : '');
+        btn.textContent = u.name;
+        btn.addEventListener('click', () => {
+          currentUmbrella = u;
+          currentSlot = u.slots[0];
+          renderTabs();
+          renderBoard();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function renderBoard() {
+      document.getElementById('stemLabel').textContent = currentUmbrella.stem;
+      const built = currentUmbrella.build(currentSlot);
+      document.getElementById('activeSentence').textContent = built.it;
+      document.getElementById('activeMeaning').textContent = built.zh;
+
+      const grid = document.getElementById('slotsGrid');
+      grid.innerHTML = '';
+      currentUmbrella.slots.forEach((slot) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'slot-chip';
+        chip.innerHTML = `
+          <span class="slot-it">${slot.it}</span>
+          <span class="slot-zh">${slot.zh}</span>
+        `;
+        chip.addEventListener('click', () => {
+          currentSlot = slot;
+          renderBoard();
+          speakItalian(currentUmbrella.build(slot).it);
+        });
+        grid.appendChild(chip);
+      });
+    }
+
+    function loadLogs() {
+      try {
+        return JSON.parse(localStorage.getItem(LOG_KEY)) || [
+          { it: 'Sono stata al concerto.', zh: '我去了音乐会。', time: '示例' },
+          { it: 'Sto bevendo il caffè.', zh: '我正在喝咖啡。', time: '示例' }
+        ];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveLogs(logs) {
+      localStorage.setItem(LOG_KEY, JSON.stringify(logs));
+    }
+
+    function addLogEntry(it, zh = '') {
+      const logs = loadLogs();
+      const now = new Date();
+      const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      logs.unshift({ it, zh, time: timeStr });
+      saveLogs(logs);
+      renderLogs();
+      showToast('已记入今日对话！');
+    }
+
+    function renderLogs() {
+      const list = document.getElementById('transcriptList');
+      const logs = loadLogs();
+      list.innerHTML = '';
+      logs.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'log-item';
+        row.innerHTML = `
+          <div>
+            <div class="log-text">${item.it}</div>
+            ${item.zh ? `<div class="log-meta">${item.zh}</div>` : ''}
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="log-meta">${item.time}</span>
+            <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:12px;">🔊</button>
+          </div>
+        `;
+        row.querySelector('button').addEventListener('click', () => speakItalian(item.it));
+        list.appendChild(row);
+      });
+    }
+
+    document.getElementById('speakBtn').addEventListener('click', () => {
+      const built = currentUmbrella.build(currentSlot);
+      speakItalian(built.it);
+    });
+
+    document.getElementById('logCurrentBtn').addEventListener('click', () => {
+      const built = currentUmbrella.build(currentSlot);
+      addLogEntry(built.it, built.zh);
+    });
+
+    document.getElementById('customLogForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('customSentenceInput');
+      const val = input.value.trim();
+      if (!val) return;
+      addLogEntry(val);
+      input.value = '';
+    });
+
+    document.getElementById('clearLogBtn').addEventListener('click', () => {
+      saveLogs([]);
+      renderLogs();
+      showToast('已清空记录');
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const logs = loadLogs();
+      const md = ['# TPRS 意大利语对话记录', ''].concat(
+        logs.map((l, i) => `${i + 1}. **${l.it}**${l.zh ? ` — ${l.zh}` : ''} _(${l.time})_`)
+      ).join('\n');
+      navigator.clipboard.writeText(md).then(() => {
+        showToast('已复制 Markdown 记录，可贴入 NotebookLM！');
+      });
+    });
+
+    renderTabs();
+    renderBoard();
+    renderLogs();
+  </script>
+</body>
+</html>
