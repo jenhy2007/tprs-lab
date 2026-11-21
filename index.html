@@ -1,221 +1,200 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TPRS Italian Listening Lab · 个人意大利语听读实验室</title>
+<head><script type='text/javascript' nonce='sNbnIzmevssOxS82Zr4woQ==' src='https://contribution.usercontent.google.com/AlSiICNTwDJscD9ja9DmcHjgozHOT3XIKwkJTgHLAC41FU4kTy_iD8Np8us_LGzw1irPgIveWHxpftpaADaQXHiIuTXU6rc4_Sw4JJJJQa4Uv7wJBw-ANVPNz6mMXhLf4rQ4rgevCC06whKuTswZUt9xdomB19S1Qytp1Cl3-zBSrEsX0ZB2j0-LwwC-Q9Jwiw06KbQQ963EgWeO76YztDIUU_sIblKlTbFzmZo0UnHGbd9iXR8qdXwNMIvSapRU7Y2B2vMbUwAWk3yu1LZOVOwXQ9HdAJOSRyLssi4ySDtfQGDdaBkmEPh4uAl80Uls5luBiYqrBZKmn1mc-8osa7-KoTKFYPRdGT20KkP9NSPatP39-F2Lw4YgR354ioef9XPN6iR8ZIQrLoCTsIAuRAb2aGWYgXOOrqm_55YJb0QFd1bGSOb8i_EcBD7hbDAOkqjfdIghtfhgMfaEPBGX7-268xSs0I8MtlEDLTMnr_G3wDXcLLZX-IUKxvOCcTTxVQJuLopgizvQrqTbZd85M0iQO-ebULy3BcfAq3_QKCD2rYbGeb2LDU9epcNgqvvPgoU9PGT1QPbMpMLnhYwvH616H7Vj2RduB9ylQktUBBYXTcBy2PeJgxG43JAJf4rYcxtFAz3d1bXnkWT2X71iBz9lZxFbrVUEvllwIhzdOVL_HGownfAjvqh9VnPQCu29NU2QbfLYnQAEc_XDjw'></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TPRS 意大利语实验室 · Italian TPRS Lab</title>
   <style>
     :root {
-      --bg: #f4f6f8;
-      --card: #ffffff;
-      --text: #1f2328;
-      --muted: #59636e;
-      --border: #d0d7de;
-      --accent: #2d6a4f;
+      --bg: #f7f5f0;
+      --card-bg: #ffffff;
+      --text-main: #2d312e;
+      --text-muted: #6e736f;
+      --accent: #4a7c59;
+      --accent-hover: #3b6347;
+      --accent-soft: #eef4f0;
+      --warm: #d97742;
+      --warm-soft: #fdf3ed;
+      --border: #e5e1d8;
+      --shadow: 0 8px 24px rgba(45, 49, 46, 0.06);
+      --radius: 18px;
     }
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
       line-height: 1.6;
-      padding-bottom: 50px;
+      padding: 32px 16px 56px;
+      display: flex;
+      justify-content: center;
     }
-    header {
-      background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
-      color: #fff;
-      padding: 32px 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0 0 8px;
-      font-size: 1.75rem;
-    }
-    header p {
-      margin: 0;
-      opacity: 0.9;
-      font-size: 0.98rem;
-    }
+
     .container {
-      max-width: 920px;
-      margin: 24px auto;
-      padding: 0 16px;
+      width: 100%;
+      max-width: 720px;
     }
-    .grid {
+
+    .hero {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 26px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .subtitle {
+      font-size: 14.5px;
+      color: var(--text-muted);
+    }
+
+    .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
       gap: 18px;
     }
-    .book-card {
-      background: var(--card);
+
+    .nav-card {
+      background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
       text-decoration: none;
       color: inherit;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      gap: 16px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
-    .book-card:hover {
+
+    .nav-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-      border-color: #2d6a4f;
+      box-shadow: 0 12px 28px rgba(45, 49, 46, 0.09);
+      border-color: var(--accent);
     }
-    .book-card.featured {
-      border: 2px solid #2d6a4f;
-      background: #f9fcfa;
+
+    .nav-card.fun:hover {
+      border-color: var(--warm);
     }
-    .book-card.maintenance {
-      border: 2px solid #9a6700;
-      background: #fffdf7;
-    }
-    .tag-row {
+
+    .card-top {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card-tag {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 8px;
+      width: fit-content;
+    }
+
+    .tag-core {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .tag-fun {
+      background: var(--warm-soft);
+      color: var(--warm);
+    }
+
+    .card-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .card-cta {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      display: inline-flex;
       align-items: center;
-      margin-bottom: 10px;
       gap: 6px;
     }
-    .unit-tag {
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 6px;
-      background: #eef2f6;
-      color: #334155;
+
+    .nav-card.fun .card-cta {
+      color: var(--warm);
     }
-    .track-tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 6px;
-      background: #e6f2ec;
-      color: #1b4332;
-    }
-    .track-tag.gold {
-      background: #fff3cd;
-      color: #6e4b00;
-    }
-    .book-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin: 0 0 8px;
-      color: #1b4332;
-    }
-    .book-desc {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin: 0 0 14px;
-    }
-    .book-footer {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #2d6a4f;
+
+    .footer {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🇮🇹 TPRS Italian Listening Lab</h1>
-    <p>Spiral Comprehensible Input · Dual-Track Scaffolding (Track A &amp; Track B)</p>
-  </header>
-
   <div class="container">
-    <div class="grid">
-      <!-- Card 1: Unit 40 -->
-      <a href="tprs_unit40_junior.html" class="book-card featured">
-        <div>
-          <div class="tag-row">
-            <span class="unit-tag">UNIT 40 · ACTIVE</span>
-            <span class="track-tag">Track A · Spiral 1-2-3</span>
-          </div>
-          <h2 class="book-title">Le domande di Junior: Papà drammatico</h2>
-          <p class="book-desc">
-            <b>Italiano + English</b> 双语螺旋阶梯。攻克家庭健康习惯、感冒头疼、<i>gli dico</i>（对他说话）与暖心反转。
-          </p>
+    <header class="hero">
+      <div class="badge">🇮🇹 TPRS Lab · 每日零压力习得</div>
+      <h1>TPRS 意大利语实验室</h1>
+      <p class="subtitle">选一张卡片开始今天的 1 分钟轻松沉浸——不背语法、不考默写，只留快乐与语感。</p>
+    </header>
+
+    <main class="cards-grid">
+      <a href="tprs-live-card.html" class="nav-card core">
+        <div class="card-top">
+          <span class="card-tag tag-core">☂️ 核心大伞练习</span>
+          <div class="card-title">TPRS Live Card · 对话大伞</div>
+          <p class="card-desc">2–4 词超短起手句、单槽替换练习与实时对话记录，轻松开口聊日常。</p>
         </div>
-        <div class="book-footer">Start Listening &rarr;</div>
+        <span class="card-cta">进入练习 →</span>
       </a>
 
-      <!-- Card 2: Foundations Units 1-5 NEW -->
-      <a href="tprs_foundations_u1_5.html" class="book-card maintenance">
-        <div>
-          <div class="tag-row">
-            <span class="unit-tag">UNITS 1–5 · NEW</span>
-            <span class="track-tag gold">☕ Morning Coffee Loop</span>
-          </div>
-          <h2 class="book-title">Survival Mash-Up: Café, Train &amp; Family</h2>
-          <p class="book-desc">
-            基础生存句型全景串联（<i>vorrei, dov'è, essere di, andare</i>），含一键连播、<b>主谓宾单槽替换</b>与 <b>Oggi vs. Ieri</b> 时态切换。
-          </p>
+      <a href="fun-italian-card.html" class="nav-card fun">
+        <div class="card-top">
+          <span class="card-tag tag-fun">🎬 趣味视听输入</span>
+          <div class="card-title">趣味意大利 · Fun Italian</div>
+          <p class="card-desc">收藏双语洗脑歌曲与 AI 萌娃日常短视频，点读高频感叹词块，随时随地磨耳朵。</p>
         </div>
-        <div class="book-footer">Open Maintenance Deck &rarr;</div>
+        <span class="card-cta">打开收藏夹 →</span>
       </a>
+    </main>
 
-      <!-- Card 3: Unit 39 Montagna -->
-      <a href="tprs_unit39_montagna.html" class="book-card">
-        <div>
-          <div class="tag-row">
-            <span class="unit-tag">UNIT 39 · B</span>
-            <span class="track-tag">Track B · Context</span>
-          </div>
-          <h2 class="book-title">Le guide di montagna a Courmayeur</h2>
-          <p class="book-desc">
-            阿尔卑斯山向导日常对话，训练真实生活语境下的容错盲听与高山词汇解码。
-          </p>
-        </div>
-        <div class="book-footer">Open Lesson &rarr;</div>
-      </a>
-
-      <!-- Card 4: Unit 39 Pizza -->
-      <a href="tprs_unit39_pizza.html" class="book-card">
-        <div>
-          <div class="tag-row">
-            <span class="unit-tag">UNIT 39 · A</span>
-            <span class="track-tag">Track B · Context</span>
-          </div>
-          <h2 class="book-title">Una pizza speciale con ingredienti segreti</h2>
-          <p class="book-desc">
-            厨房做披萨对话练习，结合独立分句朗读与三阶盲听遮罩。
-          </p>
-        </div>
-        <div class="book-footer">Open Lesson &rarr;</div>
-      </a>
-
-      <!-- Card 5: Unit 38 -->
-      <a href="tprs_unit38_admire.html" class="book-card">
-        <div>
-          <div class="tag-row">
-            <span class="unit-tag">UNIT 38</span>
-            <span class="track-tag">TPRS Story</span>
-          </div>
-          <h2 class="book-title">Chi ammiri di più? (People We Admire)</h2>
-          <p class="book-desc">
-            围绕敬佩的人物与品质展开的 TPRS 故事听读训练。
-          </p>
-        </div>
-        <div class="book-footer">Open Lesson &rarr;</div>
-      </a>
-
-      <!-- Card 6: Vocab Bank -->
-      <a href="vocab_bank.html" class="book-card">
-        <div>
-          <div class="tag-row">
-            <span class="unit-tag">REFERENCE</span>
-            <span class="track-tag">Core Chunks</span>
-          </div>
-          <h2 class="book-title">Vocab &amp; Verb Chunks Bank</h2>
-          <p class="book-desc">
-            高频动词词块与“变形金刚”句型速查库。
-          </p>
-        </div>
-        <div class="book-footer">Open Bank &rarr;</div>
-      </a>
-    </div>
+    <footer class="footer">
+      Buon divertimento e a presto! · 保持轻松，每天进步一点点
+    </footer>
   </div>
 </body>
 </html>
