@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script type='text/javascript' nonce='7oHc4MjC1KwgRYJ1x3mQfQ==' src='https://contribution.usercontent.google.com/erpfPBoV4tOJ8yV8fBBpkJhVuChDZfMNPqtrqkhEIg6hSQtEv6SCrg9WBXJmRw1GVTSK7Hq9lT41lcaooI4FMVJ-FpS4gcDEQQS5098MtQNKyzxSOMq9rUBIe_lAyP50SqJeHdvjDjMBBO4LDeoQfN_pUQ3OWJOaRHSTs0Y-uFjxr7YbSHjot9DlXNf3LWPfTHWbzT0Ek7-NT2z7SQYevZeimC1qvAA8CnAu8g8sd2R-4rB-RJ5hDARdP_rkXN735U7FWO0FLKLwF60-gltj9UGKXGAnwCdrLM8P9KxWcS2ZUltJWL2l2MUh7iKYVIBxzChu-a-QL3hVgEoIQKW9GhV7BOMECpdjfiayAAb4kWIvC_mIt8IqYquHCgJlIb2XYKdzMVOD8zs6g9nwV9mtAWyVXnbqhnIUJJDxNsikPSR_Dy20sHHGP6y8IF6Jyfod5BH4-mnyBOXmfE93kurUXnjwXpqPqb9boNG29RNdH3O0bIj3064Spy_UDv_UHGrlksrlPocP7sbNAhyMtxLdV9qLFWr1XXcT7NLSGwQdd7CKhY7n5e8auOMLeXIjPanJsfU6Ua3EAzkeiJu36tnoEU8RD1edLTPTHCm9pLnNAXxO9x7K3cU56BaEH8txrY97sCn0e1kVeOdH9Z_TBTYfgbEyU1CLpzwChYm42MDXmXYs9xEKzlvlyToOAoOXxLEAJJK1aowoUzZ7kvB1S0AjPNBplXv1ioVc'></script>
+<head><script type='text/javascript' nonce='fthdyGBTzFsT1rlgOwM0tQ==' src='https://contribution.usercontent.google.com/26kYOAV9IEhxWn04epeIHfarpw6wUEQWoyzxzDYQ1A5YG1AHGWlTejbgt7KIxFoundD_X5pGHFh29U0qJe6ySBefJCyVhdF8H-SZ0lv5NeUJGAnq3GNGP7QLZG3qlN4I6CrcWUlsFyaXaqIEoyLK2Mo-BU7er_hyOxC5cg-DW7Je2zPOpZ2REQ5Q660te4HdWYFvdVFQ41rdwr2tvmz8fC8weuwndN1Q7myof0N65H_0y8xLRx9_9FAD87uRlEFOEk1bgbAhEWyaSEYkZCyzLThP8YSNphLlOUIE3UyuM4e7p4vLQh-bp2QnAdUKZMTykLYPDlaE3J8Z6pGDdsajo_b-3FFqLzo-Y8zioFcep1L-xA8iMsVTZJueTEYo7VTFQhfVdlrvwpZmJ2iIYe_aHRcMLKLRCxSvePlHqXpu8yzqFJNi_UHc4woRHBxyU7DZni2v-gjGwywEvK4qzD_huOW2F_yADj95SgaZlvuZ8YzNFu2zHQR8JnqVVp1fLHakwYLtEYyhIid2OR1heYn_s-Mye8k-dHW0AVsPXacuWsGDAOGEPjeBCl4sHFx_njsQfLZI8gr59qSGKfYCzzRUbrFbfbMzYE38dWRmB7oQrrg7WDCa8dGNSbzk97HBCAjcwFqzhrCtyt--PHO7sGoQwS2SSSSEUZwwL3pbc29nJvOduLilWOcDFaq2UO6STRyAxPBQ2Q7G8gRPxhCl4YDusRBRBBzzBhvE'></script>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TPRS Live Card · 对话大伞</title>
@@ -210,6 +210,38 @@
       background: #f5f2eb;
     }
 
+    .btn-mic {
+      background: var(--warm-soft);
+      color: var(--warm);
+      border: 1px solid #f2cbb5;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-mic:hover {
+      background: #fae5d8;
+    }
+
+    .btn-mic.listening {
+      background: #dc2626;
+      color: #fff;
+      border-color: #dc2626;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.72; }
+      100% { opacity: 1; }
+    }
+
     .slots-label {
       font-size: 13px;
       font-weight: 600;
@@ -256,12 +288,12 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .log-form input {
       flex: 1;
-      min-width: 210px;
+      min-width: 200px;
       padding: 10px 12px;
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -273,6 +305,12 @@
     .log-form input:focus {
       border-color: var(--accent);
       background: #fff;
+    }
+
+    .mic-hint {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
     }
 
     .transcript-list {
@@ -344,7 +382,7 @@
     <header class="header">
       <div class="badge">☂️ TPRS Umbrella · 核心大伞板</div>
       <h1>TPRS Live Card · 对话大伞</h1>
-      <p class="subtitle">只换一个词（Single-Slot Substitution），听准发音、轻松跟读，把短句记进实时对话记录。</p>
+      <p class="subtitle">只换一个词（Single-Slot Substitution），听准发音、开口跟读，把短句记进实时对话记录。</p>
     </header>
 
     <section class="section-card">
@@ -374,9 +412,11 @@
       </div>
 
       <form class="log-form" id="customLogForm">
-        <input type="text" id="customSentenceInput" placeholder="自己说出的短句（如：Sono stata al concerto.）" required=""/>
+        <button type="button" class="btn-mic" id="micBtn" title="点击开始说意大利语">🎤 开口说 (it-IT)</button>
+        <input type="text" id="customSentenceInput" placeholder="点左侧麦克风开口说，或直接输入短句..." required=""/>
         <button type="submit" class="btn-primary">记录短句</button>
       </form>
+      <div class="mic-hint" id="micStatus">提示：点击 🎤 开口说意大利语（自动识别并填入框中；若浏览器不支持麦克风权限，也可使用键盘语音听写）。</div>
 
       <div class="transcript-list" id="transcriptList"></div>
     </section>
@@ -468,7 +508,7 @@
       const toast = document.getElementById('toast');
       toast.textContent = msg;
       toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2200);
+      setTimeout(() => toast.classList.remove('show'), 2400);
     }
 
     function speakItalian(text) {
@@ -565,11 +605,75 @@
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="log-meta">${item.time}</span>
-            <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:12px;">🔊</button>
+            <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:12px;" title="点击朗读">🔊</button>
           </div>
         `;
         row.querySelector('button').addEventListener('click', () => speakItalian(item.it));
         list.appendChild(row);
+      });
+    }
+
+    // Speech Recognition (Microphone input in Italian)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const micBtn = document.getElementById('micBtn');
+    const micStatus = document.getElementById('micStatus');
+    const sentenceInput = document.getElementById('customSentenceInput');
+    let recognition = null;
+    let isListening = false;
+
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = 'it-IT';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        isListening = true;
+        micBtn.classList.add('listening');
+        micBtn.textContent = '⏹ 正在聆听...';
+        micStatus.textContent = '请用意大利语说出短句（例如：Sono stata al concerto）...';
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const formatted = transcript.charAt(0).toUpperCase() + transcript.slice(1);
+        sentenceInput.value = formatted;
+        micStatus.textContent = `识别成功：“${formatted}” — 点击“记录短句”保存！`;
+        showToast('已识别你的意大利语语音！');
+      };
+
+      recognition.onerror = (event) => {
+        isListening = false;
+        micBtn.classList.remove('listening');
+        micBtn.textContent = '🎤 开口说 (it-IT)';
+        if (event.error === 'not-allowed') {
+          micStatus.textContent = '未获得麦克风权限：请在浏览器地址栏允许麦克风，或使用系统键盘自带的语音输入按钮。';
+        } else {
+          micStatus.textContent = `未听清（${event.error}），请再点一次 🎤 重试，或使用键盘听写。`;
+        }
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        micBtn.classList.remove('listening');
+        micBtn.textContent = '🎤 开口说 (it-IT)';
+      };
+
+      micBtn.addEventListener('click', () => {
+        if (isListening) {
+          recognition.stop();
+        } else {
+          try {
+            recognition.start();
+          } catch (e) {
+            showToast('请稍等一秒再点击麦克风');
+          }
+        }
+      });
+    } else {
+      micBtn.addEventListener('click', () => {
+        micStatus.textContent = '当前浏览器不支持网页直连语音识别，请点击输入框并使用设备键盘上的麦克风图标听写！';
+        sentenceInput.focus();
       });
     }
 
@@ -585,11 +689,11 @@
 
     document.getElementById('customLogForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const input = document.getElementById('customSentenceInput');
-      const val = input.value.trim();
+      const val = sentenceInput.value.trim();
       if (!val) return;
       addLogEntry(val);
-      input.value = '';
+      sentenceInput.value = '';
+      micStatus.textContent = '已保存！可以继续点击 🎤 说下一句。';
     });
 
     document.getElementById('clearLogBtn').addEventListener('click', () => {
