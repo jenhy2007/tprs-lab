@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script type='text/javascript' nonce='edhCgHuvc8D5Fyby/XZVRg==' src='https://contribution.usercontent.google.com/fBNDOx09WcXCumtheMM-FSRjOyMkyfEz9nTLkSToQbhHl4kR8eU5B7qnaV-5nipDWpGiBui10EUpLB_rQECANKpYl7cSpdvCkdKf6giHifXerzueP9wYqE7AZp2l87V8cOqGrvb_SxdjE7EY5Dw6WYcpBBcaxSJgWM6qtdOiwBhkn_heKlyEy2X32hZHBRlCSEgc-QnsZzz9Ho7pnlMxsSWZ4oSy9JHKIevQTSxRdaDYEtZyJ5SUV6ve536wqxTjuwW8WVf1AXEnXnC00rRLgluse6HRD3scddqarLaiAis1ATU1u097eU8MGjUYgp5OLuiEgka2MZuHCJ6FVD7Lbu0Ub1Nd882zXjmFU3eKIt8WWXW2XBj4nPG8TyC9ZR15oqYracDXyEg_8hCB0M3Di1NR1Ln84RBJ977QBL2uA9WmD4BRDAYJ85EDl1xCACOJVj9rdyJOZH8nKq9_O1hZpsuylVcI_t5fWDTPAOxh8J_vVRfkaG2FdsDMKt1tA4_nfNMOA_Sx9q-L4N8xhu0kDbdILF-GeLD_sg0M-ZXG8u3NzdwCTmm-1fMxEQ3TQuM5mhjNW4kXRqq38WvHSN8POUQ1qHbo_iEAOR6nbYJyxGNeBy9suxKySVtcgHkYdqtb_vxS10WI29UrVrjlcY5ZNhMhEyqRjtGyWTmM34uAv-mjGZcCST7cRqB0ZH48ot9U2Kju17HWvkcvUUgnJSWvZHDv6W1NPowdh58'></script>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>趣味意大利 · Fun Italian Media & Songs</title>
   <style>
     :root {
@@ -20,11 +20,7 @@
       --radius: 16px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -36,10 +32,23 @@
       justify-content: center;
     }
 
-    .container {
-      width: 100%;
-      max-width: 680px;
+    .container { width: 100%; max-width: 680px; }
+
+    .top-nav {
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
+
+    .back-link {
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .back-link:hover { text-decoration: underline; }
 
     .header {
       background: var(--card-bg);
@@ -56,7 +65,6 @@
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
       background: var(--accent-soft);
       color: var(--accent);
       font-size: 13px;
@@ -66,17 +74,8 @@
       width: fit-content;
     }
 
-    h1 {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: -0.3px;
-    }
-
-    .subtitle {
-      font-size: 14px;
-      color: var(--text-muted);
-    }
+    h1 { font-size: 24px; font-weight: 700; }
+    .subtitle { font-size: 14px; color: var(--text-muted); }
 
     .section-card {
       background: var(--card-bg);
@@ -111,12 +110,6 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .video-item:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     }
 
     .video-info {
@@ -141,7 +134,6 @@
       font-size: 15px;
       font-weight: 600;
       color: var(--text-main);
-      word-break: break-word;
     }
 
     .video-note {
@@ -161,25 +153,22 @@
       align-items: center;
       gap: 6px;
       background: var(--accent);
-      color: #fff;
+      color: #ffffff !important;
       text-decoration: none;
       font-size: 14px;
       font-weight: 600;
-      padding: 8px 14px;
+      padding: 9px 15px;
       border-radius: 10px;
-      transition: background 0.15s ease;
     }
 
-    .btn-watch:hover {
-      background: var(--accent-hover);
-    }
+    .btn-watch:hover { background: var(--accent-hover); }
 
     .btn-del {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
       font-size: 13px;
-      padding: 7px 10px;
+      padding: 8px 10px;
       border-radius: 10px;
       cursor: pointer;
     }
@@ -190,21 +179,10 @@
       border-color: #fecaca;
     }
 
-    .add-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .add-form { display: flex; flex-direction: column; gap: 10px; }
+    .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
-    .form-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    input[type="text"],
-    input[type="url"],
-    select {
+    input[type="text"], input[type="url"], select {
       flex: 1;
       min-width: 180px;
       padding: 10px 12px;
@@ -213,12 +191,6 @@
       font-size: 14px;
       background: #fcfbf9;
       color: var(--text-main);
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--accent);
-      background: #fff;
     }
 
     .btn-add {
@@ -230,11 +202,6 @@
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.15s ease;
-    }
-
-    .btn-add:hover {
-      opacity: 0.9;
     }
 
     .chunks-grid {
@@ -250,27 +217,13 @@
       border-radius: 12px;
       padding: 12px 14px;
       cursor: pointer;
-      transition: all 0.15s ease;
       display: flex;
       flex-direction: column;
       gap: 3px;
     }
 
-    .chunk-btn:hover {
-      background: #e1ede5;
-      transform: translateY(-1px);
-    }
-
-    .chunk-it {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--accent-hover);
-    }
-
-    .chunk-zh {
-      font-size: 12.5px;
-      color: var(--text-muted);
-    }
+    .chunk-it { font-size: 15px; font-weight: 700; color: var(--accent-hover); }
+    .chunk-zh { font-size: 12.5px; color: var(--text-muted); }
 
     .footer-bar {
       display: flex;
@@ -293,10 +246,6 @@
       cursor: pointer;
     }
 
-    .btn-export:hover {
-      background: #f0ede6;
-    }
-
     .toast {
       position: fixed;
       bottom: 20px;
@@ -312,13 +261,16 @@
       transition: opacity 0.2s ease;
     }
 
-    .toast.show {
-      opacity: 1;
-    }
+    .toast.show { opacity: 1; }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="top-nav">
+      <a href="index.html" class="back-link">← 返回实验室主页</a>
+      <span style="font-size: 12.5px; color: var(--text-muted);">轻松视听输入</span>
+    </div>
+
     <div class="header">
       <div class="badge">🇮🇹 TPRS 快乐输入 · Zero Pressure</div>
       <h1>趣味意大利 · Fun Italian</h1>
@@ -328,9 +280,29 @@
     <div class="section-card">
       <div class="section-title">
         <span>🎬 我的快乐视频收藏夹</span>
-        <span style="font-size: 12px; font-weight: 400; color: var(--text-muted);">点击直达原视频</span>
       </div>
-      <div class="video-list" id="videoList"></div>
+      <div class="video-list" id="videoList">
+        <div class="video-item">
+          <div class="video-info">
+            <span class="video-tag">🎵 双语搞笑歌曲</span>
+            <div class="video-name">双语字幕搞笑意大利歌曲</div>
+            <div class="video-note">边听旋律边看双语歌词，超有效的无痛输入！</div>
+          </div>
+          <div class="video-actions">
+            <a href="https://www.facebook.com/reel/1395262132123830" target="_blank" rel="noopener noreferrer" class="btn-watch">▶ 打开视频</a>
+          </div>
+        </div>
+        <div class="video-item">
+          <div class="video-info">
+            <span class="video-tag">👦 AI萌娃日常 (Italy News)</span>
+            <div class="video-name">Italy News · 可爱AI小男孩说意大利语</div>
+            <div class="video-note">语速清晰、画面可爱，已经 Follow 的宝藏博主</div>
+          </div>
+          <div class="video-actions">
+            <a href="https://www.facebook.com/reel/4104324013204601" target="_blank" rel="noopener noreferrer" class="btn-watch">▶ 打开视频</a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="section-card">
@@ -345,13 +317,13 @@
             <option value="😂 趣味短剧/段子">😂 趣味短剧/段子</option>
             <option value="🌿 生活/美食/旅行">🌿 生活/美食/旅行</option>
           </select>
-          <input type="text" id="titleInput" placeholder="简短标题（如：洗脑意大利语歌）" required=""/>
+          <input type="text" id="titleInput" placeholder="简短标题（如：洗脑意大利语歌）" required />
         </div>
         <div class="form-row">
-          <input type="url" id="urlInput" placeholder="粘贴 Facebook / YouTube 视频链接..." required=""/>
+          <input type="url" id="urlInput" placeholder="粘贴 Facebook / YouTube 视频链接..." required />
         </div>
         <div class="form-row">
-          <input type="text" id="noteInput" placeholder="一句话备注（可选：比如哪句特别好玩）"/>
+          <input type="text" id="noteInput" placeholder="一句话备注（可选：比如哪句特别好玩）" />
           <button type="submit" class="btn-add">+ 收藏到卡片</button>
         </div>
       </form>
@@ -366,14 +338,14 @@
 
     <div class="footer-bar">
       <span>数据自动保存在当前浏览器本地</span>
-      <button class="btn-export" id="exportBtn">📋 复制收藏列表 (可贴入 NotebookLM)</button>
+      <button type="button" class="btn-export" id="exportBtn">📋 复制收藏列表 (可贴入 NotebookLM)</button>
     </div>
   </div>
 
   <div class="toast" id="toast">已复制到剪贴板！</div>
 
   <script>
-    const STORAGE_KEY = 'tprs_fun_italian_videos_v1';
+    const STORAGE_KEY = 'tprs_fun_italian_videos_v2';
 
     const DEFAULT_VIDEOS = [
       {
@@ -408,8 +380,9 @@
         return DEFAULT_VIDEOS;
       }
       try {
-        return JSON.parse(saved);
-      } catch {
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_VIDEOS;
+      } catch (e) {
         return DEFAULT_VIDEOS;
       }
     }
@@ -433,17 +406,16 @@
       list.forEach((item) => {
         const div = document.createElement('div');
         div.className = 'video-item';
-        div.innerHTML = `
-          <div class="video-info">
-            <span class="video-tag">${item.tag}</span>
-            <div class="video-name">${item.title}</div>
-            ${item.note ? `<div class="video-note">${item.note}</div>` : ''}
-          </div>
-          <div class="video-actions">
-            <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="btn-watch">▶ 打开视频</a>
-            <button class="btn-del" title="删除" data-id="${item.id}">✕</button>
-          </div>
-        `;
+        div.innerHTML =
+          '<div class="video-info">' +
+            '<span class="video-tag">' + item.tag + '</span>' +
+            '<div class="video-name">' + item.title + '</div>' +
+            (item.note ? '<div class="video-note">' + item.note + '</div>' : '') +
+          '</div>' +
+          '<div class="video-actions">' +
+            '<a href="' + item.url + '" target="_blank" rel="noopener noreferrer" class="btn-watch">▶ 打开视频</a>' +
+            '<button type="button" class="btn-del" title="删除" data-id="' + item.id + '">✕</button>' +
+          '</div>';
         container.appendChild(div);
       });
 
@@ -476,10 +448,9 @@
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'chunk-btn';
-        btn.innerHTML = `
-          <span class="chunk-it">🔊 ${c.it}</span>
-          <span class="chunk-zh">${c.zh}</span>
-        `;
+        btn.innerHTML =
+          '<span class="chunk-it">🔊 ' + c.it + '</span>' +
+          '<span class="chunk-zh">' + c.zh + '</span>';
         btn.addEventListener('click', () => speakItalian(c.it));
         grid.appendChild(btn);
       });
@@ -497,10 +468,10 @@
       const list = loadVideos();
       list.unshift({
         id: 'v_' + Date.now(),
-        tag,
-        title,
-        url,
-        note
+        tag: tag,
+        title: title,
+        url: url,
+        note: note
       });
       saveVideos(list);
       renderVideos();
@@ -513,14 +484,13 @@
 
     document.getElementById('exportBtn').addEventListener('click', () => {
       const list = loadVideos();
-      const md = ['# 趣味意大利 · 视频收藏清单', ''].concat(
-        list.map((v, i) => `${i + 1}. **${v.title}** (${v.tag})
-   - 链接: ${v.url}${v.note ? `
-   - 备注: ${v.note}` : ''}`)
-      ).join('
-');
-
-      navigator.clipboard.writeText(md).then(() => {
+      const lines = ['# 趣味意大利 · 视频收藏清单', ''];
+      list.forEach((v, i) => {
+        lines.push((i + 1) + '. **' + v.title + '** (' + v.tag + ')');
+        lines.push('   - 链接: ' + v.url);
+        if (v.note) lines.push('   - 备注: ' + v.note);
+      });
+      navigator.clipboard.writeText(lines.join('\n')).then(() => {
         showToast('已复制 Markdown 清单，可直接贴入 NotebookLM！');
       });
     });
