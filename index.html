@@ -1,4 +1,264 @@
-// CARD 3: Pizza Umbrella (Duolingo Pizza Unit + Baby Talking About Pizza)
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TPRS Italian Lab</title>
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --card: #ffffff;
+      --text: #292524;
+      --muted: #78716c;
+      --border: #e7e5e4;
+      --accent: #2563eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 1.5rem 1rem 4rem;
+    }
+    .shell {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      background: #efede8;
+      padding: 0.3rem;
+      border-radius: 999px;
+    }
+    .tabs button {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tabs button.active {
+      background: #ffffff;
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .card h2 {
+      margin: 0 0 1.1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .sentence {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f5f5f4;
+    }
+    .sentence:last-of-type { border-bottom: none; }
+    .it-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    .audio-btn {
+      border: 1px solid var(--border);
+      background: #fafaf9;
+      border-radius: 999px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .audio-btn:hover { background: #f5f5f4; }
+
+    details {
+      margin-top: 1rem;
+      background: #fafaf9;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.9rem;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--muted);
+      user-select: none;
+    }
+    details[open] summary {
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .pager {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .pager button {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+    .pager button:disabled { opacity: 0.35; cursor: default; }
+
+    .chunk-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid #f5f5f4;
+    }
+    .chunk-pill:last-child { border-bottom: none; }
+
+    .quiz-item {
+      margin-bottom: 1rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid #f5f5f4;
+    }
+    .quiz-item input {
+      border: 1px solid #d6d3d1;
+      border-radius: 6px;
+      padding: 0.3rem 0.55rem;
+      width: 90px;
+      font-size: 0.95rem;
+      margin: 0 0.35rem;
+    }
+    .check-btn {
+      border: 1px solid var(--border);
+      background: #fafaf9;
+      border-radius: 6px;
+      padding: 0.3rem 0.65rem;
+      cursor: pointer;
+    }
+    textarea {
+      width: 100%;
+      min-height: 85px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.7rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      background: #fafaf9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+  <header>
+    <h1>🇮🇹 TPRS Italian Lab</h1>
+    <div class="tabs">
+      <button class="active" onclick="switchTab('input', this)">1. Input</button>
+      <button onclick="switchTab('transform', this)">2. Transform</button>
+      <button onclick="switchTab('output', this)">3. Output</button>
+    </div>
+  </header>
+
+  <main id="stage"></main>
+</div>
+
+<script>
+// ============================================================================
+// 🔒 PROTECTED LAB DATA (Add new cards here anytime)
+// ============================================================================
+const LAB_DATA = {
+  input: [
+    // CARD 1: Health & Daily Routine (Duo Unit 40)
+    {
+      tag: "Duo Unit 40 · Health & Care",
+      title: "Il nonno e la medicina",
+      lines: [
+        {
+          it: "Ogni mattina il nonno si alza dal letto, ma oggi gli fa male la schiena.",
+          en: "Every morning Grandpa gets out of bed, but today his back hurts.",
+          zh: "每天早上爷爷都起床，但今天他背疼。"
+        },
+        {
+          it: "La nonna chiama il dottore. Il dottore gli dà una medicina e lui la prende subito.",
+          en: "Grandma calls the doctor. The doctor gives him a medicine and he takes it right away.",
+          zh: "奶奶打电话给医生。医生给他一剂药，他马上吃了。"
+        }
+      ],
+      drills: [
+        "A chi fa male la schiena? → Al nonno! Gli fa male la schiena.",
+        "Che cosa gli dà il dottore? → Gli dà una medicina, e lui la prende."
+      ]
+    },
+
+    // CARD 2: Italian Food & Drink Culture (Espresso + Pasta)
+    {
+      tag: "Fun Web Clips · Food & Drink Culture",
+      title: "Il vero espresso e la vera pasta",
+      url: "https://www.facebook.com/reel/2581303782374111",
+      lines: [
+        {
+          it: "No! Questo caffè americano freddo con panna e caramello è un dessert.",
+          en: "No! This iced American coffee with whipped cream and caramel is a dessert.",
+          zh: "不！这种加了奶油和焦糖的冰美式咖啡根本就是甜点。"
+        },
+        {
+          it: "Questo è vero espresso italiano: caldo, intenso e perfetto. Mamma mia!",
+          en: "This is real Italian espresso: hot, intense, and perfect. Oh my goodness!",
+          zh: "这才是真正的意式浓缩咖啡：滚烫、醇厚、完美。天哪！"
+        },
+        {
+          it: "E ecco la vera pasta con salsiccia e peperoni: la salsiccia succosa e i peperoni dolci sono una magia!",
+          en: "And here is the real pasta with sausage and bell peppers: the juicy sausage and sweet peppers are pure magic!",
+          zh: "这就是正宗的香肠甜椒意面：多汁的香肠配上甘甜的甜椒，简直是魔法！"
+        }
+      ],
+      drills: [
+        "Che cosa è 'vero' in Italia? → Il vero espresso italiano e la vera pasta con salsiccia e peperoni!",
+        "Il caffè americano con panna è un vero caffè o un dessert? → È un dessert!",
+        "Anche tu ami la pasta e l'espresso? → Sì, li amo!"
+      ]
+    },
+
+    // CARD 3: Pizza Umbrella (Duolingo Pizza Unit + Baby Talking About Pizza)
     {
       tag: "Duo Unit + Fun Clip · La Pizza",
       title: "Voglio la pizza! (Duo & Il bambino)",
@@ -20,3 +280,199 @@
         "E tu, la vuoi con basilico o senza basilico? → La voglio con basilico!"
       ]
     }
+  ],
+
+  transform: [
+    {
+      tag: "HF Chunks · Super 7 & Unit 40",
+      title: "High-Frequency Engine Chunks",
+      items: [
+        { it: "Mi / Gli / Le fa male [la schiena]", tr: "My / His / Her [back] hurts · 我/他/她[背]疼" },
+        { it: "stare bene / stare male", tr: "to feel well / feel sick · 身体好 / 不舒服" },
+        { it: "prendere una medicina / riposarsi", tr: "to take medicine / to rest · 吃药 / 休息" },
+        { it: "mi piace / non mi piace", tr: "I like / I don't like · 我喜欢 / 我不喜欢" },
+        { it: "sto + [-ando/-endo]", tr: "I am [doing] right now · 我正在……" }
+      ],
+      tip: "Focus on just 3–4 engine chunks per session; swap the nouns inside [brackets] freely."
+    },
+    {
+      tag: "HF Umbrella Frames",
+      title: "Reusable Sentence Umbrellas",
+      items: [
+        { it: "Ecco la vera [pasta / pizza]!", tr: "Here is the real [pasta / pizza]! · 这才是正宗的[意面/披萨]！" },
+        { it: "Questo è vero [espresso]: caldo e perfetto.", tr: "This is real [espresso]: hot & perfect. · 这才是真正的[浓缩咖啡]：滚烫完美。" },
+        { it: "Ogni mattina [mi alzo / bevo un caffè].", tr: "Every morning [I get up / drink coffee]. · 每天早上[我起床 / 我喝咖啡]。" }
+      ],
+      tip: "Umbrella Theory: Keep the frame fixed and play with one new word in the slot."
+    },
+    {
+      tag: "Grammar Core · S+O+V & Shifts",
+      title: "Pronoun Gears & No vs. Non",
+      items: [
+        { it: "S + O + V: Il nonno la prende.", tr: "Grandpa takes it (la medicina). Weak pronouns sit BEFORE the verb." },
+        { it: "Person vs. Thing: gli / le vs. lo / la", tr: "gli (to him) / le (to her) · lo (it, m.) / la (it, f.)" },
+        { it: "Pro-Drop: Sa che lo ami?", tr: "Does he know you love him? Verb endings (-o/-i/-a) carry the subject." },
+        { it: "No vs. Non", tr: "Standalone 'No!' (rejecting a noun) vs. 'Non voglio' (before a verb)." }
+      ],
+      tip: "Two-beat rhythm: Beat 1 (Sa che...) + Beat 2 (lo ami?)."
+    }
+  ],
+
+  output: {
+    drills: [
+      { before: "La medicina? Il nonno", after: "prende subito.", ans: "la", hint: "Feminine singular object before verb → la" },
+      { before: "Il dottore", after: "dà una medicina (to him).", ans: "gli", hint: "Indirect 'to him' → gli" },
+      { before: "", after: "voglio il caffè americano!", ans: "non", hint: "Before a verb → non" },
+      { before: "Lui sa che tu", after: "ami? (him)", ans: "lo", hint: "Direct object 'him' → lo" }
+    ]
+  }
+};
+
+// ============================================================================
+// ✨ MINIMALIST ENGINE
+// ============================================================================
+let currentTab = "input";
+let cardIndex = 0;
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "it-IT";
+  u.rate = 0.92;
+  window.speechSynthesis.speak(u);
+}
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  cardIndex = 0;
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render();
+}
+
+function moveCard(delta) {
+  cardIndex += delta;
+  render();
+}
+
+function render() {
+  const stage = document.getElementById("stage");
+
+  if (currentTab === "input") {
+    const list = LAB_DATA.input;
+    const item = list[cardIndex];
+    stage.innerHTML = `
+      <div class="card">
+        <div class="meta">
+          <span>${item.tag}</span>
+          ${item.url ? `<a href="${item.url}" target="_blank" style="color:var(--accent);text-decoration:none;">🔗 Clip</a>` : ""}
+        </div>
+        <h2>${item.title}</h2>
+        ${item.lines.map(l => `
+          <div class="sentence">
+            <div class="it-row">
+              <span>${l.it}</span>
+              <button class="audio-btn" onclick="speak(\`${l.it.replace(/"/g, '&quot;')}\`)">🔊</button>
+            </div>
+          </div>
+        `).join("")}
+
+        <details>
+          <summary>▸ Show Translation (EN / 中文)</summary>
+          ${item.lines.map(l => `<p style="margin:0.4rem 0;"><strong>EN:</strong> ${l.en}<br><span style="color:var(--muted);"><strong>中文:</strong> ${l.zh}</span></p>`).join("")}
+        </details>
+
+        <details>
+          <summary>▸ Show TPRS Circling Drills</summary>
+          <ul style="margin:0.4rem 0;padding-left:1.2rem;">
+            ${item.drills.map(d => `<li>${d}</li>`).join("")}
+          </ul>
+        </details>
+      </div>
+      ${renderPager(list.length)}
+    `;
+  }
+
+  else if (currentTab === "transform") {
+    const list = LAB_DATA.transform;
+    const item = list[cardIndex];
+    stage.innerHTML = `
+      <div class="card">
+        <div class="meta"><span>${item.tag}</span></div>
+        <h2>${item.title}</h2>
+        ${item.items.map(ch => `
+          <div class="chunk-pill">
+            <div>
+              <div style="font-weight:600;">${ch.it}</div>
+              <div style="font-size:0.85rem;color:var(--muted);">${ch.tr}</div>
+            </div>
+            <button class="audio-btn" onclick="speak(\`${ch.it.replace(/\[.*?\]/g, '')}\`)">🔊</button>
+          </div>
+        `).join("")}
+
+        <details>
+          <summary>▸ 5-Second TPRS Note</summary>
+          <p style="margin:0.4rem 0;color:var(--muted);">${item.tip}</p>
+        </details>
+      </div>
+      ${renderPager(list.length)}
+    `;
+  }
+
+  else if (currentTab === "output") {
+    stage.innerHTML = `
+      <div class="card">
+        <div class="meta"><span>Interactive Practice</span></div>
+        <h2>Quick Slot Check</h2>
+        ${LAB_DATA.output.drills.map((d, i) => `
+          <div class="quiz-item">
+            <div>${d.before} <input id="q-${i}" onkeydown="if(event.key==='Enter') check(${i})" /> ${d.after}
+              <button class="check-btn" onclick="check(${i})">Check</button>
+            </div>
+            <div id="fb-${i}" style="font-size:0.84rem;margin-top:0.3rem;"></div>
+          </div>
+        `).join("")}
+
+        <details open>
+          <summary>✍️ Tell Your Mini-Story (2–3 Sentences)</summary>
+          <textarea id="story" placeholder="Ogni mattina non voglio..."></textarea>
+          <div style="margin-top:0.5rem;display:flex;gap:0.5rem;">
+            <button class="audio-btn" onclick="speak(document.getElementById('story').value)">🔊 Listen to My Story</button>
+            <button class="audio-btn" onclick="localStorage.setItem('tprs_story', document.getElementById('story').value)">💾 Save</button>
+          </div>
+        </details>
+      </div>
+    `;
+    const saved = localStorage.getItem("tprs_story");
+    if (saved) document.getElementById("story").value = saved;
+  }
+}
+
+function renderPager(total) {
+  return `
+    <div class="pager">
+      <button onclick="moveCard(-1)" ${cardIndex === 0 ? "disabled" : ""}>← Prev</button>
+      <span>Card ${cardIndex + 1} of ${total}</span>
+      <button onclick="moveCard(1)" ${cardIndex === total - 1 ? "disabled" : ""}>Next →</button>
+    </div>
+  `;
+}
+
+function check(i) {
+  const val = document.getElementById(`q-${i}`).value.trim().toLowerCase();
+  const d = LAB_DATA.output.drills[i];
+  const fb = document.getElementById(`fb-${i}`);
+  if (val === d.ans) {
+    fb.style.color = "#059669";
+    fb.textContent = "✓ Perfetto!";
+  } else {
+    fb.style.color = "#b45309";
+    fb.textContent = d.hint;
+  }
+}
+
+render();
+</script>
+</body>
+</html>
