@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TPRS Italian Lab — Input · Transformation · Output</title>
+  <title>TPRS Italian Lab</title>
   <style>
     :root {
-      --bg: #f6f7f9;
+      --bg: #faf9f6;
       --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --blue: #2563eb;    /* Station 1: Input */
-      --amber: #d97706;   /* Station 2: Transformation */
-      --green: #059669;   /* Station 3: Output */
+      --text: #292524;
+      --muted: #78716c;
+      --border: #e7e5e4;
+      --accent: #2563eb;
     }
     * { box-sizing: border-box; }
     body {
@@ -21,520 +19,424 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.55;
+      line-height: 1.65;
+      padding: 1.5rem 1rem 4rem;
+    }
+    .shell {
+      max-width: 640px;
+      margin: 0 auto;
     }
     header {
-      background: #111827;
-      color: #fff;
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
     }
-    header h1 { margin: 0; font-size: 1.35rem; letter-spacing: 0.3px; }
-    header p { margin: 0.2rem 0 0; font-size: 0.85rem; color: #9ca3af; }
-    .controls { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    button {
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: #fff;
-      color: var(--text);
-      padding: 0.45rem 0.85rem;
-      border-radius: 8px;
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      background: #efede8;
+      padding: 0.3rem;
+      border-radius: 999px;
+    }
+    .tabs button {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
       font-size: 0.88rem;
       font-weight: 500;
+      cursor: pointer;
       transition: all 0.15s ease;
     }
-    button:hover { background: #f3f4f6; }
-    button.active-tab { color: #fff; border-color: transparent; }
-    button.tab-all.active-tab { background: #374151; }
-    button.tab-input.active-tab { background: var(--blue); }
-    button.tab-transform.active-tab { background: var(--amber); }
-    button.tab-output.active-tab { background: var(--green); }
+    .tabs button.active {
+      background: #ffffff;
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
 
-    nav.stations {
-      max-width: 1020px;
-      margin: 1.25rem auto 0;
-      padding: 0 1rem;
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-    }
-    main {
-      max-width: 1020px;
-      margin: 1rem auto 3rem;
-      padding: 0 1rem;
-      display: grid;
-      gap: 1.25rem;
-    }
     .card {
       background: var(--card);
-      border-radius: 12px;
-      padding: 1.25rem 1.4rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
       border: 1px solid var(--border);
-      border-left: 6px solid #9ca3af;
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
-    .card.station-input { border-left-color: var(--blue); }
-    .card.station-transform { border-left-color: var(--amber); }
-    .card.station-output { border-left-color: var(--green); }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      padding: 0.2rem 0.55rem;
-      border-radius: 6px;
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--muted);
       margin-bottom: 0.5rem;
     }
-    .badge-input { background: #dbeafe; color: #1e40af; }
-    .badge-transform { background: #fef3c7; color: #92400e; }
-    .badge-output { background: #d1fae5; color: #065f46; }
-
-    .card h2 { margin: 0.2rem 0 0.75rem; font-size: 1.15rem; }
-    .it-line { font-size: 1.05rem; font-weight: 600; color: #111827; margin: 0.35rem 0; }
-    .en-line { font-size: 0.92rem; color: #374151; margin: 0.15rem 0; }
-    .zh-line { font-size: 0.9rem; color: var(--muted); margin: 0.15rem 0 0.6rem; }
-    body.hide-zh .zh-line { display: none; }
-    body.hide-en .en-line { display: none; }
-
-    .drill-box {
-      background: #f9fafb;
-      border: 1px dashed #d1d5db;
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      margin-top: 0.85rem;
-      font-size: 0.92rem;
+    .card h2 {
+      margin: 0 0 1.1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
     }
-    .drill-box strong { color: #111827; }
-
-    .chunk-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    .sentence {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f5f5f4;
+    }
+    .sentence:last-of-type { border-bottom: none; }
+    .it-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
       gap: 0.75rem;
-      margin-top: 0.6rem;
+      font-size: 1.1rem;
+      font-weight: 500;
     }
-    .chunk-item {
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-radius: 8px;
-      padding: 0.65rem 0.85rem;
+    .audio-btn {
+      border: 1px solid var(--border);
+      background: #fafaf9;
+      border-radius: 999px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
     }
-    .chunk-item .it { font-weight: 700; color: #78350f; }
-    .chunk-item .tr { font-size: 0.85rem; color: #4b5563; margin-top: 0.2rem; }
+    .audio-btn:hover { background: #f5f5f4; }
 
-    table.grammar-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0.75rem 0;
+    details {
+      margin-top: 1rem;
+      background: #fafaf9;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.65rem 0.9rem;
       font-size: 0.9rem;
     }
-    table.grammar-table th, table.grammar-table td {
-      border: 1px solid var(--border);
-      padding: 0.45rem 0.6rem;
-      text-align: left;
+    summary {
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--muted);
+      user-select: none;
     }
-    table.grammar-table th { background: #f3f4f6; }
+    details[open] summary {
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
 
-    .quiz-row {
+    .pager {
       display: flex;
-      flex-wrap: wrap;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
-      margin: 0.65rem 0;
-      padding: 0.6rem 0.8rem;
-      background: #f0fdf4;
-      border-radius: 8px;
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      color: var(--muted);
     }
-    .quiz-row input {
-      padding: 0.35rem 0.6rem;
-      border: 1px solid #9ca3af;
+    .pager button {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+    .pager button:disabled { opacity: 0.35; cursor: default; }
+
+    .chunk-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid #f5f5f4;
+    }
+    .chunk-pill:last-child { border-bottom: none; }
+
+    .quiz-item {
+      margin-bottom: 1rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid #f5f5f4;
+    }
+    .quiz-item input {
+      border: 1px solid #d6d3d1;
       border-radius: 6px;
-      width: 110px;
+      padding: 0.3rem 0.55rem;
+      width: 90px;
       font-size: 0.95rem;
+      margin: 0 0.35rem;
     }
-    .feedback { font-weight: 600; font-size: 0.88rem; }
-    textarea.story-box {
+    .check-btn {
+      border: 1px solid var(--border);
+      background: #fafaf9;
+      border-radius: 6px;
+      padding: 0.3rem 0.65rem;
+      cursor: pointer;
+    }
+    textarea {
       width: 100%;
       min-height: 85px;
-      padding: 0.65rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.7rem;
       font-family: inherit;
       font-size: 0.95rem;
       margin-top: 0.5rem;
-    }
-    .tts-btn {
-      background: #eef2ff;
-      border-color: #c7d2fe;
-      color: #3730a3;
-      padding: 0.25rem 0.6rem;
-      font-size: 0.8rem;
-      margin-left: 0.4rem;
-    }
-    .link-bar {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.6rem;
-    }
-    .link-bar input {
-      flex: 1;
-      min-width: 180px;
-      padding: 0.4rem 0.6rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
+      background: #fafaf9;
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>🇮🇹 TPRS Italian Living Lab</h1>
-    <p>1. Input (Duo + Fun Web) &nbsp;→&nbsp; 2. Transformation (HF Chunks + Grammar) &nbsp;→&nbsp; 3. Output (Interactive Stage)</p>
-  </div>
-  <div class="controls">
-    <button onclick="document.body.classList.toggle('hide-zh')">Toggle 中文</button>
-    <button onclick="document.body.classList.toggle('hide-en')">Toggle English</button>
-  </div>
-</header>
+<div class="shell">
+  <header>
+    <h1>🇮🇹 TPRS Italian Lab</h1>
+    <div class="tabs">
+      <button class="active" onclick="switchTab('input', this)">1. Input</button>
+      <button onclick="switchTab('transform', this)">2. Transform</button>
+      <button onclick="switchTab('output', this)">3. Output</button>
+    </div>
+  </header>
 
-<nav class="stations">
-  <button class="tab-all active-tab" onclick="filterStation('all', this)">All Stations</button>
-  <button class="tab-input" onclick="filterStation('input', this)">1. Input (Sources & Clips)</button>
-  <button class="tab-transform" onclick="filterStation('transformation', this)">2. Transformation (HF Vocab & Grammar)</button>
-  <button class="tab-output" onclick="filterStation('output', this)">3. Output (Interactive Stage)</button>
-</nav>
-
-<main id="lab-container"></main>
+  <main id="stage"></main>
+</div>
 
 <script>
 // ============================================================================
-// 🔒 PROTECTED LAB DATA (Add new cards here; UI updates will never wipe them)
+// 🔒 PROTECTED LAB DATA (Add new cards here anytime)
 // ============================================================================
 const LAB_DATA = {
-  // STATION 1: INPUT (Duo Lessons + Fun Web Clips + Link Collector)
   input: [
     {
-      id: "in-duo-u40",
-      title: "Duo Unit 40: Family Health & Care (Mini-Story)",
-      tag: "Duolingo Listening / Reading",
+      tag: "Duo Unit 40 · Story",
+      title: "Il nonno e la medicina",
       lines: [
-        {
-          it: "Ogni mattina il nonno si alza dal letto, ma oggi gli fa male la schiena.",
-          en: "Every morning Grandpa gets out of bed, but today his back hurts.",
-          zh: "每天早上爷爷都起床，但今天他背疼。"
-        },
-        {
-          it: "La nonna chiama il dottore. Il dottore gli dà una medicina e lui la prende subito.",
-          en: "Grandma calls the doctor. The doctor gives him a medicine and he takes it right away.",
-          zh: "奶奶打电话给医生。医生给他一剂药，他马上吃了。"
-        }
+        { it: "Ogni mattina il nonno si alza dal letto, ma oggi gli fa male la schiena.", en: "Every morning Grandpa gets out of bed, but today his back hurts.", zh: "每天早上爷爷都起床，但今天他背疼。" },
+        { it: "La nonna chiama il dottore. Il dottore gli dà una medicina e lui la prende subito.", en: "Grandma calls the doctor. The doctor gives him a medicine and he takes it right away.", zh: "奶奶打电话给医生。医生给他一剂药，他马上吃了。" }
       ],
-      circling: [
-        "Q: A chi fa male la schiena? Al nonno o alla nonna? → Al nonno! Gli fa male la schiena.",
-        "Q: Che cosa gli dà il dottore? → Gli dà una medicina, e il nonno la prende."
+      drills: [
+        "A chi fa male la schiena? → Al nonno! Gli fa male la schiena.",
+        "Che cosa gli dà il dottore? → Gli dà una medicina, e lui la prende."
       ]
     },
     {
-      id: "in-fun-coffee",
-      title: "Fun Web Clip #1: Vero Espresso vs. Caffè Americano",
-      tag: "Facebook Reel · Coffee Humor",
-      url: "https://www.facebook.com/reel/",
+      tag: "Fun Web Clip · Coffee",
+      title: "Vero Espresso vs. Caffè Americano",
       lines: [
-        {
-          it: "No! Questo caffè americano freddo con panna e caramello è un dessert.",
-          en: "No! This iced American coffee with whipped cream and caramel is a dessert.",
-          zh: "不！这种加了奶油和焦糖的冰美式咖啡根本就是甜点。"
-        },
-        {
-          it: "Questo è vero espresso italiano: caldo, intenso e perfetto. Mamma mia!",
-          en: "This is real Italian espresso: hot, intense, and perfect. Oh my goodness!",
-          zh: "这才是真正的意式浓缩咖啡：滚烫、醇厚、完美。天哪！"
-        }
+        { it: "No! Questo caffè americano freddo con panna e caramello è un dessert.", en: "No! This iced American coffee with whipped cream and caramel is a dessert.", zh: "不！这种加了奶油和焦糖的冰美式咖啡根本就是甜点。" },
+        { it: "Questo è vero espresso italiano: caldo, intenso e perfetto. Mamma mia!", en: "This is real Italian espresso: hot, intense, and perfect. Oh my goodness!", zh: "这才是真正的意式浓缩咖啡：滚烫、醇厚、完美。天哪！" }
       ],
-      circling: [
-        "Q: Il caffè americano con panna è un vero caffè o un dessert? → È un dessert!",
-        "Q: Com'è il vero espresso italiano? → È caldo, intenso e perfetto!"
+      drills: [
+        "Il caffè americano con panna è un vero caffè o un dessert? → È un dessert!",
+        "Com'è il vero espresso italiano? → È caldo, intenso e perfetto!"
       ]
     },
     {
-      id: "in-fun-pasta",
-      title: "Fun Web Clip #2: Pasta con Salsiccia e Peperoni",
-      tag: "Facebook Reel · Food & Travel",
+      tag: "Fun Web Clip · Food",
+      title: "Pasta con Salsiccia e Peperoni",
       url: "https://www.facebook.com/reel/2581303782374111",
       lines: [
-        {
-          it: "Ecco la vera pasta con salsiccia e peperoni, la preferita di tutta Italia!",
-          en: "Here is the real pasta with sausage and bell peppers, all of Italy's favorite!",
-          zh: "这就是正宗的香肠甜椒意面，全意大利人的最爱！"
-        },
-        {
-          it: "La salsiccia succosa e i peperoni dolci sono una magia. Anche voi amate questo piatto?",
-          en: "The juicy sausage and sweet bell peppers are pure magic. Do you love this dish too?",
-          zh: "多汁的香肠配上甘甜的甜椒，简直就像魔法一样美妙。你们也爱这道菜吗？"
-        }
+        { it: "Ecco la vera pasta con salsiccia e peperoni, la preferita di tutta Italia!", en: "Here is the real pasta with sausage and bell peppers, all of Italy's favorite!", zh: "这就是正宗的香肠甜椒意面，全意大利人的最爱！" },
+        { it: "La salsiccia succosa e i peperoni dolci sono una magia. Anche voi amate questo piatto?", en: "The juicy sausage and sweet bell peppers are pure magic. Do you love this dish too?", zh: "多汁的香肠配上甘甜的甜椒，简直就像魔法一样美妙。你们也爱这道菜吗？" }
       ],
-      circling: [
-        "Q: Che cosa c'è nella pasta? → Salsiccia succosa e peperoni dolci!",
-        "Q: Anche tu ami questo piatto straordinario? → Sì, lo amo!"
+      drills: [
+        "Che cosa c'è nella pasta? → Salsiccia succosa e peperoni dolci!",
+        "Anche tu ami questo piatto? → Sì, lo amo!"
       ]
     }
   ],
 
-  // STATION 2: TRANSFORMATION (Living HF Vocab Card + Structural Grammar Core)
-  transformation: {
-    hfVocabCard: {
-      title: "Living High-Frequency (HF) Chunks & Umbrella Frames",
-      updated: "2026-11-22",
-      categories: [
-        {
-          name: "1. Super 7 & Daily Engines",
-          chunks: [
-            { it: "c'è / ci sono", en: "there is / there are", zh: "有（存在）" },
-            { it: "mi piace / non mi piace", en: "I like / I don't like", zh: "我喜欢 / 我不喜欢" },
-            { it: "voglio + [verb/noun]", en: "I want...", zh: "我想要……" },
-            { it: "sto + [-ando/-endo]", en: "I am [doing] right now", zh: "我正在……" }
-          ]
-        },
-        {
-          name: "2. Duo Unit 40 Health & Care Chunks",
-          chunks: [
-            { it: "Mi / Gli / Le fa male [la testa]", en: "My / His / Her [head] hurts", zh: "我/他/她[头]疼" },
-            { it: "stare bene / stare male", en: "to feel well / feel sick", zh: "身体好 / 不舒服" },
-            { it: "ammalarsi / guarire", en: "to get sick / to recover", zh: "生病 / 康复" },
-            { it: "prendere una medicina / riposarsi", en: "to take medicine / to rest", zh: "吃药 / 休息" }
-          ]
-        },
-        {
-          name: "3. Umbrella Frames (From Fun Reels)",
-          chunks: [
-            { it: "Ecco la vera [pasta / pizza]!", en: "Here is the real [pasta / pizza]!", zh: "这才是正宗的[意面/披萨]！" },
-            { it: "Questo è vero [espresso]: caldo e perfetto.", en: "This is real [espresso]: hot & perfect.", zh: "这才是真正的[浓缩咖啡]：滚烫完美。" },
-            { it: "Ogni mattina [mi alzo / bevo un caffè].", en: "Every morning [I get up / drink coffee].", zh: "每天早上[我起床 / 我喝咖啡]。" }
-          ]
-        }
-      ]
+  transform: [
+    {
+      tag: "HF Chunks · Super 7 & Unit 40",
+      title: "High-Frequency Engine Chunks",
+      items: [
+        { it: "Mi / Gli / Le fa male [la schiena]", tr: "My / His / Her [back] hurts · 我/他/她[背]疼" },
+        { it: "stare bene / stare male", tr: "to feel well / feel sick · 身体好 / 不舒服" },
+        { it: "prendere una medicina / riposarsi", tr: "to take medicine / to rest · 吃药 / 休息" },
+        { it: "mi piace / non mi piace", tr: "I like / I don't like · 我喜欢 / 我不喜欢" },
+        { it: "sto + [-ando/-endo]", tr: "I am [doing] right now · 我正在……" }
+      ],
+      tip: "Focus on just 3–4 engine chunks per session; swap the nouns inside [brackets] freely."
     },
-    grammarCard: {
-      title: "Grammar Core: S+O+V Shifts, Pro-Drop & No vs. Non",
-      notes: [
-        "⚙️ <strong>S + O + V Gear Shift:</strong> Weak object pronouns sit directly BEFORE the conjugated verb: <em>(Io) <strong>ti</strong> amo</em> (I love you), <em>Il nonno <strong>la</strong> prende</em> (Grandpa takes it [la medicina]).",
-        "🎯 <strong>Person vs. Thing (gli / le vs. lo / la):</strong> Use <strong>gli</strong> (to him) / <strong>le</strong> (to her) for people (<em>Il dottore <strong>gli</strong> dà la medicina</em>), and <strong>lo</strong> (it, m.) / <strong>la</strong> (it, f.) for objects.",
-        "✂️ <strong>Pro-Drop Two-Beat Rhythm:</strong> Verb endings carry the subject (<em>-o</em> = I, <em>-i</em> = you, <em>-a</em> = he/she), so native speakers drop pronouns: <em><strong>Sa che lo ami?</strong></em> (Does he know that you love him?).",
-        "🚫 <strong>No vs. Non:</strong> Use standalone <strong>no</strong> to reject/contrast (<em>No! Questo caffè è un dessert</em>), and <strong>non</strong> directly before a verb (<em><strong>Non</strong> voglio questo caffè</em>)."
-      ]
+    {
+      tag: "HF Umbrella Frames",
+      title: "Reusable Sentence Umbrellas",
+      items: [
+        { it: "Ecco la vera [pasta / pizza]!", tr: "Here is the real [pasta / pizza]! · 这才是正宗的[意面/披萨]！" },
+        { it: "Questo è vero [espresso]: caldo e perfetto.", tr: "This is real [espresso]: hot & perfect. · 这才是真正的[浓缩咖啡]：滚烫完美。" },
+        { it: "Ogni mattina [mi alzo / bevo un caffè].", tr: "Every morning [I get up / drink coffee]. · 每天早上[我起床 / 我喝咖啡]。" }
+      ],
+      tip: "Umbrella Theory: Keep the frame fixed and play with one new word in the slot."
+    },
+    {
+      tag: "Grammar Core · S+O+V & Shifts",
+      title: "Pronoun Gears & No vs. Non",
+      items: [
+        { it: "S + O + V: Il nonno la prende.", tr: "Grandpa takes it (la medicina). Weak pronouns sit BEFORE the verb." },
+        { it: "Person vs. Thing: gli / le vs. lo / la", tr: "gli (to him) / le (to her) · lo (it, m.) / la (it, f.)" },
+        { it: "Pro-Drop: Sa che lo ami?", tr: "Does he know you love him? Verb endings (-o/-i/-a) carry the subject." },
+        { it: "No vs. Non", tr: "Standalone 'No!' (rejecting a noun) vs. 'Non voglio' (before a verb)." }
+      ],
+      tip: "Two-beat rhythm: Beat 1 (Sa che...) + Beat 2 (lo ami?)."
     }
-  },
+  ],
 
-  // STATION 3: OUTPUT (Interactive Slot Checks + Personal Story Stage)
   output: {
     drills: [
-      {
-        prompt: "1. S+O+V Shift (Feminine Object): La medicina? Il nonno ___ prende subito.",
-        answer: "la",
-        hint: "Use 'la' for feminine singular 'la medicina' placed before 'prende'."
-      },
-      {
-        prompt: "2. Indirect Pronoun (To Him): Il dottore ___ dà una medicina.",
-        answer: "gli",
-        hint: "'gli' = to him (il nonno); 'le' = to her."
-      },
-      {
-        prompt: "3. Verbal Negation: ___ voglio il caffè americano con panna!",
-        answer: "non",
-        hint: "Before a conjugated verb ('voglio'), always use 'non' (not 'no')."
-      },
-      {
-        prompt: "4. Pro-Drop Clause: Lui sa che tu ___ ami? (Does he know you love him?)",
-        answer: "lo",
-        hint: "'lo' = him (direct object right before 'ami')."
-      }
+      { before: "La medicina? Il nonno", after: "prende subito.", ans: "la", hint: "Feminine singular object before verb → la" },
+      { before: "Il dottore", after: "dà una medicina (to him).", ans: "gli", hint: "Indirect 'to him' → gli" },
+      { before: "", after: "voglio il caffè americano!", ans: "non", hint: "Before a verb → non" },
+      { before: "Lui sa che tu", after: "ami? (him)", ans: "lo", hint: "Direct object 'him' → lo" }
     ]
   }
 };
 
 // ============================================================================
-// 🛠️ RENDERING & INTERACTIVE ENGINE
+// ✨ MINIMALIST ENGINE
 // ============================================================================
-function speakItalian(text) {
-  if (!('speechSynthesis' in window)) return alert("TTS not supported in this browser.");
+let currentTab = "input";
+let cardIndex = 0;
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "it-IT";
-  utter.rate = 0.92;
-  window.speechSynthesis.speak(utter);
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "it-IT";
+  u.rate = 0.92;
+  window.speechSynthesis.speak(u);
 }
 
-function renderLab() {
-  const container = document.getElementById("lab-container");
-  let html = "";
+function switchTab(tab, btn) {
+  currentTab = tab;
+  cardIndex = 0;
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render();
+}
 
-  // 1. Render Input Cards
-  LAB_DATA.input.forEach(item => {
-    html += `
-      <section class="card station-input" data-station="input">
-        <span class="badge badge-input">Station 1 · Input · ${item.tag}</span>
-        <h2>${item.title} ${item.url ? `<a href="${item.url}" target="_blank" style="font-size:0.8rem;margin-left:8px;">🔗 Source Clip</a>` : ""}</h2>
+function moveCard(delta) {
+  cardIndex += delta;
+  render();
+}
+
+function render() {
+  const stage = document.getElementById("stage");
+
+  if (currentTab === "input") {
+    const list = LAB_DATA.input;
+    const item = list[cardIndex];
+    stage.innerHTML = `
+      <div class="card">
+        <div class="meta">
+          <span>${item.tag}</span>
+          ${item.url ? `<a href="${item.url}" target="_blank" style="color:var(--accent);text-decoration:none;">🔗 Clip</a>` : ""}
+        </div>
+        <h2>${item.title}</h2>
         ${item.lines.map(l => `
-          <div class="it-line">
-            ${l.it}
-            <button class="tts-btn" onclick="speakItalian(\`${l.it.replace(/"/g, '&quot;')}\`)">🔊 Listen</button>
-          </div>
-          <div class="en-line">${l.en}</div>
-          <div class="zh-line">${l.zh}</div>
-        `).join("")}
-        <div class="drill-box">
-          <strong>🔄 Embedded TPRS Circling Drills:</strong>
-          <ul style="margin:0.4rem 0 0;padding-left:1.2rem;">
-            ${item.circling.map(c => `<li>${c}</li>`).join("")}
-          </ul>
-        </div>
-      </section>
-    `;
-  });
-
-  // Quick Link Collector Card in Station 1
-  html += `
-    <section class="card station-input" data-station="input">
-      <span class="badge badge-input">Station 1 · Quick Web Clip Collector</span>
-      <h2>📌 Save a New Video Link to Practice</h2>
-      <div class="link-bar">
-        <input type="text" id="new-clip-title" placeholder="Clip title (e.g., Rome Colosseum Reel)" />
-        <input type="url" id="new-clip-url" placeholder="Paste Facebook / YouTube URL..." />
-        <button onclick="saveQuickLink()">+ Save Link</button>
-      </div>
-      <ul id="saved-links-list" style="margin-top:0.75rem;padding-left:1.2rem;font-size:0.9rem;"></ul>
-    </section>
-  `;
-
-  // 2. Render Transformation Cards (HF Vocab Card + Grammar Core Card)
-  const hf = LAB_DATA.transformation.hfVocabCard;
-  html += `
-    <section class="card station-transform" data-station="transformation">
-      <span class="badge badge-transform">Station 2 · Transformation · Living HF Vocab Card (Updated ${hf.updated})</span>
-      <h2>${hf.title}</h2>
-      ${hf.categories.map(cat => `
-        <h3 style="font-size:0.95rem;margin:0.9rem 0 0.3rem;color:#92400e;">${cat.name}</h3>
-        <div class="chunk-grid">
-          ${cat.chunks.map(ch => `
-            <div class="chunk-item">
-              <div class="it">${ch.it} <button class="tts-btn" onclick="speakItalian(\`${ch.it.replace(/\[.*?\]/g, '')}\`)">🔊</button></div>
-              <div class="tr">${ch.en} · <span class="zh-line">${ch.zh}</span></div>
+          <div class="sentence">
+            <div class="it-row">
+              <span>${l.it}</span>
+              <button class="audio-btn" onclick="speak(\`${l.it.replace(/"/g, '&quot;')}\`)">🔊</button>
             </div>
-          `).join("")}
-        </div>
-      `).join("")}
-    </section>
-  `;
+          </div>
+        `).join("")}
 
-  const gr = LAB_DATA.transformation.grammarCard;
-  html += `
-    <section class="card station-transform" data-station="transformation">
-      <span class="badge badge-transform">Station 2 · Transformation · Structural Grammar Backbone</span>
-      <h2>${gr.title}</h2>
-      <ul style="padding-left:1.2rem;margin:0.5rem 0;">
-        ${gr.notes.map(n => `<li style="margin-bottom:0.5rem;">${n}</li>`).join("")}
-      </ul>
-      <table class="grammar-table">
-        <tr><th>Person</th><th>Subject</th><th>Direct (Who/What)</th><th>Indirect (To Whom)</th><th>After Preposition</th></tr>
-        <tr><td>I / Me</td><td>io</td><td><strong>mi</strong> (<em>mi vede</em>)</td><td><strong>mi</strong> (<em>mi parla</em>)</td><td><strong>me</strong> (<em>per me</em>)</td></tr>
-        <tr><td>You</td><td>tu</td><td><strong>ti</strong> (<em>ti amo</em>)</td><td><strong>ti</strong> (<em>ti dico</em>)</td><td><strong>te</strong> (<em>con te</em>)</td></tr>
-        <tr><td>He / Him</td><td>lui</td><td><strong>lo</strong> (<em>lo prendo</em>)</td><td><strong>gli</strong> (<em>gli dà</em>)</td><td><strong>lui</strong> (<em>per lui</em>)</td></tr>
-        <tr><td>She / Her</td><td>lei</td><td><strong>la</strong> (<em>la amo</em>)</td><td><strong>le</strong> (<em>le parla</em>)</td><td><strong>lei</strong> (<em>con lei</em>)</td></tr>
-      </table>
-    </section>
-  `;
+        <details>
+          <summary>▸ Show Translation (EN / 中文)</summary>
+          ${item.lines.map(l => `<p style="margin:0.4rem 0;"><strong>EN:</strong> ${l.en}<br><span style="color:var(--muted);"><strong>中文:</strong> ${l.zh}</span></p>`).join("")}
+        </details>
 
-  // 3. Render Output Card (Interactive Slot Drills + Personal Story Stage)
-  html += `
-    <section class="card station-output" data-station="output">
-      <span class="badge badge-output">Station 3 · Output · Interactive S+O+V & Grammar Check</span>
-      <h2>🎯 Active Slot Practice (Instant Feedback)</h2>
-      ${LAB_DATA.output.drills.map((d, idx) => `
-        <div class="quiz-row">
-          <span>${d.prompt}</span>
-          <input type="text" id="ans-${idx}" placeholder="type here..." onkeydown="if(event.key==='Enter') checkSlot(${idx})" />
-          <button onclick="checkSlot(${idx})">Check</button>
-          <span class="feedback" id="fb-${idx}"></span>
-        </div>
-      `).join("")}
-
-      <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);">
-        <h3 style="margin:0 0 0.3rem;font-size:1rem;">✍️ Tell Your Own Mini-Story (TPRS Personal Output)</h3>
-        <p style="margin:0;font-size:0.85rem;color:var(--muted);">
-          Combine today's chunks! Example: <em>"Ogni mattina non voglio il caffè americano. Preferisco il vero espresso italiano, e lo bevo caldo!"</em>
-        </p>
-        <textarea class="story-box" id="personal-story" placeholder="Scrivi qui la tua storia in italiano..."></textarea>
-        <div style="margin-top:0.5rem;display:flex;gap:0.5rem;">
-          <button onclick="speakItalian(document.getElementById('personal-story').value)">🔊 Read My Story Aloud</button>
-          <button onclick="saveStoryLocal()">💾 Save Story</button>
-          <span id="story-status" style="font-size:0.85rem;color:var(--green);align-self:center;"></span>
-        </div>
+        <details>
+          <summary>▸ Show TPRS Circling Drills</summary>
+          <ul style="margin:0.4rem 0;padding-left:1.2rem;">
+            ${item.drills.map(d => `<li>${d}</li>`).join("")}
+          </ul>
+        </details>
       </div>
-    </section>
+      ${renderPager(list.length)}
+    `;
+  }
+
+  else if (currentTab === "transform") {
+    const list = LAB_DATA.transform;
+    const item = list[cardIndex];
+    stage.innerHTML = `
+      <div class="card">
+        <div class="meta"><span>${item.tag}</span></div>
+        <h2>${item.title}</h2>
+        ${item.items.map(ch => `
+          <div class="chunk-pill">
+            <div>
+              <div style="font-weight:600;">${ch.it}</div>
+              <div style="font-size:0.85rem;color:var(--muted);">${ch.tr}</div>
+            </div>
+            <button class="audio-btn" onclick="speak(\`${ch.it.replace(/\[.*?\]/g, '')}\`)">🔊</button>
+          </div>
+        `).join("")}
+
+        <details>
+          <summary>▸ 5-Second TPRS Note</summary>
+          <p style="margin:0.4rem 0;color:var(--muted);">${item.tip}</p>
+        </details>
+      </div>
+      ${renderPager(list.length)}
+    `;
+  }
+
+  else if (currentTab === "output") {
+    stage.innerHTML = `
+      <div class="card">
+        <div class="meta"><span>Interactive Practice</span></div>
+        <h2>Quick Slot Check</h2>
+        ${LAB_DATA.output.drills.map((d, i) => `
+          <div class="quiz-item">
+            <div>${d.before} <input id="q-${i}" onkeydown="if(event.key==='Enter') check(${i})" /> ${d.after}
+              <button class="check-btn" onclick="check(${i})">Check</button>
+            </div>
+            <div id="fb-${i}" style="font-size:0.84rem;margin-top:0.3rem;"></div>
+          </div>
+        `).join("")}
+
+        <details open>
+          <summary>✍️ Tell Your Mini-Story (2–3 Sentences)</summary>
+          <textarea id="story" placeholder="Ogni mattina non voglio..."></textarea>
+          <div style="margin-top:0.5rem;display:flex;gap:0.5rem;">
+            <button class="audio-btn" onclick="speak(document.getElementById('story').value)">🔊 Listen to My Story</button>
+            <button class="audio-btn" onclick="localStorage.setItem('tprs_story', document.getElementById('story').value)">💾 Save</button>
+          </div>
+        </details>
+      </div>
+    `;
+    const saved = localStorage.getItem("tprs_story");
+    if (saved) document.getElementById("story").value = saved;
+  }
+}
+
+function renderPager(total) {
+  return `
+    <div class="pager">
+      <button onclick="moveCard(-1)" ${cardIndex === 0 ? "disabled" : ""}>← Prev</button>
+      <span>Card ${cardIndex + 1} of ${total}</span>
+      <button onclick="moveCard(1)" ${cardIndex === total - 1 ? "disabled" : ""}>Next →</button>
+    </div>
   `;
-
-  container.innerHTML = html;
-  loadSavedItems();
 }
 
-function checkSlot(idx) {
-  const userVal = document.getElementById(`ans-${idx}`).value.trim().toLowerCase();
-  const drill = LAB_DATA.output.drills[idx];
-  const fb = document.getElementById(`fb-${idx}`);
-  if (userVal === drill.answer) {
+function check(i) {
+  const val = document.getElementById(`q-${i}`).value.trim().toLowerCase();
+  const d = LAB_DATA.output.drills[i];
+  const fb = document.getElementById(`fb-${i}`);
+  if (val === d.ans) {
     fb.style.color = "#059669";
-    fb.textContent = "✅ Perfetto!";
+    fb.textContent = "✓ Perfetto!";
   } else {
-    fb.style.color = "#dc2626";
-    fb.textContent = `💡 Hint: ${drill.hint}`;
+    fb.style.color = "#b45309";
+    fb.textContent = d.hint;
   }
 }
 
-function filterStation(station, btn) {
-  document.querySelectorAll("nav.stations button").forEach(b => b.classList.remove("active-tab"));
-  btn.classList.add("active-tab");
-  document.querySelectorAll(".card").forEach(card => {
-    card.style.display = (station === "all" || card.dataset.station === station) ? "block" : "none";
-  });
-}
-
-function saveQuickLink() {
-  const title = document.getElementById("new-clip-title").value.trim();
-  const url = document.getElementById("new-clip-url").value.trim();
-  if (!title || !url) return;
-  const links = JSON.parse(localStorage.getItem("tprs_links") || "[]");
-  links.push({ title, url });
-  localStorage.setItem("tprs_links", JSON.stringify(links));
-  document.getElementById("new-clip-title").value = "";
-  document.getElementById("new-clip-url").value = "";
-  loadSavedItems();
-}
-
-function saveStoryLocal() {
-  const text = document.getElementById("personal-story").value;
-  localStorage.setItem("tprs_personal_story", text);
-  document.getElementById("story-status").textContent = "Saved in browser!";
-}
-
-function loadSavedItems() {
-  const links = JSON.parse(localStorage.getItem("tprs_links") || "[]");
-  const list = document.getElementById("saved-links-list");
-  if (list) {
-    list.innerHTML = links.map(l => `<li><a href="${l.url}" target="_blank">${l.title}</a></li>`).join("");
-  }
-  const savedStory = localStorage.getItem("tprs_personal_story");
-  const box = document.getElementById("personal-story");
-  if (savedStory && box) box.value = savedStory;
-}
-
-renderLab();
+render();
 </script>
 </body>
 </html>
