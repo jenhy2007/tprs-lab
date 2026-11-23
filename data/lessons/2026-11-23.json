@@ -1,0 +1,111 @@
+{
+  "date": "2026-11-23",
+  "trackA": {
+    "stage1_rawInput": {
+      "title": "DUO Unit 40: Describe Family Health Habits",
+      "items": [
+        { "it": "Oggi al nonno gli fa male la schiena.", "en": "Today Grandpa's back hurts.", "zh": "今天爷爷背疼。" },
+        { "it": "Il dottore gli dà una medicina e lui la prende.", "en": "The doctor gives him medicine and he takes it.", "zh": "医生给他药，他吃了。" }
+      ],
+      "anchors": [
+        "Indirect object 'gli' (to him) vs. Direct object 'la' (it, feminine).",
+        "Reflexive daily habit: alzarsi (si alza) & riposarsi (si riposa)."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Gli fa male [X]",
+        "cue": "Visual: Grandpa holding his back; Audio: 'Ahi, la schiena!'"
+      },
+      "step1_hfChunks": [
+        { "it": "gli fa male", "en": "his ... hurts" },
+        { "it": "gli dà", "en": "gives to him" },
+        { "it": "la prende", "en": "takes it (f.)" }
+      ],
+      "step2_singleSlot": {
+        "stem": "Oggi al nonno gli fa male",
+        "variables": ["la schiena", "la testa", "la gola", "lo stomaco"]
+      },
+      "step3_circling": [
+        { "type": "Statement", "q": "Al nonno gli fa male la schiena.", "a": "Sì, gli fa male la schiena." },
+        { "type": "Yes/No", "q": "Gli fa male la testa?", "a": "No, non gli fa male la testa, gli fa male la schiena!" },
+        { "type": "Either/Or", "q": "Il nonno prende un caffè o una medicina?", "a": "Prende una medicina!" },
+        { "type": "Open Wh-", "q": "Chi gli dà la medicina?", "a": "Il dottore gli dà la medicina." }
+      ],
+      "step4_scaffolding": {
+        "level1": "Il nonno sta male. Prende una medicina.",
+        "level2": "Oggi al nonno gli fa male la schiena, allora il dottore gli dà una medicina.",
+        "level3": "Anche se ogni mattina si alza presto, oggi al nonno gli fa male la schiena e il dottore gli dà una medicina che lui prende subito."
+      },
+      "step5_writeOutput": {
+        "prompt": "Summary Cloze: Il dottore ___ (to him) dà la medicina e il nonno ___ (it) prende."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "Quando ti fa male la testa, che cosa prendi?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "Notice how Italian keeps the object pronoun right in front of 'prendo' (S + O + V), rather than after the verb like English.",
+        "modelAnswer": "Quando mi fa male la testa, prendo un'aspirina e la prendo con acqua."
+      },
+      "personalStory": {
+        "prompt": "Write 2–3 sentences in 1st-person POV about how you keep healthy every morning."
+      }
+    }
+  },
+  "trackB": {
+    "stage1_rawInput": {
+      "title": "Fun-Italian Reel (facebook.com/reel/1133675759579830)",
+      "items": [
+        { "it": "No! Non voglio la verdura, voglio solo la pizza calda!", "en": "No! I don't want vegetables, I only want hot pizza!", "zh": "不要！我不要蔬菜，我只要热乎乎的披萨！" },
+        { "it": "Questa è vera pizza italiana: calda, fresca e perfetta!", "en": "This is real Italian pizza: hot, fresh, and perfect!", "zh": "这才是真正的意大利披萨：滚烫、新鲜、完美！" }
+      ],
+      "anchors": [
+        "Source Reel: https://www.facebook.com/reel/1133675759579830",
+        "Standalone 'No!' vs. 'non' before a conjugated verb ('Non voglio')."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Non voglio [X], voglio solo [Y]",
+        "cue": "Visual: Pushing away broccoli and reaching for hot pizza."
+      },
+      "step1_hfChunks": [
+        { "it": "Non voglio", "en": "I don't want" },
+        { "it": "voglio solo", "en": "I only want" },
+        { "it": "Questa è vera", "en": "This is real (f.)" }
+      ],
+      "step2_singleSlot": {
+        "stem": "Oggi non voglio",
+        "variables": ["la verdura", "il caffè freddo", "la pasta", "la medicina"]
+      },
+      "step3_circling": [
+        { "type": "Statement", "q": "Il bambino vuole la pizza calda.", "a": "Sì, vuole la pizza calda!" },
+        { "type": "Yes/No", "q": "Il bambino vuole la verdura?", "a": "No, non vuole la verdura, vuole la pizza!" },
+        { "type": "Either/Or", "q": "Vuole la pizza fredda o la pizza calda?", "a": "Vuole la pizza calda!" },
+        { "type": "Open Wh-", "q": "Che cosa vuole il bambino?", "a": "Vuole solo la pizza calda!" }
+      ],
+      "step4_scaffolding": {
+        "level1": "Non voglio la verdura. Voglio la pizza.",
+        "level2": "No! Non voglio la verdura fredda, voglio solo la pizza calda.",
+        "level3": "Anche se la verdura fa bene, oggi non voglio la verdura perché preferisco la vera pizza italiana calda e fresca."
+      },
+      "step5_writeOutput": {
+        "prompt": "1-Sentence Drill: Reject something with 'No! Non voglio...' and say what you want instead."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "A cena preferisci la pizza o la pasta?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "Check whether you placed 'non' directly before the verb ('non voglio') rather than using standalone 'no'.",
+        "modelAnswer": "A cena non voglio la pasta, voglio solo una pizza margherita!"
+      },
+      "personalStory": {
+        "prompt": "Write 2 sentences in 1st-person POV about your favorite dinner."
+      }
+    }
+  }
+}
