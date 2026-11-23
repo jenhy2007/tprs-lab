@@ -1,0 +1,111 @@
+{
+  "date": "2026-11-23",
+  "trackA": {
+    "stage1_rawInput": {
+      "title": "DUO Unit 40: Describe Family Health Habits",
+      "items": [
+        { "it": "Oggi al nonno gli fa male la schiena.", "en": "Today Grandpa's back hurts.", "zh": "今天爷爷背疼。" },
+        { "it": "Il dottore gli dà una medicina e lui la prende.", "en": "The doctor gives him medicine and he takes it.", "zh": "医生给他药，他吃了。" }
+      ],
+      "anchors": [
+        "Indirect object 'gli' (to him) vs. Direct object 'la' (it, feminine).",
+        "Reflexive daily habit: alzarsi (si alza) & riposarsi (si riposa)."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Gli fa male [X]",
+        "cue": "Visual: Grandpa holding his back; Audio: 'Ahi, la schiena!'"
+      },
+      "step1_hfChunks": [
+        { "it": "gli fa male", "en": "his ... hurts" },
+        { "it": "gli dà", "en": "gives to him" },
+        { "it": "la prende", "en": "takes it (f.)" }
+      ],
+      "step2_singleSlot": {
+        "stem": "Oggi al nonno gli fa male",
+        "variables": ["la schiena", "la testa", "la gola", "lo stomaco"]
+      },
+      "step3_circling": [
+        { "type": "Statement", "q": "Al nonno gli fa male la schiena.", "a": "Sì, gli fa male la schiena." },
+        { "type": "Yes/No", "q": "Gli fa male la testa?", "a": "No, non gli fa male la testa, gli fa male la schiena!" },
+        { "type": "Either/Or", "q": "Il nonno prende un caffè o una medicina?", "a": "Prende una medicina!" },
+        { "type": "Open Wh-", "q": "Chi gli dà la medicina?", "a": "Il dottore gli dà la medicina." }
+      ],
+      "step4_scaffolding": {
+        "level1": "Il nonno sta male. Prende una medicina.",
+        "level2": "Oggi al nonno gli fa male la schiena, allora il dottore gli dà una medicina.",
+        "level3": "Anche se ogni mattina si alza presto, oggi al nonno gli fa male la schiena e il dottore gli dà una medicina che lui prende subito."
+      },
+      "step5_writeOutput": {
+        "prompt": "Summary Cloze: Il dottore ___ (to him) dà la medicina e il nonno ___ (it) prende."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "Quando ti fa male la testa, che cosa prendi?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "Notice how Italian keeps the object pronoun right in front of 'prendo' (S + O + V), rather than after the verb like English.",
+        "modelAnswer": "Quando mi fa male la testa, prendo un'aspirina e la prendo con acqua."
+      },
+      "personalStory": {
+        "prompt": "Write 2–3 sentences in 1st-person POV about how you keep healthy every morning."
+      }
+    }
+  },
+  "trackB": {
+    "stage1_rawInput": {
+      "title": "Fun-Italian Clip: Vero Espresso vs. Caffè Americano",
+      "items": [
+        { "it": "No! Questo caffè americano con panna è un dessert.", "en": "No! This American coffee with cream is a dessert.", "zh": "不！加奶油的美式咖啡是甜点。" },
+        { "it": "Questo è vero espresso italiano: caldo, intenso e perfetto.", "en": "This is real Italian espresso: hot, intense, and perfect.", "zh": "这才是真正的意式浓缩咖啡：滚烫、醇厚、完美。" }
+      ],
+      "anchors": [
+        "Standalone 'No!' (rejecting a concept) vs. 'non' before a verb.",
+        "Adjective placement: 'vero espresso italiano' (emphasizing authenticity)."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Questo è vero [X]",
+        "cue": "Visual: Steaming tiny espresso cup vs. giant whipped-cream cup."
+      },
+      "step1_hfChunks": [
+        { "it": "Questo è vero", "en": "This is real" },
+        { "it": "Non voglio", "en": "I don't want" },
+        { "it": "un dessert", "en": "a dessert" }
+      ],
+      "step2_singleSlot": {
+        "stem": "Questo è vero",
+        "variables": ["espresso italiano", "caffè caldo", "pane fresco", "gelato artigianale"]
+      },
+      "step3_circling": [
+        { "type": "Statement", "q": "Il caffè americano con panna è un dessert.", "a": "Sì, è un dessert!" },
+        { "type": "Yes/No", "q": "L'espresso italiano è freddo?", "a": "No, non è freddo, è caldo e intenso!" },
+        { "type": "Either/Or", "q": "Preferisci un espresso caldo o un dessert freddo?", "a": "Preferisco un espresso caldo!" },
+        { "type": "Open Wh-", "q": "Com'è il vero espresso italiano?", "a": "È caldo, intenso e perfetto." }
+      ],
+      "step4_scaffolding": {
+        "level1": "Non voglio il caffè freddo. Voglio l'espresso.",
+        "level2": "No! Il caffè americano con panna è un dessert, ma l'espresso è caldo e intenso.",
+        "level3": "Non voglio bere un dessert freddo con panna e caramello perché preferisco il vero espresso italiano, che è caldo, intenso e perfetto."
+      },
+      "step5_writeOutput": {
+        "prompt": "1-Sentence Drill: Reject a food/drink you dislike using 'No! Non voglio...' and state what you prefer."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "La mattina bevi il caffè nero o con panna?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "Check whether you used 'non' (before a verb like 'voglio') vs. standalone 'No!' at the start of your sentence.",
+        "modelAnswer": "La mattina bevo solo caffè nero caldo; non voglio panna!"
+      },
+      "personalStory": {
+        "prompt": "Describe your real morning coffee routine in 2 sentences (1st-person POV)."
+      }
+    }
+  }
+}
