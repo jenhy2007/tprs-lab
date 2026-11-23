@@ -1,0 +1,16 @@
+{
+  "hfChunks": [
+    { "it": "Mi fa male...", "en": "My ... hurts" },
+    { "it": "Ecco la vera...", "en": "Here is the real..." },
+    { "it": "Non voglio...", "en": "I don't want..." },
+    { "it": "Sa che...", "en": "He/She knows that..." }
+  ],
+  "grammarMechanics": [
+    { "topic": "S+O+V Pronoun Shift", "rule": "Weak object pronouns (lo, la, mi, ti) sit BEFORE the conjugated verb.", "example": "Il nonno la prende." },
+    { "topic": "Pro-Drop Mechanism", "rule": "Verb endings (-o, -i, -a) carry the subject so pronouns drop naturally.", "example": "Sa che lo ami?" },
+    { "topic": "No vs. Non", "rule": "Standalone 'No!' rejects a noun; 'non' negates a conjugated verb.", "example": "No! Non voglio questo caffè." }
+  ],
+  "dailyQuestions": [
+    { "date": "2026-11-22", "question": "When to use 'gli' vs 'lo'?", "insight": "'gli' = to him (person); 'lo' = it (masculine object)." }
+  ]
+}
