@@ -2,55 +2,66 @@
   "date": "2026-11-23",
   "trackA": {
     "stage1_rawInput": {
-      "title": "DUO Unit 40: Describe Family Health Habits",
+      "title": "DUO Unit 39: Le avventure di Bea — Le guide di montagna",
       "items": [
-        { "it": "Oggi al nonno gli fa male la schiena.", "en": "Today Grandpa's back hurts.", "zh": "今天爷爷背疼。" },
-        { "it": "Il dottore gli dà una medicina e lui la prende.", "en": "The doctor gives him medicine and he takes it.", "zh": "医生给他药，他吃了。" }
+        { "it": "Io sono Bea, e oggi parleremo delle guide di montagna nelle Alpi italiane.", "en": "I am Bea, and today we will talk about mountain guides in the Italian Alps.", "zh": "我是贝娅，今天我们来聊聊意大利阿尔卑斯山的登山向导。" },
+        { "it": "La settimana scorsa sono andata a Courmayeur, una città piccola vicino al Monte Bianco.", "en": "Last week I went to Courmayeur, a small town near Mont Blanc.", "zh": "上周我去了库马约尔，勃朗峰附近的一座小城。" },
+        { "it": "Lì ho parlato con Elisa, una guida di montagna molto esperta.", "en": "There I spoke with Elisa, a very experienced mountain guide.", "zh": "在那里我和伊丽莎聊了聊，她是一位经验丰富的登山向导。" },
+        { "it": "Per fare questo lavoro bisogna essere molto coraggiosi.", "en": "To do this job, one must be very brave.", "zh": "做这份工作必须非常勇敢。" },
+        { "it": "Elisa mi ha mostrato il suo equipaggiamento. Ha molte corde e altri strumenti importanti!", "en": "Elisa showed me her equipment. She has many ropes and other important tools!", "zh": "伊丽莎给我看了她的装备。她有很多绳索和其他重要工具！" },
+        { "it": "Prima di salire, devo sempre pensare al tempo. Se il tempo è brutto, non possiamo andare.", "en": "Before climbing, I always have to think about the weather. If the weather is bad, we cannot go.", "zh": "登山前，我总得考虑天气。如果天气不好，我们就不能去。" },
+        { "it": "La sicurezza è la cosa più importante.", "en": "Safety is the most important thing.", "zh": "安全是最重要的事情。" },
+        { "it": "Ho visto delle foto incredibili delle montagne. Elisa le ha fatte durante le sue escursioni.", "en": "I saw incredible photos of the mountains. Elisa took them during her hikes.", "zh": "我看到了一些令人惊叹的山景照片。那是伊丽莎在徒步时拍的。" },
+        { "it": "Io preferisco guardare le montagne dal basso! Ma forse un giorno proverò a scalare una montagna piccola.", "en": "I prefer looking at the mountains from below! But maybe one day I will try to climb a small mountain.", "zh": "我更喜欢从山脚下看山！不过也许有一天我会试着爬一座小山。" }
       ],
       "anchors": [
-        "Indirect object 'gli' (to him) vs. Direct object 'la' (it, feminine).",
-        "Reflexive daily habit: alzarsi (si alza) & riposarsi (si riposa)."
+        "Passato Prossimo agreement: 'sono andata' (fem. singular with essere) vs. 'ho parlato / ho visto / ho provato' (with avere).",
+        "Direct object pronoun agreement in Passato Prossimo: 'Elisa le ha fatte' ('le' = le foto, feminine plural → 'fatte').",
+        "Impersonal necessity: 'bisogna + infinitive' (bisogna essere = one must be)."
       ]
     },
     "stage2_tprs": {
       "step0_umbrella": {
-        "frame": "Gli fa male [X]",
-        "cue": "Visual: Grandpa holding his back; Audio: 'Ahi, la schiena!'"
+        "frame": "Prima di [fare X], bisogna pensare a [Y]",
+        "cue": "Visual: Elisa checking the sky at Mont Blanc with ropes in hand; Audio: 'La sicurezza è la cosa più importante!'"
       },
       "step1_hfChunks": [
-        { "it": "gli fa male", "en": "his ... hurts" },
-        { "it": "gli dà", "en": "gives to him" },
-        { "it": "la prende", "en": "takes it (f.)" }
+        { "it": "La settimana scorsa", "en": "Last week" },
+        { "it": "bisogna essere", "en": "one must be" },
+        { "it": "mi ha mostrato", "en": "showed me" },
+        { "it": "Prima di salire", "en": "Before climbing" },
+        { "it": "la cosa più importante", "en": "the most important thing" },
+        { "it": "dal basso", "en": "from below" }
       ],
       "step2_singleSlot": {
-        "stem": "Oggi al nonno gli fa male",
-        "variables": ["la schiena", "la testa", "la gola", "lo stomaco"]
+        "stem": "Prima di salire in montagna, devo sempre pensare",
+        "variables": ["al tempo", "alla sicurezza", "all'equipaggiamento", "alle corde"]
       },
       "step3_circling": [
-        { "type": "Statement", "q": "Al nonno gli fa male la schiena.", "a": "Sì, gli fa male la schiena." },
-        { "type": "Yes/No", "q": "Gli fa male la testa?", "a": "No, non gli fa male la testa, gli fa male la schiena!" },
-        { "type": "Either/Or", "q": "Il nonno prende un caffè o una medicina?", "a": "Prende una medicina!" },
-        { "type": "Open Wh-", "q": "Chi gli dà la medicina?", "a": "Il dottore gli dà la medicina." }
+        { "type": "Statement", "q": "La settimana scorsa Bea è andata a Courmayeur.", "a": "Sì, è andata a Courmayeur vicino al Monte Bianco." },
+        { "type": "Yes/No", "q": "Elisa lavora come guida da due anni?", "a": "No, non lavora da due anni, lavora come guida da dieci anni!" },
+        { "type": "Either/Or", "q": "Bea preferisce scalare subito o guardare le montagne dal basso?", "a": "Preferisce guardare le montagne dal basso!" },
+        { "type": "Open Wh-", "q": "Che cosa ha fatto Elisa durante le sue escursioni?", "a": "Ha fatto delle foto incredibili delle montagne!" }
       ],
       "step4_scaffolding": {
-        "level1": "Il nonno sta male. Prende una medicina.",
-        "level2": "Oggi al nonno gli fa male la schiena, allora il dottore gli dà una medicina.",
-        "level3": "Anche se ogni mattina si alza presto, oggi al nonno gli fa male la schiena e il dottore gli dà una medicina che lui prende subito."
+        "level1": "Bea va a Courmayeur. Parla con Elisa, una guida di montagna.",
+        "level2": "La settimana scorsa Bea è andata a Courmayeur e ha parlato con Elisa, che lavora come guida da dieci anni.",
+        "level3": "Anche se la montagna è pericolosa e bisogna essere molto coraggiosi, Elisa ama il suo lavoro perché vede panorami bellissimi e conosce persone da tutto il mondo."
       },
       "step5_writeOutput": {
-        "prompt": "Summary Cloze: Il dottore ___ (to him) dà la medicina e il nonno ___ (it) prende."
+        "prompt": "Pronoun Cloze: Ho visto delle foto incredibili; Elisa ___ (them, f.pl.) ha ___ (taken/made) durante le sue escursioni."
       }
     },
     "stage3_output": {
       "aliveQA": {
-        "question": "Quando ti fa male la testa, che cosa prendi?"
+        "question": "Preferisci guardare le montagne dal basso o salire fino in cima? Perché?"
       },
       "gentleFeedback": {
-        "thoughtSlice": "Notice how Italian keeps the object pronoun right in front of 'prendo' (S + O + V), rather than after the verb like English.",
-        "modelAnswer": "Quando mi fa male la testa, prendo un'aspirina e la prendo con acqua."
+        "thoughtSlice": "Notice how 'le foto' is feminine plural in Italian (short for 'le fotografie'), so both the pronoun ('le') and the past participle ('fatte') take '-e'.",
+        "modelAnswer": "Io preferisco guardare le montagne dal basso perché non sono molto coraggiosa, ma mi piace fare foto dei panorami!"
       },
       "personalStory": {
-        "prompt": "Write 2–3 sentences in 1st-person POV about how you keep healthy every morning."
+        "prompt": "Write 2–3 sentences in 1st-person POV about a park, lake, or mountain you visited recently ('La settimana scorsa sono andata...')."
       }
     }
   },
