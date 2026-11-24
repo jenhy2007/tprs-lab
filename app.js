@@ -36,13 +36,16 @@ const DEFAULT_LESSON = {
       title: "Fun-Italian Reel: Pace per tutti",
       sourceUrl: "https://www.facebook.com/reel/4603424389930520",
       items: [
-        { it: "Oggi desidero la pace per tutti. Per ogni persona in questo mondo.", en: "Today I wish for peace for everyone. For every person in this world." },
+        { it: "Vediamo chi sta soffrendo.", en: "Let's see (or: We see) who is suffering." },
+        { it: "Pregate con me per chi soffre.", en: "Pray with me for those who suffer." },
+        { it: "Ciao amici miei.", en: "Hello, my friends." },
+        { it: "Oggi desidero la pace per tutti.", en: "Today I wish for peace for everyone." },
+        { it: "Per ogni persona in questo mondo.", en: "For every person in this world." },
         { it: "Siamo gentili con tutti.", en: "Let's be kind to everyone." },
-        { it: "Consoliamo chi sta soffrendo.", en: "Let's comfort those who are suffering." },
-        { it: "Pregate con me per chi soffre. Ciao amici miei.", en: "Pray with me for those who suffer. Hello, my friends." }
+        { it: "Consoliamo chi sta soffrendo?", en: "Shall we comfort (or: Let's comfort) those who are suffering?" }
       ],
       anchors: [
-        "1st-person plural imperative ('noi' commands without subject): 'Siamo gentili!' (Let's be kind!) & 'Consoliamo!' (Let's comfort!).",
+        "1st-person plural imperatives ('noi' commands without subject): 'Vediamo...' (Let's see...), 'Siamo gentili!' (Let's be kind!), and 'Consoliamo...' (Let's comfort...).",
         "2nd-person plural imperative ('voi' command): 'Pregate con me' (Pray with me).",
         "Relative pronoun 'chi' = 'those who / anyone who' ('chi sta soffrendo' = those who are suffering).",
         "Affectionate vocative word order: 'amici miei' (possessive placed after the noun for warmth)."
@@ -54,29 +57,29 @@ const DEFAULT_LESSON = {
         cue: "Listen at 0.75x first to catch the rhythm, then shadow at 0.95x."
       },
       step1_hfChunks: [
-        { it: "per tutti", en: "for everyone" },
-        { it: "Per ogni persona", en: "For every person" },
-        { it: "Siamo gentili con", en: "Let's be kind to" },
+        { it: "Vediamo chi", en: "Let's see who" },
         { it: "chi sta soffrendo", en: "those who are suffering" },
-        { it: "Ciao amici miei", en: "Hello, my friends" }
+        { it: "Pregate con me", en: "Pray with me" },
+        { it: "Ciao amici miei", en: "Hello, my friends" },
+        { it: "Siamo gentili con tutti", en: "Let's be kind to everyone" }
       ],
       step2_singleSlot: {
         stem: "Oggi desidero la pace",
-        variables: ["per tutti", "per ogni persona", "per i miei amici", "in questo mondo"]
+        variables: ["per tutti", "per ogni persona", "per chi soffre", "in questo mondo"]
       },
       step3_circling: [
         { type: "Statement", q: "Oggi desidero la pace per ogni persona in questo mondo.", a: "Sì, desidero la pace per tutti!" },
-        { type: "Yes/No", q: "Desidero la pace solo per una persona?", a: "No, non solo per una persona, per ogni persona in questo mondo!" },
-        { type: "Either/Or", q: "Dobbiamo essere gentili con tutti o solo con gli amici?", a: "Siamo gentili con tutti!" },
+        { type: "Yes/No", q: "Siamo gentili solo con i nostri amici?", a: "No, siamo gentili con tutti!" },
+        { type: "Either/Or", q: "Dobbiamo ignorare o consolare chi sta soffrendo?", a: "Consoliamo chi sta soffrendo!" },
         { type: "Open Wh-", q: "Per chi pregate con me oggi?", a: "Preghiamo per chi soffre in questo mondo." }
       ],
       step4_scaffolding: {
-        level1: "Oggi desidero la pace per tutti. Siamo gentili.",
-        level2: "Oggi desidero la pace per ogni persona in questo mondo e siamo gentili con tutti.",
-        level3: "Ciao amici miei! Oggi desidero la pace per ogni persona in questo mondo: siamo gentili con tutti e consoliamo chi sta soffrendo."
+        level1: "Ciao amici miei. Oggi desidero la pace per tutti.",
+        level2: "Vediamo chi sta soffrendo, siamo gentili con tutti e preghiamo insieme.",
+        level3: "Ciao amici miei! Oggi desidero la pace per ogni persona in questo mondo: siamo gentili con tutti, consoliamo chi sta soffrendo e pregate con me per chi soffre."
       },
       step5_writeOutput: {
-        prompt: "Imperative Drill: Use 'Siamo...' (Let's be...) to suggest a positive attitude toward friends or neighbors."
+        prompt: "Imperative Drill: Use 'Siamo...' or 'Vediamo...' to suggest a positive action with friends or neighbors."
       }
     },
     stage3_output: {
@@ -215,6 +218,15 @@ function exportPinnedJSON() {
   });
 }
 
+function exportCurrentLessonJSON() {
+  const lesson = STATE.currentLesson || DEFAULT_LESSON;
+  const jsonStr = JSON.stringify(lesson, null, 2);
+  navigator.clipboard.writeText(jsonStr).then(() => {
+    const status = document.getElementById("lesson-export-status");
+    if (status) status.textContent = "✓ Copied full lesson JSON! Paste into data/lessons/YYYY-MM-DD.json";
+  });
+}
+
 function saveGeminiKey() {
   const val = document.getElementById("gemini-key-input").value.trim();
   STATE.geminiApiKey = val;
@@ -255,8 +267,8 @@ function detectNonEnglishPatterns(sentences, sourceUrl) {
   if (/\bchi\b/i.test(joined) && !/\bchi\s+(è|sono|sei|ha|fa)\b.*\?/i.test(joined)) {
     notes.push("Relative 'chi' = 'those who / anyone who' (e.g., 'chi soffre' = those who suffer, rather than a question word 'who?').");
   }
-  if (/\b(siamo|andiamo|facciamo|consoliamo|pregate|guardate|ascoltate|venite)\b/i.test(joined)) {
-    notes.push("Subject-dropped Imperative ('noi' / 'voi' command): e.g., 'Siamo...' = 'Let's be...', 'Pregate...' = 'Pray (you all)...'.");
+  if (/\b(siamo|andiamo|facciamo|consoliamo|pregate|guardate|ascoltate|venite|vediamo)\b/i.test(joined)) {
+    notes.push("Subject-dropped Imperative ('noi' / 'voi' command): e.g., 'Siamo...' = 'Let's be...', 'Vediamo...' = 'Let's see...', 'Pregate...' = 'Pray (you all)...'.");
   }
   if (/\b(mi|ti|gli|le|lo|la|ci|vi)\s+[a-zàèéìòù]{3,}/i.test(joined)) {
     notes.push("Pre-verb Object Pronouns (S + O + V): Short pronouns like 'mi / ti / gli / le / lo / la' sit directly BEFORE the conjugated verb.");
@@ -587,6 +599,11 @@ function renderStage1(data) {
           <div style="color:var(--muted);font-size:0.9rem;margin-top:0.2rem;">${item.en}</div>
         </div>
       `).join("")}
+
+      <div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+        <button class="pill-btn" onclick="exportCurrentLessonJSON()">💾 Export Lesson JSON (for GitHub Archive)</button>
+        <span id="lesson-export-status" style="font-size:0.84rem;color:var(--green);"></span>
+      </div>
     </section>
   `;
 }
