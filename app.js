@@ -1,12 +1,18 @@
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
+
 const STATE = {
-  branch: "branch1",
+  branch: "branch1", // "branch1", "input", or "branch2"
   track: "trackA",
-  stageView: 1, // 1, 2, 3, or "all"
+  stageView: 1,
   manifest: [],
   currentLesson: null,
   toolbox: { hfChunks: [], grammarMechanics: [], dailyQuestions: [] },
   scaffoldingLevel: 1,
-  pinnedChunks: JSON.parse(localStorage.getItem("tprs_pinned_chunks") || "[]")
+  pinnedChunks: JSON.parse(localStorage.getItem("tprs_pinned_chunks") || "[]"),
+  extractedPdfLines: []
 };
 
 async function init() {
@@ -18,30 +24,25 @@ async function init() {
     if (manifestRes.ok) STATE.manifest = await manifestRes.json();
     if (toolboxRes.ok) STATE.toolbox = await toolboxRes.json();
 
-    // Try loading latest.json first if present; otherwise load newest manifest entry
-    try {
-      const latestRes = await fetch("data/lessons/latest.json");
-      if (latestRes.ok) {
-        STATE.currentLesson = await latestRes.json();
-      }
-    } catch (e) {
-      // Fallback to manifest if latest.json is not present
-    }
-
-    if (!STATE.currentLesson && STATE.manifest.length > 0) {
+    // Check if user saved a custom draft lesson in browser storage first
+    const localDraft = localStorage.getItem("tprs_active_draft_lesson");
+    if (localDraft) {
+      STATE.currentLesson = JSON.parse(localDraft);
+    } else if (STATE.manifest.length > 0) {
       await loadLesson(STATE.manifest[0].file);
     }
     render();
   } catch (err) {
     document.getElementById("app").innerHTML = `
       <div class="card">
-        <h2>⚠️ Local Preview Note</h2>
-        <p>GitHub Pages loads your JSON lesson files automatically once pushed. If previewing locally, run a local HTTP server.</p>
+        <h2>⚠️ Loading Note</h2>
+        <p>Could not load initial files. Please check your GitHub Pages connection.</p>
       </div>`;
   }
 }
 
 async function loadLesson(filePath) {
+  localStorage.removeItem("tprs_active_draft_lesson");
   const res = await fetch(filePath);
   if (res.ok) {
     STATE.currentLesson = await res.json();
@@ -77,6 +78,7 @@ function audioButtons(text) {
 function setBranch(branch) {
   STATE.branch = branch;
   document.getElementById("nav-branch1").classList.toggle("active", branch === "branch1");
+  document.getElementById("nav-input").classList.toggle("active", branch === "input");
   document.getElementById("nav-branch2").classList.toggle("active", branch === "branch2");
   render();
 }
@@ -120,14 +122,211 @@ function exportPinnedJSON() {
   });
 }
 
+// --- PDF Extraction Handler ---
+async function handlePdfUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = document.getElementById("pdf-status");
+  status.textContent = "⏳ Reading PDF...";
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      fullText += content.items.map(item => item.str).join(" ") + "\n";
+    }
+
+    // Split into clean Italian sentences/lines
+    const lines = fullText
+      .split(/(?<=[.?!])\s+|\n+/)
+      .map(s => s.trim())
+      .filter(s => s.length > 6 && !/^Unit\s+\d+/i.test(s));
+
+    STATE.extractedPdfLines = lines;
+    document.getElementById("duo-raw-box").value = lines.join("\n");
+    if (!document.getElementById("duo-title-box").value) {
+      document.getElementById("duo-title-box").value = file.name.replace(/\.pdf$/i, "");
+    }
+    status.textContent = `✓ Extracted ${lines.length} lines from ${file.name}! Review below and click "Load into Track A".`;
+  } catch (err) {
+    status.textContent = "⚠️ Could not read PDF text. You can copy-paste lines manually below.";
+  }
+}
+
+function buildQuickTrackData(title, lines, sourceUrl = "") {
+  const cleanLines = lines.filter(Boolean);
+  const firstLine = cleanLines[0] || "Ciao! Come stai?";
+  const words = firstLine.replace(/[.,!?]/g, "").split(/\s+/);
+  const stem = words.slice(0, Math.max(2, words.length - 1)).join(" ");
+  const lastWord = words[words.length - 1] || "bene";
+
+  return {
+    stage1_rawInput: {
+      title: title || "Custom Input Lesson",
+      items: cleanLines.map(line => ({
+        it: line,
+        en: "Click 🐢 / 🔊 to listen & decode",
+        zh: "点击右侧喇叭跟读"
+      })),
+      anchors: sourceUrl
+        ? [`Source Link: ${sourceUrl}`, "Use 'Copy for Gemini' in + Add Input to generate full grammar notes."]
+        : ["Imported from DUO PDF.", "Use 'Copy for Gemini' in + Add Input to generate full grammar notes."]
+    },
+    stage2_tprs: {
+      step0_umbrella: {
+        frame: firstLine,
+        cue: "Listen slowly at 0.75x first, then shadow at 0.95x."
+      },
+      step1_hfChunks: cleanLines.slice(0, 4).map(l => ({
+        it: l.split(/\s+/).slice(0, 3).join(" "),
+        en: "HF starter"
+      })),
+      step2_singleSlot: {
+        stem: stem,
+        variables: [lastWord, "oggi", "adesso", "sempre"]
+      },
+      step3_circling: [
+        { type: "Statement", q: firstLine, a: `Sì, ${firstLine.toLowerCase()}` },
+        { type: "Open Wh-", q: "Che cosa succede qui?", a: firstLine }
+      ],
+      step4_scaffolding: {
+        level1: cleanLines[0] || "",
+        level2: cleanLines.slice(0, 2).join(" "),
+        level3: cleanLines.join(" ")
+      },
+      step5_writeOutput: {
+        prompt: `Rewrite or adapt the key pattern from: "${firstLine}"`
+      }
+    },
+    stage3_output: {
+      aliveQA: {
+        question: `Come usi "${words.slice(0, 2).join(" ")}" nella tua giornata?`
+      },
+      gentleFeedback: {
+        thoughtSlice: "Focus on smooth rhythm and verb ending agreement rather than word-for-word translation.",
+        modelAnswer: firstLine
+      },
+      personalStory: {
+        prompt: "Write 2–3 sentences in 1st-person POV using today's new expressions."
+      }
+    }
+  };
+}
+
+function loadCustomIntoLab(targetTrack) {
+  const today = new Date().toISOString().slice(0, 10);
+  const baseLesson = STATE.currentLesson
+    ? JSON.parse(JSON.stringify(STATE.currentLesson))
+    : { date: today, trackA: buildQuickTrackData("DUO Lesson", ["Oggi studio italiano."]), trackB: buildQuickTrackData("Fun-Italian", ["Che bella giornata!"]) };
+
+  baseLesson.date = today;
+
+  if (targetTrack === "trackA") {
+    const title = document.getElementById("duo-title-box").value.trim() || "DUO Listening PDF";
+    const lines = document.getElementById("duo-raw-box").value.split("\n").map(s => s.trim()).filter(Boolean);
+    if (lines.length === 0) return alert("Please upload a PDF or enter at least one Italian line first.");
+    baseLesson.trackA = buildQuickTrackData(title, lines);
+  } else {
+    const url = document.getElementById("web-url-box").value.trim();
+    const title = document.getElementById("web-title-box").value.trim() || (url ? `Web / Reel (${url})` : "Fun-Italian Clip");
+    const lines = document.getElementById("web-raw-box").value.split("\n").map(s => s.trim()).filter(Boolean);
+    if (lines.length === 0) return alert("Please paste at least 1–2 Italian lines or captions from the link.");
+    baseLesson.trackB = buildQuickTrackData(title, lines, url);
+  }
+
+  STATE.currentLesson = baseLesson;
+  localStorage.setItem("tprs_active_draft_lesson", JSON.stringify(baseLesson));
+  STATE.track = targetTrack;
+  STATE.stageView = 1;
+  setBranch("branch1");
+}
+
+function copyPromptForGemini(targetTrack) {
+  let payload = "";
+  if (targetTrack === "trackA") {
+    const title = document.getElementById("duo-title-box").value.trim();
+    const lines = document.getElementById("duo-raw-box").value.trim();
+    payload = `Generate today's TPRS Lab JSON for Track A (DUO: ${title}):\n\n${lines}`;
+  } else {
+    const url = document.getElementById("web-url-box").value.trim();
+    const lines = document.getElementById("web-raw-box").value.trim();
+    payload = `Generate today's TPRS Lab JSON for Track B (Fun-Italian link: ${url}):\n\n${lines}`;
+  }
+  navigator.clipboard.writeText(payload).then(() => {
+    alert("✓ Copied! Paste this straight into your Gemini chat to get the full AI-enriched JSON.");
+  });
+}
+
+function importFullLessonJSON() {
+  try {
+    const raw = document.getElementById("json-import-box").value.trim();
+    const parsed = JSON.parse(raw);
+    if (!parsed.trackA || !parsed.trackB) throw new Error("Missing trackA or trackB");
+    STATE.currentLesson = parsed;
+    localStorage.setItem("tprs_active_draft_lesson", JSON.stringify(parsed));
+    setBranch("branch1");
+  } catch (e) {
+    alert("⚠️ Invalid JSON format. Make sure you copied the entire JSON block from Gemini.");
+  }
+}
+
 function render() {
   const app = document.getElementById("app");
-  app.innerHTML = STATE.branch === "branch1" ? renderBranch1() : renderBranch2();
+  if (STATE.branch === "branch1") app.innerHTML = renderBranch1();
+  else if (STATE.branch === "input") app.innerHTML = renderInputCard();
+  else app.innerHTML = renderBranch2();
+}
+
+function renderInputCard() {
+  return `
+    <section class="card">
+      <span class="stage-badge s1">Input 1 · Track A (DUO Listening PDF)</span>
+      <h2>📄 Upload DUO Listening PDF</h2>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:-0.4rem;">
+        Select your Duolingo listening PDF—the Lab extracts the Italian lines automatically so you can listen at 0.75x/0.95x right away.
+      </p>
+      <input type="file" accept=".pdf" onchange="handlePdfUpload(event)" style="margin:0.4rem 0;" />
+      <div id="pdf-status" style="font-size:0.84rem;color:var(--green);margin-bottom:0.4rem;"></div>
+      <input type="text" id="duo-title-box" placeholder="Lesson Title (e.g., Unit 41: Order at a Café)" />
+      <textarea id="duo-raw-box" rows="4" placeholder="Extracted Italian sentences appear here (or paste directly)..."></textarea>
+      <div style="margin-top:0.65rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="pill-btn active" onclick="loadCustomIntoLab('trackA')">▶ Load into Track A Now</button>
+        <button class="pill-btn" onclick="copyPromptForGemini('trackA')">📋 Copy for Gemini (Full TPRS)</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s2">Input 2 · Track B (Web Link / Facebook Reel)</span>
+      <h2>🎬 Add Web Material or Reel Link</h2>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:-0.4rem;">
+        Paste the Facebook Reel or article link plus 2–3 Italian lines or captions you want to practice.
+      </p>
+      <input type="url" id="web-url-box" placeholder="https://www.facebook.com/reel/..." />
+      <input type="text" id="web-title-box" placeholder="Clip Title (optional)" />
+      <textarea id="web-raw-box" rows="3" placeholder="Paste Italian captions or lines from the video/article..."></textarea>
+      <div style="margin-top:0.65rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="pill-btn active" onclick="loadCustomIntoLab('trackB')">▶ Load into Track B Now</button>
+        <button class="pill-btn" onclick="copyPromptForGemini('trackB')">📋 Copy for Gemini (Full TPRS)</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s3">Optional · Paste Full Gemini Lesson JSON</span>
+      <h2>⚡ Quick-Load Full AI Lesson JSON</h2>
+      <textarea id="json-import-box" rows="3" placeholder='Paste full JSON from Gemini here to preview immediately before pushing to GitHub...'></textarea>
+      <div style="margin-top:0.6rem;">
+        <button class="pill-btn" onclick="importFullLessonJSON()">✨ Load Full JSON into Lab</button>
+      </div>
+    </section>
+  `;
 }
 
 function renderBranch1() {
   const lesson = STATE.currentLesson;
-  if (!lesson) return `<div class="card">No lesson data found yet. Check that <code>data/lessons/2026-11-23.json</code> exists.</div>`;
+  if (!lesson) return `<div class="card">No lesson data found yet. Click <strong>+ Add Input</strong> above to upload a DUO PDF or paste a link!</div>`;
   const data = lesson[STATE.track];
   const v = STATE.stageView;
 
@@ -141,7 +340,7 @@ function renderBranch1() {
         <select onchange="changeDate(this.value)">
           ${STATE.manifest.map(m => `<option value="${m.file}" ${m.date === lesson.date ? 'selected' : ''}>📅 ${m.date} — ${m.title}</option>`).join("")}
         </select>
-      ` : `<span style="font-size:0.84rem;color:var(--muted);">📅 ${lesson.date || "Latest"}</span>`}
+      ` : `<span style="font-size:0.84rem;color:var(--muted);">📅 ${lesson.date || "Today"}</span>`}
     </div>
 
     <div class="stage-bar">
