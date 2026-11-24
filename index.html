@@ -31,7 +31,7 @@
 
     .top-nav {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.35rem;
       background: #efede8;
       padding: 0.3rem;
       border-radius: 999px;
@@ -42,9 +42,9 @@
       border: none;
       background: transparent;
       color: var(--muted);
-      padding: 0.48rem 0.8rem;
+      padding: 0.48rem 0.6rem;
       border-radius: 999px;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -167,7 +167,7 @@
     summary { cursor: pointer; font-weight: 500; color: var(--muted); user-select: none; }
     details[open] summary { color: var(--text); margin-bottom: 0.45rem; }
 
-    textarea, input[type="text"] {
+    textarea, input[type="text"], input[type="url"] {
       width: 100%;
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -200,16 +200,18 @@
 <div class="shell">
   <header>
     <h1>🇮🇹 Italian with DUO · 不甘退休的TPRS 实验室</h1>
-    <p>Branch 1: Input Italian (Track A & Track B) &nbsp;·&nbsp; Branch 2: My Italian Toolbox</p>
+    <p>Branch 1: Input Italian · Branch 2: My Italian Toolbox · + Add Input</p>
     <div class="top-nav">
-      <button id="nav-branch1" class="active" onclick="setBranch('branch1')">1. Input Italian (意语原料)</button>
-      <button id="nav-branch2" onclick="setBranch('branch2')">2. My Italian Toolbox (意语工具箱)</button>
+      <button id="nav-branch1" class="active" onclick="setBranch('branch1')">1. Study Lab (学习实验室)</button>
+      <button id="nav-input" onclick="setBranch('input')">+ Add Input (录入原料)</button>
+      <button id="nav-branch2" onclick="setBranch('branch2')">2. Toolbox (意语工具箱)</button>
     </div>
   </header>
 
   <main id="app"></main>
 </div>
 
-<script src="app.js?v=3"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
