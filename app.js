@@ -1,3 +1,693 @@
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
+
+const DEFAULT_LESSON = {
+  date: "2026-11-24",
+  trackA: {
+    stage1_rawInput: {
+      title: "DUO Track (Paused — Focus on Track B)",
+      items: [
+        { it: "Oggi mi concentro sull'ascolto in italiano.", en: "Today I am focusing on Italian listening." }
+      ],
+      anchors: ["Switch to Track B: Fun-Italian to decode web links and transcripts."]
+    },
+    stage2_tprs: {
+      step0_umbrella: { frame: "Mi concentro su [X]", cue: "Focus mode active." },
+      step1_hfChunks: [{ it: "mi concentro su", en: "I focus on" }],
+      step2_singleSlot: { stem: "Oggi mi concentro", variables: ["sull'ascolto", "sulla lettura"] },
+      step3_circling: [{ type: "Statement", q: "Oggi ascolto italiano.", a: "Sì, ascolto italiano!" }],
+      step4_scaffolding: {
+        level1: "Ascolto italiano.",
+        level2: "Oggi mi concentro sull'ascolto in italiano.",
+        level3: "Oggi mi concentro sull'ascolto in italiano per capire meglio i video."
+      },
+      step5_writeOutput: { prompt: "Write 1 sentence in Italian." }
+    },
+    stage3_output: {
+      aliveQA: { question: "Che cosa ascolti oggi?" },
+      gentleFeedback: { thoughtSlice: "Keep going!", modelAnswer: "Oggi ascolto un video breve." },
+      personalStory: { prompt: "Write 2 sentences." }
+    }
+  },
+  trackB: {
+    stage1_rawInput: {
+      title: "Fun-Italian Reel: Pace per tutti",
+      sourceUrl: "https://www.facebook.com/reel/4603424389930520",
+      items: [
+        { it: "Oggi desidero la pace per tutti. Per ogni persona in questo mondo.", en: "Today I wish for peace for everyone. For every person in this world." },
+        { it: "Siamo gentili con tutti.", en: "Let's be kind to everyone." },
+        { it: "Consoliamo chi sta soffrendo.", en: "Let's comfort those who are suffering." },
+        { it: "Pregate con me per chi soffre. Ciao amici miei.", en: "Pray with me for those who suffer. Hello, my friends." }
+      ],
+      anchors: [
+        "1st-person plural imperative ('noi' commands without subject): 'Siamo gentili!' (Let's be kind!) & 'Consoliamo!' (Let's comfort!).",
+        "2nd-person plural imperative ('voi' command): 'Pregate con me' (Pray with me).",
+        "Relative pronoun 'chi' = 'those who / anyone who' ('chi sta soffrendo' = those who are suffering).",
+        "Affectionate vocative word order: 'amici miei' (possessive placed after the noun for warmth)."
+      ]
+    },
+    stage2_tprs: {
+      step0_umbrella: {
+        frame: "Siamo [aggettivo] con [chi...]",
+        cue: "Listen at 0.75x first to catch the rhythm, then shadow at 0.95x."
+      },
+      step1_hfChunks: [
+        { it: "per tutti", en: "for everyone" },
+        { it: "Per ogni persona", en: "For every person" },
+        { it: "Siamo gentili con", en: "Let's be kind to" },
+        { it: "chi sta soffrendo", en: "those who are suffering" },
+        { it: "Ciao amici miei", en: "Hello, my friends" }
+      ],
+      step2_singleSlot: {
+        stem: "Oggi desidero la pace",
+        variables: ["per tutti", "per ogni persona", "per i miei amici", "in questo mondo"]
+      },
+      step3_circling: [
+        { type: "Statement", q: "Oggi desidero la pace per ogni persona in questo mondo.", a: "Sì, desidero la pace per tutti!" },
+        { type: "Yes/No", q: "Desidero la pace solo per una persona?", a: "No, non solo per una persona, per ogni persona in questo mondo!" },
+        { type: "Either/Or", q: "Dobbiamo essere gentili con tutti o solo con gli amici?", a: "Siamo gentili con tutti!" },
+        { type: "Open Wh-", q: "Per chi pregate con me oggi?", a: "Preghiamo per chi soffre in questo mondo." }
+      ],
+      step4_scaffolding: {
+        level1: "Oggi desidero la pace per tutti. Siamo gentili.",
+        level2: "Oggi desidero la pace per ogni persona in questo mondo e siamo gentili con tutti.",
+        level3: "Ciao amici miei! Oggi desidero la pace per ogni persona in questo mondo: siamo gentili con tutti e consoliamo chi sta soffrendo."
+      },
+      step5_writeOutput: {
+        prompt: "Imperative Drill: Use 'Siamo...' (Let's be...) to suggest a positive attitude toward friends or neighbors."
+      }
+    },
+    stage3_output: {
+      aliveQA: {
+        question: "Come possiamo essere gentili con gli altri ogni giorno?"
+      },
+      gentleFeedback: {
+        thoughtSlice: "Notice how 'chi' replaces 'le persone che' (the people who), letting you express 'those who...' cleanly with a singular verb ('chi soffre').",
+        modelAnswer: "Possiamo ascoltare chi ha bisogno di aiuto e dire una parola gentile a ogni persona che incontriamo."
+      },
+      personalStory: {
+        prompt: "Write 2 sentences in 1st-person POV wishing something good for your family or friends ('Oggi desidero...')."
+      }
+    }
+  }
+};
+
+const STATE = {
+  branch: "branch1",
+  track: "trackB",
+  stageView: 1,
+  manifest: [],
+  currentLesson: null,
+  toolbox: { hfChunks: [], grammarMechanics: [], dailyQuestions: [] },
+  scaffoldingLevel: 1,
+  pinnedChunks: JSON.parse(localStorage.getItem("tprs_pinned_chunks") || "[]"),
+  geminiApiKey: localStorage.getItem("tprs_gemini_api_key") || ""
+};
+
+async function init() {
+  try {
+    const [manifestRes, toolboxRes] = await Promise.all([
+      fetch("data/manifest.json"),
+      fetch("data/toolbox.json")
+    ]);
+    if (manifestRes.ok) STATE.manifest = await manifestRes.json();
+    if (toolboxRes.ok) STATE.toolbox = await toolboxRes.json();
+
+    const localDraft = localStorage.getItem("tprs_active_draft_lesson");
+    if (localDraft) {
+      STATE.currentLesson = JSON.parse(localDraft);
+    } else if (STATE.manifest.length > 0) {
+      await loadLesson(STATE.manifest[0].file);
+    } else {
+      STATE.currentLesson = DEFAULT_LESSON;
+    }
+    render();
+  } catch (err) {
+    STATE.currentLesson = DEFAULT_LESSON;
+    render();
+  }
+}
+
+async function loadLesson(filePath) {
+  localStorage.removeItem("tprs_active_draft_lesson");
+  const res = await fetch(filePath);
+  if (res.ok) {
+    STATE.currentLesson = await res.json();
+    STATE.scaffoldingLevel = 1;
+  } else {
+    STATE.currentLesson = DEFAULT_LESSON;
+  }
+}
+
+function speak(text, rate = 0.95) {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "it-IT";
+  u.rate = rate;
+  window.speechSynthesis.speak(u);
+}
+
+function escapeAttr(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/'/g, "&#39;")
+    .replace(/"/g, "&quot;");
+}
+
+function audioButtons(text, showTranslateBtn = false) {
+  const safe = escapeAttr(text);
+  const gTransUrl = `https://translate.google.com/?sl=it&tl=en&text=${encodeURIComponent(text)}&op=translate`;
+  return `
+    <span class="audio-group">
+      <button class="audio-btn" title="Slow 0.75x" data-text="${safe}" onclick="speak(this.dataset.text, 0.75)">🐢</button>
+      <button class="audio-btn" title="Normal 0.95x" data-text="${safe}" onclick="speak(this.dataset.text, 0.95)">🔊</button>
+      ${showTranslateBtn ? `<a class="audio-btn" style="text-decoration:none;color:var(--text);" href="${gTransUrl}" target="_blank" rel="noopener" title="Check exact English meaning">🌐 EN</a>` : ""}
+    </span>`;
+}
+
+function setBranch(branch) {
+  STATE.branch = branch;
+  document.getElementById("nav-branch1").classList.toggle("active", branch === "branch1");
+  document.getElementById("nav-input").classList.toggle("active", branch === "input");
+  document.getElementById("nav-branch2").classList.toggle("active", branch === "branch2");
+  render();
+}
+
+function setTrack(track) {
+  STATE.track = track;
+  STATE.scaffoldingLevel = 1;
+  render();
+}
+
+function setStageView(view) {
+  STATE.stageView = view;
+  render();
+}
+
+async function changeDate(filePath) {
+  await loadLesson(filePath);
+  render();
+}
+
+function togglePinChunk(it, en) {
+  const exists = STATE.pinnedChunks.findIndex(c => c.it === it);
+  if (exists >= 0) {
+    STATE.pinnedChunks.splice(exists, 1);
+  } else {
+    STATE.pinnedChunks.push({ it, en });
+  }
+  localStorage.setItem("tprs_pinned_chunks", JSON.stringify(STATE.pinnedChunks));
+  render();
+}
+
+function isPinned(it) {
+  return STATE.pinnedChunks.some(c => c.it === it);
+}
+
+function exportPinnedJSON() {
+  const jsonStr = JSON.stringify(STATE.pinnedChunks, null, 2);
+  navigator.clipboard.writeText(jsonStr).then(() => {
+    const status = document.getElementById("export-status");
+    if (status) status.textContent = "✓ Copied pinned JSON to clipboard!";
+  });
+}
+
+function saveGeminiKey() {
+  const val = document.getElementById("gemini-key-input").value.trim();
+  STATE.geminiApiKey = val;
+  if (val) {
+    localStorage.setItem("tprs_gemini_api_key", val);
+    alert("✓ API Key saved privately in your browser!");
+  } else {
+    localStorage.removeItem("tprs_gemini_api_key");
+    alert("API Key cleared.");
+  }
+  render();
+}
+
+function cleanAndDedupeTranscript(rawText) {
+  const rawSentences = rawText
+    .replace(/\s+/g, " ")
+    .split(/(?<=[.?!])\s+|\n+/)
+    .map(s => s.trim())
+    .filter(s => s.length > 2);
+
+  const seen = new Set();
+  const uniqueSentences = [];
+  for (const s of rawSentences) {
+    const norm = s.toLowerCase().replace(/[.?!,;:]+$/g, "").trim();
+    if (norm.length > 2 && !seen.has(norm)) {
+      seen.add(norm);
+      uniqueSentences.push(s);
+    }
+  }
+  return uniqueSentences;
+}
+
+function detectNonEnglishPatterns(sentences, sourceUrl) {
+  const joined = " " + sentences.join(" ") + " ";
+  const notes = [];
+  if (sourceUrl) notes.push(`Source Link: ${sourceUrl}`);
+
+  if (/\bchi\b/i.test(joined) && !/\bchi\s+(è|sono|sei|ha|fa)\b.*\?/i.test(joined)) {
+    notes.push("Relative 'chi' = 'those who / anyone who' (e.g., 'chi soffre' = those who suffer, rather than a question word 'who?').");
+  }
+  if (/\b(siamo|andiamo|facciamo|consoliamo|pregate|guardate|ascoltate|venite)\b/i.test(joined)) {
+    notes.push("Subject-dropped Imperative ('noi' / 'voi' command): e.g., 'Siamo...' = 'Let's be...', 'Pregate...' = 'Pray (you all)...'.");
+  }
+  if (/\b(mi|ti|gli|le|lo|la|ci|vi)\s+[a-zàèéìòù]{3,}/i.test(joined)) {
+    notes.push("Pre-verb Object Pronouns (S + O + V): Short pronouns like 'mi / ti / gli / le / lo / la' sit directly BEFORE the conjugated verb.");
+  }
+  if (/\b(ne|ci)\b/i.test(joined)) {
+    notes.push("Particles 'ci' (there / about it) or 'ne' (of it / some of them): Italian packs prepositional phrases into tiny pre-verb particles.");
+  }
+  if (/\b[a-z]+i\s+(miei|tuoi|suoi|nostri|vostri)\b/i.test(joined)) {
+    notes.push("Possessive placed AFTER the noun (e.g., 'amici miei'): Used in direct greetings/vocatives for warmth and affection.");
+  }
+  if (/\bche\b/i.test(joined)) {
+    notes.push("Connector 'che' ('that / which / who'): Unlike English, Italian NEVER drops 'that' between two clauses.");
+  }
+
+  if (notes.length <= (sourceUrl ? 1 : 0)) {
+    notes.push("Tip: Notice how Italian drops subject pronouns (io, tu, noi) because the verb ending already tells you who is acting.");
+  }
+  return notes;
+}
+
+function buildRuleBasedTrackB(title, rawText, sourceUrl) {
+  const cleanLines = cleanAndDedupeTranscript(rawText);
+  const anchors = detectNonEnglishPatterns(cleanLines, sourceUrl);
+  const firstLine = cleanLines[0] || "Ciao amici miei!";
+  const words = firstLine.replace(/[.,!?]/g, "").split(/\s+/);
+  const stem = words.slice(0, Math.max(2, words.length - 1)).join(" ");
+  const lastWord = words[words.length - 1] || "tutti";
+
+  return {
+    stage1_rawInput: {
+      title: title || "Fun-Italian Clip",
+      sourceUrl: sourceUrl || "",
+      items: cleanLines.map(line => ({
+        it: line,
+        en: "Tap 🌐 EN for exact gloss · 🐢 0.75x / 🔊 0.95x to train your ear"
+      })),
+      anchors
+    },
+    stage2_tprs: {
+      step0_umbrella: {
+        frame: firstLine,
+        cue: "Step 1: Read the Non-English Logic notes below. Step 2: Listen at 0.75x until every word separates clearly."
+      },
+      step1_hfChunks: cleanLines.slice(0, 5).map(l => ({
+        it: l.split(/\s+/).slice(0, 3).join(" "),
+        en: "key phrase"
+      })),
+      step2_singleSlot: {
+        stem,
+        variables: [lastWord, "oggi", "per tutti", "sempre"]
+      },
+      step3_circling: [
+        { type: "Statement", q: firstLine, a: `Sì, ${firstLine.toLowerCase()}` },
+        { type: "Open Wh-", q: "Che cosa dice questo passaggio?", a: firstLine }
+      ],
+      step4_scaffolding: {
+        level1: cleanLines[0] || "",
+        level2: cleanLines.slice(0, 2).join(" "),
+        level3: cleanLines.join(" ")
+      },
+      step5_writeOutput: {
+        prompt: `Shadow & adapt: Rewrite "${firstLine}" changing one detail for your own life.`
+      }
+    },
+    stage3_output: {
+      aliveQA: {
+        question: "Qual è l'idea principale di questo brano secondo te?"
+      },
+      gentleFeedback: {
+        thoughtSlice: "Focus on linking words smoothly in breath groups rather than pausing after every word.",
+        modelAnswer: firstLine
+      },
+      personalStory: {
+        prompt: "Write 2 sentences in 1st-person POV using one expression from today's clip."
+      }
+    }
+  };
+}
+
+async function decodeWithGeminiAPI(title, rawText, sourceUrl) {
+  const prompt = `You are an Italian TPRS coach for an English-speaking learner.
+Analyze this Italian transcript from ${sourceUrl || "a web clip"}:
+"""
+${rawText}
+"""
+1. Deduplicate any repeated/looping captions into clean, natural Italian sentences.
+2. Identify expressions/grammar that differ from English word-for-word logic (e.g., dropped subjects, imperatives, 'chi', pre-verb pronouns, idioms).
+3. Provide accurate line-by-line English translations (NO Chinese).
+4. Return ONLY valid JSON matching this exact structure (no markdown fences):
+{
+  "stage1_rawInput": {
+    "title": "${title || "Fun-Italian Clip"}",
+    "sourceUrl": "${sourceUrl || ""}",
+    "items": [
+      { "it": "Italian sentence", "en": "Natural English translation" }
+    ],
+    "anchors": [
+      "Non-English expression/grammar explanation 1",
+      "Non-English expression/grammar explanation 2"
+    ]
+  },
+  "stage2_tprs": {
+    "step0_umbrella": { "frame": "Key pattern frame", "cue": "Listening cue" },
+    "step1_hfChunks": [{ "it": "chunk", "en": "meaning" }],
+    "step2_singleSlot": { "stem": "Locked starter", "variables": ["opt1", "opt2", "opt3"] },
+    "step3_circling": [
+      { "type": "Statement", "q": "...", "a": "..." },
+      { "type": "Yes/No", "q": "...", "a": "..." },
+      { "type": "Open Wh-", "q": "...", "a": "..." }
+    ],
+    "step4_scaffolding": { "level1": "...", "level2": "...", "level3": "..." },
+    "step5_writeOutput": { "prompt": "..." }
+  },
+  "stage3_output": {
+    "aliveQA": { "question": "..." },
+    "gentleFeedback": { "thoughtSlice": "...", "modelAnswer": "..." },
+    "personalStory": { "prompt": "..." }
+  }
+}`;
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(STATE.geminiApiKey)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: "application/json" }
+      })
+    }
+  );
+
+  if (!res.ok) throw new Error("Gemini API request failed");
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  return JSON.parse(text);
+}
+
+async function processTrackBInput() {
+  const url = document.getElementById("web-url-box").value.trim();
+  const title = document.getElementById("web-title-box").value.trim() || (url ? "Fun-Italian Web Clip" : "Fun-Italian Transcript");
+  const rawText = document.getElementById("web-raw-box").value.trim();
+  const statusEl = document.getElementById("decode-status");
+
+  if (!rawText) {
+    alert("Please paste the transcript or lines from the video/link first.");
+    return;
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const baseLesson = STATE.currentLesson
+    ? JSON.parse(JSON.stringify(STATE.currentLesson))
+    : JSON.parse(JSON.stringify(DEFAULT_LESSON));
+  baseLesson.date = today;
+
+  if (STATE.geminiApiKey) {
+    statusEl.textContent = "✨ Decoding expressions & translating line-by-line with Gemini AI...";
+    try {
+      baseLesson.trackB = await decodeWithGeminiAPI(title, rawText, url);
+    } catch (err) {
+      statusEl.textContent = "⚠️ AI key call failed—falling back to instant built-in decoder...";
+      baseLesson.trackB = buildRuleBasedTrackB(title, rawText, url);
+    }
+  } else {
+    baseLesson.trackB = buildRuleBasedTrackB(title, rawText, url);
+  }
+
+  STATE.currentLesson = baseLesson;
+  localStorage.setItem("tprs_active_draft_lesson", JSON.stringify(baseLesson));
+  STATE.track = "trackB";
+  STATE.stageView = 1;
+  setBranch("branch1");
+}
+
+function copyPromptForGemini() {
+  const url = document.getElementById("web-url-box").value.trim();
+  const rawText = document.getElementById("web-raw-box").value.trim();
+  if (!rawText) return alert("Paste the transcript first!");
+
+  const payload = `Decode this Track B Fun-Italian transcript (${url || "web clip"}) in two steps (English only, no Chinese):
+1a. Explain any expressions or grammar that differ from English word-for-word logic.
+1b. Deduplicate any loops and provide clean line-by-line Italian + English translations.
+2. Output the complete Track B JSON for my TPRS Lab:
+
+${rawText}`;
+
+  navigator.clipboard.writeText(payload).then(() => {
+    alert("✓ Copied structured prompt! Paste it into your Gemini chat.");
+  });
+}
+
+function importFullLessonJSON() {
+  try {
+    const raw = document.getElementById("json-import-box").value.trim();
+    const parsed = JSON.parse(raw);
+    const today = new Date().toISOString().slice(0, 10);
+
+    if (parsed.trackB) {
+      STATE.currentLesson = parsed;
+    } else if (parsed.stage1_rawInput) {
+      const base = STATE.currentLesson ? JSON.parse(JSON.stringify(STATE.currentLesson)) : JSON.parse(JSON.stringify(DEFAULT_LESSON));
+      base.date = today;
+      base.trackB = parsed;
+      STATE.currentLesson = base;
+    } else {
+      throw new Error("Unrecognized JSON shape");
+    }
+
+    localStorage.setItem("tprs_active_draft_lesson", JSON.stringify(STATE.currentLesson));
+    STATE.track = "trackB";
+    STATE.stageView = 1;
+    setBranch("branch1");
+  } catch (e) {
+    alert("⚠️ Invalid JSON format. Make sure you copied the entire JSON block.");
+  }
+}
+
+function render() {
+  const app = document.getElementById("app");
+  if (STATE.branch === "branch1") app.innerHTML = renderBranch1();
+  else if (STATE.branch === "input") app.innerHTML = renderInputCard();
+  else app.innerHTML = renderBranch2();
+}
+
+function renderInputCard() {
+  return `
+    <section class="card">
+      <span class="stage-badge s2">Track B · Fun-Italian Link & Transcript Decoder</span>
+      <h2>🎬 Paste Link & Transcript (Read → Comprehend → Listen)</h2>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:-0.4rem;">
+        Paste any Facebook Reel / YouTube link and its raw transcript below. The Lab automatically cleans repeated loops, flags non-English grammar patterns, and prepares slow/normal listening drills.
+      </p>
+      <input type="url" id="web-url-box" placeholder="Link: https://www.facebook.com/reel/..." />
+      <input type="text" id="web-title-box" placeholder="Clip Title (optional, e.g., Pace per tutti)" />
+      <textarea id="web-raw-box" rows="5" placeholder="Paste raw Italian transcript here (even messy or repeating captions)..."></textarea>
+      <div id="decode-status" style="font-size:0.85rem;color:var(--green);margin-top:0.4rem;"></div>
+      <div style="margin-top:0.65rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="pill-btn active" onclick="processTrackBInput()">
+          ${STATE.geminiApiKey ? "✨ AI Decode & Load into Track B" : "▶ Decode & Load into Track B"}
+        </button>
+        <button class="pill-btn" onclick="copyPromptForGemini()">📋 Copy Prompt for Gemini Chat</button>
+      </div>
+
+      <details style="margin-top:1rem;">
+        <summary>🔑 Optional: Add Free Gemini API Key for Automatic Line-by-Line English Translation (${STATE.geminiApiKey ? "Active ✓" : "Off — Using Built-In Decoder"})</summary>
+        <p style="font-size:0.84rem;color:var(--muted);margin:0.4rem 0;">
+          Stored privately in your browser's <code>localStorage</code> only (never uploaded to GitHub). Leave blank to use the free built-in decoder + <code>🌐 EN</code> buttons.
+        </p>
+        <div style="display:flex;gap:0.4rem;align-items:center;">
+          <input type="text" id="gemini-key-input" value="${escapeAttr(STATE.geminiApiKey)}" placeholder="AIzaSy..." style="margin-top:0;" />
+          <button class="pill-btn" onclick="saveGeminiKey()">Save</button>
+        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s3">Optional · Paste JSON from Gemini Chat</span>
+      <h2>⚡ Quick-Load Gemini JSON</h2>
+      <textarea id="json-import-box" rows="3" placeholder="Paste full JSON (or trackB JSON) from Gemini here..."></textarea>
+      <div style="margin-top:0.6rem;">
+        <button class="pill-btn" onclick="importFullLessonJSON()">✨ Load JSON into Lab</button>
+      </div>
+    </section>
+  `;
+}
+
+function renderBranch1() {
+  const lesson = STATE.currentLesson || DEFAULT_LESSON;
+  const data = lesson[STATE.track];
+  const v = STATE.stageView;
+
+  return `
+    <div class="sub-bar">
+      <div>
+        <button class="pill-btn ${STATE.track === 'trackB' ? 'active' : ''}" onclick="setTrack('trackB')">Track B: Fun-Italian</button>
+        <button class="pill-btn ${STATE.track === 'trackA' ? 'active' : ''}" onclick="setTrack('trackA')">Track A: DUO</button>
+      </div>
+      ${STATE.manifest.length > 0 ? `
+        <select onchange="changeDate(this.value)">
+          ${STATE.manifest.map(m => `<option value="${m.file}" ${m.date === lesson.date ? 'selected' : ''}>📅 ${m.date} — ${m.title}</option>`).join("")}
+        </select>
+      ` : `<span style="font-size:0.84rem;color:var(--muted);">📅 ${lesson.date || "Today"}</span>`}
+    </div>
+
+    <div class="stage-bar">
+      <button class="pill-btn ${v === 1 ? 'active' : ''}" onclick="setStageView(1)">1. Read & Listen</button>
+      <button class="pill-btn ${v === 2 ? 'active' : ''}" onclick="setStageView(2)">2. TPRS Drills (0–5)</button>
+      <button class="pill-btn ${v === 3 ? 'active' : ''}" onclick="setStageView(3)">3. Speak & Reflect</button>
+      <button class="pill-btn ${v === 'all' ? 'active' : ''}" onclick="setStageView('all')">All 3 Stages</button>
+    </div>
+
+    ${(v === 1 || v === "all") ? renderStage1(data) : ""}
+    ${(v === 2 || v === "all") ? renderStage2(data) : ""}
+    ${(v === 3 || v === "all") ? renderStage3(data) : ""}
+
+    ${v !== "all" ? `
+      <div class="pager">
+        <button class="pill-btn" onclick="setStageView(${v - 1})" ${v === 1 ? "disabled" : ""}>← Prev Stage</button>
+        <span>Stage ${v} of 3</span>
+        <button class="pill-btn" onclick="setStageView(${v + 1})" ${v === 3 ? "disabled" : ""}>Next Stage →</button>
+      </div>
+    ` : ""}
+  `;
+}
+
+function renderStage1(data) {
+  const sourceUrl = data.stage1_rawInput.sourceUrl;
+  return `
+    <section class="card">
+      <span class="stage-badge s1">Step 1 · Comprehensible Reading & Listening</span>
+      <h2>${data.stage1_rawInput.title}</h2>
+      ${sourceUrl ? `<p style="margin:-0.5rem 0 0.8rem;font-size:0.84rem;">🔗 <a href="${escapeAttr(sourceUrl)}" target="_blank" rel="noopener" style="color:var(--blue);">${sourceUrl}</a></p>` : ""}
+
+      <details open style="margin-bottom:0.9rem;background:#fefce8;border-color:#fde68a;">
+        <summary style="color:#92400e;">💡 1a. Non-English Logic & Expressions (Read This First)</summary>
+        <ul style="margin:0.4rem 0;padding-left:1.2rem;">
+          ${data.stage1_rawInput.anchors.map(a => `<li style="margin-bottom:0.3rem;">${a}</li>`).join("")}
+        </ul>
+      </details>
+
+      <h3 style="margin-top:0.5rem;">1b. Line-by-Line Comprehension & Ear Training (🐢 0.75x / 🔊 0.95x)</h3>
+      ${data.stage1_rawInput.items.map(item => `
+        <div class="line-item">
+          <div class="line-top">
+            <strong style="font-size:1.06rem;">${item.it}</strong>
+            ${audioButtons(item.it, true)}
+          </div>
+          <div style="color:var(--muted);font-size:0.9rem;margin-top:0.2rem;">${item.en}</div>
+        </div>
+      `).join("")}
+    </section>
+  `;
+}
+
+function renderStage2(data) {
+  const t = data.stage2_tprs;
+  const levelKey = "level" + STATE.scaffoldingLevel;
+  const activeText = t.step4_scaffolding[levelKey];
+  const safeStem = escapeAttr(t.step2_singleSlot.stem);
+
+  return `
+    <section class="card">
+      <span class="stage-badge s2">Step 2 · TPRS Listening & Pattern Drills (0 → 5)</span>
+      <h2>0. Umbrella Frame: “${t.step0_umbrella.frame}”</h2>
+      <p style="color:var(--muted);font-size:0.88rem;margin-top:-0.4rem;">${t.step0_umbrella.cue}</p>
+
+      <h3>1. HF-Vocab Extraction & Chunking (Tap ☆ to Pin to Toolbox)</h3>
+      <div>
+        ${t.step1_hfChunks.map(c => {
+          const safeIt = escapeAttr(c.it);
+          const safeEn = escapeAttr(c.en);
+          return `
+            <span class="chunk-chip">
+              <span style="cursor:pointer;" data-it="${safeIt}" onclick="speak(this.dataset.it)">🔊 <strong>${c.it}</strong> (${c.en})</span>
+              <button class="pin-btn" title="Pin to Toolbox" data-it="${safeIt}" data-en="${safeEn}" onclick="togglePinChunk(this.dataset.it, this.dataset.en)">
+                ${isPinned(c.it) ? "★" : "☆"}
+              </button>
+            </span>`;
+        }).join("")}
+      </div>
+
+      <h3>2. S+V+O Single-Slot Replacement Drill</h3>
+      <div class="level-box">
+        <div>Locked Stem: <strong>${t.step2_singleSlot.stem}</strong> <span id="slot-preview" style="color:var(--amber);font-weight:700;">[ ___ ]</span></div>
+        <div style="margin-top:0.45rem;">
+          ${t.step2_singleSlot.variables.map(v => {
+            const safeVar = escapeAttr(v);
+            return `
+              <button class="pill-btn" style="margin:0.15rem;" data-stem="${safeStem}" data-var="${safeVar}"
+                onclick="document.getElementById('slot-preview').textContent=this.dataset.var; speak(this.dataset.stem + ' ' + this.dataset.var)">
+                ${v}
+              </button>`;
+          }).join("")}
+        </div>
+      </div>
+
+      <h3>3. Circling Q&A (Statement → Yes/No → Either/Or → Wh-)</h3>
+      <details>
+        <summary>▸ Open Circling Sequence (${t.step3_circling.length} steps)</summary>
+        <ol style="margin:0.4rem 0;padding-left:1.2rem;">
+          ${t.step3_circling.map(q => `<li style="margin-bottom:0.35rem;"><strong>${q.type}:</strong> ${q.q} <em style="color:var(--muted);">(${q.a})</em></li>`).join("")}
+        </ol>
+      </details>
+
+      <h3>4. Scaffolding Comprehension (3-Level Toggle)</h3>
+      <div>
+        <button class="pill-btn ${STATE.scaffoldingLevel === 1 ? 'active' : ''}" onclick="STATE.scaffoldingLevel=1;render()">Level 1: Skeleton</button>
+        <button class="pill-btn ${STATE.scaffoldingLevel === 2 ? 'active' : ''}" onclick="STATE.scaffoldingLevel=2;render()">Level 2: Details</button>
+        <button class="pill-btn ${STATE.scaffoldingLevel === 3 ? 'active' : ''}" onclick="STATE.scaffoldingLevel=3;render()">Level 3: Complex</button>
+      </div>
+      <div class="level-box" style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.6rem;">
+        <span>${activeText}</span>
+        ${audioButtons(activeText)}
+      </div>
+
+      <h3>5. Write Output (Need-Based Prompt)</h3>
+      <p style="font-size:0.88rem;color:var(--muted);margin:0;">${t.step5_writeOutput.prompt}</p>
+      <input type="text" placeholder="Scrivi qui..." />
+    </section>
+  `;
+}
+
+function renderStage3(data) {
+  const o = data.stage3_output;
+  return `
+    <section class="card">
+      <span class="stage-badge s3">Step 3 · Output & Gentle Cognitive Assessment</span>
+      <h2>1. Alive Q&A & 2. Thought-Slice Feedback</h2>
+      <p style="margin-bottom:0.3rem;"><strong>Prompt:</strong> ${o.aliveQA.question}</p>
+      <input type="text" id="alive-input" placeholder="Rispondi in italiano..." />
+      <div style="margin-top:0.55rem;">
+        <button class="pill-btn" onclick="document.getElementById('thought-slice-box').style.display='block'">✨ Reflect & Compare</button>
+      </div>
+      <div class="thought-slice" id="thought-slice-box">
+        <strong>🧠 Diagnostic Thought Slice (No Red Xs):</strong><br>
+        ${o.gentleFeedback.thoughtSlice}<br><br>
+        <em>Native Model:</em> “${o.gentleFeedback.modelAnswer}” ${audioButtons(o.gentleFeedback.modelAnswer)}
+      </div>
+
+      <h3>3. Personal Storytelling (1st-Person POV)</h3>
+      <p style="font-size:0.88rem;color:var(--muted);margin:0;">${o.personalStory.prompt}</p>
+      <textarea id="pov-story" rows="3" placeholder="Io..."></textarea>
+      <div style="margin-top:0.45rem;display:flex;gap:0.5rem;align-items:center;">
+        <button class="pill-btn" onclick="speak(document.getElementById('pov-story').value, 0.75)">🐢 Read Slowly</button>
+        <button class="pill-btn" onclick="speak(document.getElementById('pov-story').value, 0.95)">🔊 Read Story</button>
+        <button class="pill-btn" onclick="localStorage.setItem('tprs_pov_draft', document.getElementById('pov-story').value)">💾 Save Draft</button>
+      </div>
+    </section>
+  `;
+}
+
 function renderBranch2() {
   const tb = STATE.toolbox;
   const allChunks = [...(tb.hfChunks || []), ...STATE.pinnedChunks];
@@ -91,3 +781,5 @@ function renderBranch2() {
     </section>
   `;
 }
+
+init();
