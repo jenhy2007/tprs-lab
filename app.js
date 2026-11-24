@@ -3,6 +3,12 @@ if (window.pdfjsLib) {
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 }
 
+const GITHUB_CONFIG = {
+  owner: "jenhy2007",
+  repo: "tprs-lab",
+  branch: "main"
+};
+
 const DEFAULT_LESSON = {
   date: "2026-11-24",
   trackA: {
@@ -36,13 +42,13 @@ const DEFAULT_LESSON = {
       title: "Fun-Italian Reel: Pace per tutti",
       sourceUrl: "https://www.facebook.com/reel/4603424389930520",
       items: [
-        { it: "Vediamo chi sta soffrendo.", en: "Let's see (or: We see) who is suffering." },
+        { it: "Vediamo chi sta soffrendo.", en: "Let's see who is suffering." },
         { it: "Pregate con me per chi soffre.", en: "Pray with me for those who suffer." },
         { it: "Ciao amici miei.", en: "Hello, my friends." },
         { it: "Oggi desidero la pace per tutti.", en: "Today I wish for peace for everyone." },
         { it: "Per ogni persona in questo mondo.", en: "For every person in this world." },
         { it: "Siamo gentili con tutti.", en: "Let's be kind to everyone." },
-        { it: "Consoliamo chi sta soffrendo?", en: "Shall we comfort (or: Let's comfort) those who are suffering?" }
+        { it: "Consoliamo chi sta soffrendo?", en: "Shall we comfort those who are suffering?" }
       ],
       anchors: [
         "1st-person plural imperatives ('noi' commands without subject): 'Vediamo...' (Let's see...), 'Siamo gentili!' (Let's be kind!), and 'Consoliamo...' (Let's comfort...).",
@@ -102,18 +108,33 @@ const STATE = {
   track: "trackB",
   stageView: 1,
   manifest: [],
+  localLessons: JSON.parse(localStorage.getItem("tprs_local_lessons") || "[]"),
   currentLesson: null,
+  activeLessonId: "",
   toolbox: { hfChunks: [], grammarMechanics: [], dailyQuestions: [] },
   scaffoldingLevel: 1,
   pinnedChunks: JSON.parse(localStorage.getItem("tprs_pinned_chunks") || "[]"),
-  geminiApiKey: localStorage.getItem("tprs_gemini_api_key") || ""
+  geminiApiKey: (localStorage.getItem("tprs_gemini_api_key") || "").trim(),
+  githubToken: (localStorage.getItem("tprs_github_token") || "").trim()
 };
+
+function saveToLocalLibrary(lessonObj) {
+  const title = lessonObj.trackB?.stage1_rawInput?.title || "Fun-Italian Lesson";
+  const date = lessonObj.date || new Date().toISOString().slice(0, 10);
+  const id = `local_${date}`;
+  const entry = { id, date, title, lesson: lessonObj };
+
+  STATE.localLessons = [entry, ...STATE.localLessons.filter(item => item.id !== id)];
+  localStorage.setItem("tprs_local_lessons", JSON.stringify(STATE.localLessons));
+  localStorage.setItem("tprs_active_draft_lesson", JSON.stringify(lessonObj));
+  STATE.activeLessonId = id;
+}
 
 async function init() {
   try {
     const [manifestRes, toolboxRes] = await Promise.all([
-      fetch("data/manifest.json"),
-      fetch("data/toolbox.json")
+      fetch("data/manifest.json?t=" + Date.now()),
+      fetch("data/toolbox.json?t=" + Date.now())
     ]);
     if (manifestRes.ok) STATE.manifest = await manifestRes.json();
     if (toolboxRes.ok) STATE.toolbox = await toolboxRes.json();
@@ -121,6 +142,7 @@ async function init() {
     const localDraft = localStorage.getItem("tprs_active_draft_lesson");
     if (localDraft) {
       STATE.currentLesson = JSON.parse(localDraft);
+      if (STATE.localLessons.length > 0) STATE.activeLessonId = STATE.localLessons[0].id;
     } else if (STATE.manifest.length > 0) {
       await loadLesson(STATE.manifest[0].file);
     } else {
@@ -133,11 +155,23 @@ async function init() {
   }
 }
 
-async function loadLesson(filePath) {
+async function loadLesson(selectionValue) {
+  if (selectionValue.startsWith("local_")) {
+    const found = STATE.localLessons.find(l => l.id === selectionValue);
+    if (found) {
+      STATE.currentLesson = found.lesson;
+      STATE.activeLessonId = found.id;
+      STATE.scaffoldingLevel = 1;
+      localStorage.setItem("tprs_active_draft_lesson", JSON.stringify(found.lesson));
+    }
+    return;
+  }
+
   localStorage.removeItem("tprs_active_draft_lesson");
-  const res = await fetch(filePath);
+  const res = await fetch(selectionValue + "?t=" + Date.now());
   if (res.ok) {
     STATE.currentLesson = await res.json();
+    STATE.activeLessonId = selectionValue;
     STATE.scaffoldingLevel = 1;
   } else {
     STATE.currentLesson = DEFAULT_LESSON;
@@ -160,14 +194,39 @@ function escapeAttr(str) {
     .replace(/"/g, "&quot;");
 }
 
-function audioButtons(text, showTranslateBtn = false) {
+async function translateLineInline(idx) {
+  const lesson = STATE.currentLesson || DEFAULT_LESSON;
+  const item = lesson[STATE.track]?.stage1_rawInput?.items?.[idx];
+  if (!item) return;
+
+  const glossEl = document.getElementById(`gloss-${idx}`);
+  if (glossEl) glossEl.textContent = "Translating...";
+
+  try {
+    const res = await fetch(
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(item.it)}&langpair=it|en`
+    );
+    const data = await res.json();
+    const translated = data?.responseData?.translatedText;
+    if (translated) {
+      item.en = translated;
+      if (glossEl) glossEl.textContent = translated;
+      saveToLocalLibrary(lesson);
+    } else if (glossEl) {
+      glossEl.textContent = "Could not fetch translation—try again.";
+    }
+  } catch (e) {
+    if (glossEl) glossEl.textContent = "Network error while translating.";
+  }
+}
+
+function audioButtons(text, lineIdx = null) {
   const safe = escapeAttr(text);
-  const gTransUrl = `https://translate.google.com/?sl=it&tl=en&text=${encodeURIComponent(text)}&op=translate`;
   return `
     <span class="audio-group">
       <button class="audio-btn" title="Slow 0.75x" data-text="${safe}" onclick="speak(this.dataset.text, 0.75)">🐢</button>
       <button class="audio-btn" title="Normal 0.95x" data-text="${safe}" onclick="speak(this.dataset.text, 0.95)">🔊</button>
-      ${showTranslateBtn ? `<a class="audio-btn" style="text-decoration:none;color:var(--text);" href="${gTransUrl}" target="_blank" rel="noopener" title="Check exact English meaning">🌐 EN</a>` : ""}
+      ${lineIdx !== null ? `<button class="audio-btn" title="Refresh inline English gloss" onclick="translateLineInline(${lineIdx})">🌐 EN</button>` : ""}
     </span>`;
 }
 
@@ -218,13 +277,125 @@ function exportPinnedJSON() {
   });
 }
 
-function exportCurrentLessonJSON() {
+function downloadCurrentLessonJSON() {
   const lesson = STATE.currentLesson || DEFAULT_LESSON;
-  const jsonStr = JSON.stringify(lesson, null, 2);
-  navigator.clipboard.writeText(jsonStr).then(() => {
-    const status = document.getElementById("lesson-export-status");
-    if (status) status.textContent = "✓ Copied full lesson JSON! Paste into data/lessons/YYYY-MM-DD.json";
+  const date = lesson.date || new Date().toISOString().slice(0, 10);
+  const filename = `${date}.json`;
+  const blob = new Blob([JSON.stringify(lesson, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+
+  const status = document.getElementById("lesson-export-status");
+  if (status) status.textContent = `✓ Downloaded ${filename}`;
+}
+
+function utf8ToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+
+function base64ToUtf8(b64) {
+  const bin = atob(b64.replace(/\s/g, ""));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+async function githubUpsertFile(path, contentString, commitMessage) {
+  const apiUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${path}`;
+  const headers = {
+    Authorization: `Bearer ${STATE.githubToken}`,
+    Accept: "application/vnd.github+json",
+    "Content-Type": "application/json"
+  };
+
+  let sha = null;
+  let existingContent = null;
+  const getRes = await fetch(apiUrl, { headers });
+  if (getRes.ok) {
+    const existing = await getRes.json();
+    sha = existing.sha;
+    if (existing.content) existingContent = base64ToUtf8(existing.content);
+  }
+
+  const finalString = typeof contentString === "function" ? contentString(existingContent) : contentString;
+
+  const putRes = await fetch(apiUrl, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({
+      message: commitMessage,
+      content: utf8ToBase64(finalString),
+      branch: GITHUB_CONFIG.branch,
+      ...(sha ? { sha } : {})
+    })
   });
+
+  if (!putRes.ok) {
+    const errData = await putRes.json().catch(() => ({}));
+    throw new Error(errData.message || `GitHub API error (${putRes.status})`);
+  }
+  return finalString;
+}
+
+async function saveLessonToGitHub() {
+  const status = document.getElementById("lesson-export-status");
+  if (!STATE.githubToken) {
+    alert("Add your GitHub Token once under '1. Add Input → GitHub Auto-Archive Token' (or use Download JSON).");
+    return;
+  }
+
+  const lesson = STATE.currentLesson || DEFAULT_LESSON;
+  const date = lesson.date || new Date().toISOString().slice(0, 10);
+  const title = lesson.trackB?.stage1_rawInput?.title || lesson.trackA?.stage1_rawInput?.title || "Daily Lesson";
+  const filePath = `data/lessons/${date}.json`;
+
+  try {
+    if (status) status.textContent = `⏳ Saving to ${filePath}...`;
+    const savedJsonStr = await githubUpsertFile(
+      filePath,
+      (existingText) => {
+        let merged = JSON.parse(JSON.stringify(lesson));
+        if (existingText) {
+          try {
+            const prev = JSON.parse(existingText);
+            merged = { ...prev, ...lesson, date };
+          } catch (e) {}
+        }
+        return JSON.stringify(merged, null, 2);
+      },
+      `Save daily TPRS lesson: ${date}`
+    );
+
+    STATE.currentLesson = JSON.parse(savedJsonStr);
+
+    if (status) status.textContent = "⏳ Updating data/manifest.json...";
+    const updatedManifestStr = await githubUpsertFile(
+      "data/manifest.json",
+      (existingText) => {
+        let list = [];
+        try {
+          if (existingText) list = JSON.parse(existingText);
+        } catch (e) {
+          list = [];
+        }
+        list = [{ date, title, file: filePath }, ...list.filter(item => item.file !== filePath)];
+        return JSON.stringify(list, null, 2);
+      },
+      `Update manifest.json for ${date}`
+    );
+
+    STATE.manifest = JSON.parse(updatedManifestStr);
+    STATE.activeLessonId = filePath;
+    if (status) status.textContent = `✅ Saved to ${filePath} & added to dropdown!`;
+  } catch (err) {
+    if (status) status.textContent = `⚠️ GitHub Save Failed: ${err.message}`;
+  }
 }
 
 function saveGeminiKey() {
@@ -232,10 +403,23 @@ function saveGeminiKey() {
   STATE.geminiApiKey = val;
   if (val) {
     localStorage.setItem("tprs_gemini_api_key", val);
-    alert("✓ API Key saved privately in your browser!");
+    alert("✓ Gemini API Key saved privately in your browser!");
   } else {
     localStorage.removeItem("tprs_gemini_api_key");
-    alert("API Key cleared.");
+    alert("Gemini API Key cleared.");
+  }
+  render();
+}
+
+function saveGithubToken() {
+  const val = document.getElementById("github-token-input").value.trim();
+  STATE.githubToken = val;
+  if (val) {
+    localStorage.setItem("tprs_github_token", val);
+    alert("✓ GitHub Token saved privately in your browser!");
+  } else {
+    localStorage.removeItem("tprs_github_token");
+    alert("GitHub Token cleared.");
   }
   render();
 }
@@ -289,9 +473,27 @@ function detectNonEnglishPatterns(sentences, sourceUrl) {
   return notes;
 }
 
-function buildRuleBasedTrackB(title, rawText, sourceUrl) {
+async function fetchAutoEnglishLines(cleanLines) {
+  const results = [];
+  for (const line of cleanLines) {
+    try {
+      const res = await fetch(
+        `https://api.mymemory.translated.net/get?q=${encodeURIComponent(line)}&langpair=it|en`
+      );
+      const data = await res.json();
+      const en = data?.responseData?.translatedText || "Tap 🌐 EN to translate inline";
+      results.push({ it: line, en });
+    } catch (e) {
+      results.push({ it: line, en: "Tap 🌐 EN to translate inline" });
+    }
+  }
+  return results;
+}
+
+async function buildRuleBasedTrackB(title, rawText, sourceUrl) {
   const cleanLines = cleanAndDedupeTranscript(rawText);
   const anchors = detectNonEnglishPatterns(cleanLines, sourceUrl);
+  const items = await fetchAutoEnglishLines(cleanLines);
   const firstLine = cleanLines[0] || "Ciao amici miei!";
   const words = firstLine.replace(/[.,!?]/g, "").split(/\s+/);
   const stem = words.slice(0, Math.max(2, words.length - 1)).join(" ");
@@ -301,10 +503,7 @@ function buildRuleBasedTrackB(title, rawText, sourceUrl) {
     stage1_rawInput: {
       title: title || "Fun-Italian Clip",
       sourceUrl: sourceUrl || "",
-      items: cleanLines.map(line => ({
-        it: line,
-        en: "Tap 🌐 EN for exact gloss · 🐢 0.75x / 🔊 0.95x to train your ear"
-      })),
+      items,
       anchors
     },
     stage2_tprs: {
@@ -389,22 +588,33 @@ ${rawText}
   }
 }`;
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(STATE.geminiApiKey)}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: "application/json" }
-      })
-    }
-  );
+  const models = ["gemini-2.5-flash", "gemini-2.0-flash"];
+  let lastErr = "Gemini API error";
 
-  if (!res.ok) throw new Error("Gemini API request failed");
-  const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  return JSON.parse(text);
+  for (const model of models) {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(STATE.geminiApiKey)}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: "application/json" }
+        })
+      }
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      const rawJson = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      const cleaned = rawJson.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      return JSON.parse(cleaned);
+    } else {
+      const errBody = await res.json().catch(() => ({}));
+      lastErr = errBody?.error?.message || `HTTP ${res.status}`;
+    }
+  }
+  throw new Error(lastErr);
 }
 
 async function processTrackBInput() {
@@ -429,15 +639,16 @@ async function processTrackBInput() {
     try {
       baseLesson.trackB = await decodeWithGeminiAPI(title, rawText, url);
     } catch (err) {
-      statusEl.textContent = "⚠️ AI key call failed—falling back to instant built-in decoder...";
-      baseLesson.trackB = buildRuleBasedTrackB(title, rawText, url);
+      statusEl.textContent = `⚠️ Gemini Key Note (${err.message}) — translating line-by-line automatically...`;
+      baseLesson.trackB = await buildRuleBasedTrackB(title, rawText, url);
     }
   } else {
-    baseLesson.trackB = buildRuleBasedTrackB(title, rawText, url);
+    statusEl.textContent = "⏳ Cleaning transcript & translating line-by-line...";
+    baseLesson.trackB = await buildRuleBasedTrackB(title, rawText, url);
   }
 
   STATE.currentLesson = baseLesson;
-  localStorage.setItem("tprs_active_draft_lesson", JSON.stringify(baseLesson));
+  saveToLocalLibrary(baseLesson);
   STATE.track = "trackB";
   STATE.stageView = 1;
   setBranch("branch1");
@@ -477,7 +688,7 @@ function importFullLessonJSON() {
       throw new Error("Unrecognized JSON shape");
     }
 
-    localStorage.setItem("tprs_active_draft_lesson", JSON.stringify(STATE.currentLesson));
+    saveToLocalLibrary(STATE.currentLesson);
     STATE.track = "trackB";
     STATE.stageView = 1;
     setBranch("branch1");
@@ -499,7 +710,7 @@ function renderInputCard() {
       <span class="stage-badge s2">Track B · Fun-Italian Link & Transcript Decoder</span>
       <h2>🎬 Paste Link & Transcript (Read → Comprehend → Listen)</h2>
       <p style="font-size:0.88rem;color:var(--muted);margin-top:-0.4rem;">
-        Paste any Facebook Reel / YouTube link and its raw transcript below. The Lab automatically cleans repeated loops, flags non-English grammar patterns, and prepares slow/normal listening drills.
+        Paste any Facebook Reel / YouTube link and its raw transcript below. Every decoded clip auto-translates inline and saves to your library.
       </p>
       <input type="url" id="web-url-box" placeholder="Link: https://www.facebook.com/reel/..." />
       <input type="text" id="web-title-box" placeholder="Clip Title (optional, e.g., Pace per tutti)" />
@@ -513,13 +724,24 @@ function renderInputCard() {
       </div>
 
       <details style="margin-top:1rem;">
-        <summary>🔑 Optional: Add Free Gemini API Key for Automatic Line-by-Line English Translation (${STATE.geminiApiKey ? "Active ✓" : "Off — Using Built-In Decoder"})</summary>
+        <summary>🔑 Optional: Gemini API Key for Deep Grammar & Idiom Notes (${STATE.geminiApiKey ? "Active ✓" : "Off"})</summary>
         <p style="font-size:0.84rem;color:var(--muted);margin:0.4rem 0;">
-          Stored privately in your browser's <code>localStorage</code> only (never uploaded to GitHub). Leave blank to use the free built-in decoder + <code>🌐 EN</code> buttons.
+          Stored privately in your browser's <code>localStorage</code> only (never uploaded to GitHub).
         </p>
         <div style="display:flex;gap:0.4rem;align-items:center;">
           <input type="text" id="gemini-key-input" value="${escapeAttr(STATE.geminiApiKey)}" placeholder="AIzaSy..." style="margin-top:0;" />
           <button class="pill-btn" onclick="saveGeminiKey()">Save</button>
+        </div>
+      </details>
+
+      <details style="margin-top:0.6rem;">
+        <summary>☁️ Optional: GitHub Auto-Archive Token (${STATE.githubToken ? "Connected ✓" : "Not Set"})</summary>
+        <p style="font-size:0.84rem;color:var(--muted);margin:0.4rem 0;">
+          Stored privately in your browser's <code>localStorage</code> only. Saves daily lessons directly to <code>data/lessons/YYYY-MM-DD.json</code> in <code>${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}</code>.
+        </p>
+        <div style="display:flex;gap:0.4rem;align-items:center;">
+          <input type="text" id="github-token-input" value="${escapeAttr(STATE.githubToken)}" placeholder="github_pat_..." style="margin-top:0;" />
+          <button class="pill-btn" onclick="saveGithubToken()">Save</button>
         </div>
       </details>
     </section>
@@ -539,6 +761,7 @@ function renderBranch1() {
   const lesson = STATE.currentLesson || DEFAULT_LESSON;
   const data = lesson[STATE.track];
   const v = STATE.stageView;
+  const hasOptions = STATE.localLessons.length > 0 || STATE.manifest.length > 0;
 
   return `
     <div class="sub-bar">
@@ -546,9 +769,18 @@ function renderBranch1() {
         <button class="pill-btn ${STATE.track === 'trackB' ? 'active' : ''}" onclick="setTrack('trackB')">Track B: Fun-Italian</button>
         <button class="pill-btn ${STATE.track === 'trackA' ? 'active' : ''}" onclick="setTrack('trackA')">Track A: DUO</button>
       </div>
-      ${STATE.manifest.length > 0 ? `
+      ${hasOptions ? `
         <select onchange="changeDate(this.value)">
-          ${STATE.manifest.map(m => `<option value="${m.file}" ${m.date === lesson.date ? 'selected' : ''}>📅 ${m.date} — ${m.title}</option>`).join("")}
+          ${STATE.localLessons.length > 0 ? `
+            <optgroup label="💻 Browser Saved Lessons">
+              ${STATE.localLessons.map(l => `<option value="${l.id}" ${STATE.activeLessonId === l.id ? 'selected' : ''}>📌 ${l.date} — ${l.title}</option>`).join("")}
+            </optgroup>
+          ` : ""}
+          ${STATE.manifest.length > 0 ? `
+            <optgroup label="☁️ GitHub Archived Lessons">
+              ${STATE.manifest.map(m => `<option value="${m.file}" ${STATE.activeLessonId === m.file ? 'selected' : ''}>📅 ${m.date} — ${m.title}</option>`).join("")}
+            </optgroup>
+          ` : ""}
         </select>
       ` : `<span style="font-size:0.84rem;color:var(--muted);">📅 ${lesson.date || "Today"}</span>`}
     </div>
@@ -590,18 +822,19 @@ function renderStage1(data) {
       </details>
 
       <h3 style="margin-top:0.5rem;">1b. Line-by-Line Comprehension & Ear Training (🐢 0.75x / 🔊 0.95x)</h3>
-      ${data.stage1_rawInput.items.map(item => `
+      ${data.stage1_rawInput.items.map((item, idx) => `
         <div class="line-item">
           <div class="line-top">
             <strong style="font-size:1.06rem;">${item.it}</strong>
-            ${audioButtons(item.it, true)}
+            ${audioButtons(item.it, idx)}
           </div>
-          <div style="color:var(--muted);font-size:0.9rem;margin-top:0.2rem;">${item.en}</div>
+          <div id="gloss-${idx}" style="color:var(--muted);font-size:0.9rem;margin-top:0.2rem;">${item.en}</div>
         </div>
       `).join("")}
 
       <div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
-        <button class="pill-btn" onclick="exportCurrentLessonJSON()">💾 Export Lesson JSON (for GitHub Archive)</button>
+        <button class="pill-btn active" onclick="saveLessonToGitHub()">☁️ Save to GitHub</button>
+        <button class="pill-btn" onclick="downloadCurrentLessonJSON()">⬇️ Download JSON</button>
         <span id="lesson-export-status" style="font-size:0.84rem;color:var(--green);"></span>
       </div>
     </section>
