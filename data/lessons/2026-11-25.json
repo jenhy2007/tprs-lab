@@ -1,0 +1,208 @@
+{
+  "date": "2026-11-25",
+  "trackA": {
+    "stage1_rawInput": {
+      "title": "DUO Unit 40: Describe Family Health Habits",
+      "items": [
+        {
+          "it": "Oggi al nonno gli fa male la schiena.",
+          "en": "Today Grandpa's back hurts.",
+          "zh": "今天爷爷背疼。"
+        },
+        {
+          "it": "Il dottore gli dà una medicina e lui la prende.",
+          "en": "The doctor gives him medicine and he takes it.",
+          "zh": "医生给他药，他吃了。"
+        }
+      ],
+      "anchors": [
+        "Indirect object 'gli' (to him) vs. Direct object 'la' (it, feminine).",
+        "Reflexive daily habit: alzarsi (si alza) & riposarsi (si riposa)."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Gli fa male [X]",
+        "cue": "Visual: Grandpa holding his back; Audio: 'Ahi, la schiena!'"
+      },
+      "step1_hfChunks": [
+        {
+          "it": "gli fa male",
+          "en": "his ... hurts"
+        },
+        {
+          "it": "gli dà",
+          "en": "gives to him"
+        },
+        {
+          "it": "la prende",
+          "en": "takes it (f.)"
+        }
+      ],
+      "step2_singleSlot": {
+        "stem": "Oggi al nonno gli fa male",
+        "variables": [
+          "la schiena",
+          "la testa",
+          "la gola",
+          "lo stomaco"
+        ]
+      },
+      "step3_circling": [
+        {
+          "type": "Statement",
+          "q": "Al nonno gli fa male la schiena.",
+          "a": "Sì, gli fa male la schiena."
+        },
+        {
+          "type": "Yes/No",
+          "q": "Gli fa male la testa?",
+          "a": "No, non gli fa male la testa, gli fa male la schiena!"
+        },
+        {
+          "type": "Either/Or",
+          "q": "Il nonno prende un caffè o una medicina?",
+          "a": "Prende una medicina!"
+        },
+        {
+          "type": "Open Wh-",
+          "q": "Chi gli dà la medicina?",
+          "a": "Il dottore gli dà la medicina."
+        }
+      ],
+      "step4_scaffolding": {
+        "level1": "Il nonno sta male. Prende una medicina.",
+        "level2": "Oggi al nonno gli fa male la schiena, allora il dottore gli dà una medicina.",
+        "level3": "Anche se ogni mattina si alza presto, oggi al nonno gli fa male la schiena e il dottore gli dà una medicina che lui prende subito."
+      },
+      "step5_writeOutput": {
+        "prompt": "Summary Cloze: Il dottore ___ (to him) dà la medicina e il nonno ___ (it) prende."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "Quando ti fa male la testa, che cosa prendi?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "Notice how Italian keeps the object pronoun right in front of 'prendo' (S + O + V), rather than after the verb like English.",
+        "modelAnswer": "Quando mi fa male la testa, prendo un'aspirina e la prendo con acqua."
+      },
+      "personalStory": {
+        "prompt": "Write 2–3 sentences in 1st-person POV about how you keep healthy every morning."
+      }
+    }
+  },
+  "trackB": {
+    "stage1_rawInput": {
+      "title": "AI Boy: Quanto è bella l'Italia!",
+      "sourceUrl": "",
+      "items": [
+        {
+          "it": "Mamma mia, guardate che meraviglia il mare, i paesaggi!",
+          "en": "Oh my goodness, look how marvelous the sea and the landscapes are!"
+        },
+        {
+          "it": "Ma quanto è bella l'Italia!",
+          "en": "Oh, how beautiful Italy is!"
+        },
+        {
+          "it": "Sono proprio fortunato ad essere nato qui.",
+          "en": "I am really lucky to have been born here."
+        },
+        {
+          "it": "Se anche voi vivete in Italia, condividete questo video!",
+          "en": "If you also live in Italy, share this video!"
+        },
+        {
+          "it": "Facciamo vedere al mondo quanto è bella la nostra Italia!",
+          "en": "Let's show the world how beautiful our Italy is!"
+        }
+      ],
+      "anchors": [
+        "Exclamatory 'Quanto è + [adj]': 'Ma quanto è bella l'Italia!' = 'Oh, how beautiful Italy is!' (an exclamation of awe, not a question).",
+        "'Che meraviglia + [noun]': Literally 'What a marvel [the sea]!' = 'How marvelous the sea and landscapes are!'",
+        "Subject-dropped imperatives: 'Guardate...' ('Look!'), 'Condividete...' ('Share!'), and 'Facciamo vedere...' ('Let's show...' — literally 'let's make see').",
+        "Gender agreement on 'fortunato' / 'nato': Masculine '-o' endings because the speaker is male ('Sono proprio fortunato ad essere nato qui')."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Quanto è [aggettivo] [sostantivo]!",
+        "cue": "Listen for the rising emotional stress on 'Ma quanto è bella...' at 0.75x first, then shadow at 0.95x."
+      },
+      "step1_hfChunks": [
+        {
+          "it": "Guardate che meraviglia",
+          "en": "Look how marvelous"
+        },
+        {
+          "it": "Ma quanto è bella",
+          "en": "Oh, how beautiful it is"
+        },
+        {
+          "it": "Sono proprio fortunato",
+          "en": "I am really lucky"
+        },
+        {
+          "it": "essere nato qui",
+          "en": "to have been born here"
+        },
+        {
+          "it": "Facciamo vedere al mondo",
+          "en": "Let's show the world"
+        }
+      ],
+      "step2_singleSlot": {
+        "stem": "Guardate che meraviglia",
+        "variables": [
+          "il mare",
+          "i paesaggi",
+          "la nostra Italia",
+          "questo posto"
+        ]
+      },
+      "step3_circling": [
+        {
+          "type": "Statement",
+          "q": "Il ragazzo è proprio fortunato ad essere nato in Italia.",
+          "a": "Sì, è proprio fortunato ad essere nato qui!"
+        },
+        {
+          "type": "Yes/No",
+          "q": "Il ragazzo guarda solo le città?",
+          "a": "No, guarda che meraviglia il mare e i paesaggi!"
+        },
+        {
+          "type": "Either/Or",
+          "q": "Vuole nascondere o far vedere al mondo quanto è bella l'Italia?",
+          "a": "Vuole far vedere al mondo quanto è bella la nostra Italia!"
+        },
+        {
+          "type": "Open Wh-",
+          "q": "Che cosa chiede di fare a chi vive in Italia?",
+          "a": "Chiede di condividere questo video!"
+        }
+      ],
+      "step4_scaffolding": {
+        "level1": "Guardate che meraviglia il mare! Quanto è bella l'Italia!",
+        "level2": "Mamma mia, guardate che meraviglia il mare e i paesaggi! Sono proprio fortunato ad essere nato qui.",
+        "level3": "Mamma mia, guardate che meraviglia il mare e i paesaggi! Ma quanto è bella l'Italia, sono proprio fortunato ad essere nato qui: se anche voi vivete in Italia, condividete questo video e facciamo vedere al mondo quanto è bella la nostra Italia!"
+      },
+      "step5_writeOutput": {
+        "prompt": "Exclamation Drill: Write 1 sentence using 'Quanto è bello/bella...' about a place or view you love."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "Quale paesaggio o luogo in Italia ti sembra una meraviglia?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "Remember to match 'bello/bella' with the gender of the noun ('Quanto è bella l'Italia' vs. 'Quanto è bello il mare').",
+        "modelAnswer": "Per me la costa e le colline della Toscana sono una vera meraviglia!"
+      },
+      "personalStory": {
+        "prompt": "Write 2 sentences in 1st-person POV using 'Sono proprio fortunata...' (note the feminine '-a' ending!) about something you appreciate."
+      }
+    }
+  }
+}
