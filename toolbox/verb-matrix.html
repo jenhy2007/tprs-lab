@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Verb & Pronoun Matrix (Core 5 Tenses + Si) — TPRS Lab</title>
+  <title>Verb & Pronoun Matrix (Core 5 Tenses + Condizionale + Si) — TPRS Lab</title>
   <style>
     :root {
       --bg: #faf9f6;
@@ -16,7 +16,10 @@
       --amber: #d97706;
       --amber-soft: #fef3c7;
       --green: #059669;
+      --green-soft: #d1fae5;
       --purple: #7c3aed;
+      --rose: #e11d48;
+      --rose-soft: #ffe4e6;
     }
     * { box-sizing: border-box; }
     body {
@@ -27,7 +30,7 @@
       line-height: 1.55;
       padding: 1.25rem 1rem 4rem;
     }
-    .shell { max-width: 1120px; margin: 0 auto; }
+    .shell { max-width: 1260px; margin: 0 auto; }
 
     header {
       display: flex;
@@ -83,19 +86,49 @@
       margin-right: 0.25rem;
     }
 
-    select, .pill-btn {
+    select, input[type="text"], .pill-btn {
       border: 1px solid var(--border);
       background: #fff;
       color: var(--text);
       padding: 0.4rem 0.82rem;
       border-radius: 999px;
       font-size: 0.84rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
+      font-family: inherit;
     }
+    input[type="text"] {
+      border-radius: 10px;
+      background: #fafaf9;
+    }
+    .pill-btn { cursor: pointer; transition: all 0.15s ease; }
     .pill-btn:hover { background: #f5f5f4; }
     .pill-btn.active { background: #292524; color: #fff; border-color: #292524; }
+    .pill-btn.add-btn { background: var(--green-soft); color: #065f46; border-color: #a7f3d0; font-weight: 600; }
+    .pill-btn.add-btn:hover { background: #a7f3d0; }
 
+    /* Add Verb Builder Drawer */
+    .builder-box {
+      display: none;
+      margin-top: 0.85rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+    }
+    .builder-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .field-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    /* Spotlight Banner */
     .spotlight {
       background: linear-gradient(135deg, #fffbeb 0%, #f0fdf4 100%);
       border: 1px solid #fde68a;
@@ -127,6 +160,7 @@
     .hidden-en { filter: blur(5px); user-select: none; cursor: pointer; }
     .hidden-en:hover { filter: blur(0); }
 
+    /* Stem + Ending Color Coding */
     .stem { color: var(--text); }
     .ending {
       color: var(--blue);
@@ -140,30 +174,35 @@
       font-weight: 600;
     }
 
+    /* Matrix Table */
     .table-wrap { overflow-x: auto; }
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.88rem;
-      min-width: 820px;
+      font-size: 0.86rem;
+      min-width: 980px;
     }
     th {
       text-align: left;
-      padding: 0.65rem 0.6rem;
+      padding: 0.65rem 0.55rem;
       background: #f5f5f4;
       border-bottom: 2px solid var(--border);
-      font-size: 0.8rem;
+      font-size: 0.79rem;
       color: var(--text);
       vertical-align: top;
+    }
+    th.cond-col {
+      background: var(--rose-soft);
+      color: #9f1239;
     }
     th small {
       display: block;
       font-weight: 400;
       color: var(--muted);
-      font-size: 0.72rem;
+      font-size: 0.71rem;
     }
     td {
-      padding: 0.6rem;
+      padding: 0.55rem;
       border-bottom: 1px solid #f0efed;
       vertical-align: top;
     }
@@ -173,17 +212,17 @@
     .pronoun-cell {
       font-weight: 700;
       white-space: nowrap;
-      width: 145px;
+      width: 140px;
     }
     .pronoun-sub {
       display: block;
       font-weight: 400;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       color: var(--muted);
     }
     .pro-drop-badge {
       display: inline-block;
-      font-size: 0.68rem;
+      font-size: 0.67rem;
       background: var(--amber-soft);
       color: #92400e;
       padding: 0.08rem 0.4rem;
@@ -200,7 +239,7 @@
       background: #eff6ff !important;
       outline: 2px solid var(--blue);
     }
-    .cell-sentence { font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .cell-sentence { font-size: 0.88rem; margin-bottom: 0.25rem; }
     .cell-actions { display: flex; gap: 0.25rem; }
     .mini-btn {
       border: 1px solid var(--border);
@@ -212,6 +251,7 @@
     }
     .mini-btn:hover { background: #efede8; }
 
+    /* Single Tense Spotlight Grid */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -232,8 +272,8 @@
 <div class="shell">
   <header>
     <div>
-      <h1>🧭 Verb &amp; Pronoun Matrix — Core 5 Tenses + <code>si</code></h1>
-      <p>7 Subject Pronouns + Impersonal/Passive <code>si + verb</code> · Stem/Ending Color-Coding · 0.75x / 0.95x Italian Audio</p>
+      <h1>🧭 Verb &amp; Pronoun Matrix — Core 5 Tenses + Condizionale (“would”) + <code>si</code></h1>
+      <p>7 Subject Pronouns + Impersonal/Passive <code>si + verb</code> · Live HF Verb Builder · 0.75x / 0.95x Italian Audio</p>
     </div>
     <a href="../index.html" class="back-link">← Back to TPRS Lab</a>
   </header>
@@ -242,17 +282,15 @@
     <div class="controls-grid">
       <div class="control-group">
         <span class="control-label">Sentence / Verb:</span>
-        <select id="verb-select" onchange="selectVerb(this.value)">
-          <option value="prendere">prendere una camomilla (to take/drink chamomile — regular -ere)</option>
-          <option value="andare">andare al parco (to go to the park — movement verb with essere)</option>
-          <option value="guardare">guardare gli uccelli (to watch birds — regular -are)</option>
-        </select>
+        <select id="verb-select" onchange="selectVerb(this.value)"></select>
+        <button class="pill-btn add-btn" onclick="toggleBuilder()">➕ Add HF Verb</button>
+        <button id="delete-custom-btn" class="pill-btn" style="display:none;color:#be123c;" onclick="deleteCurrentCustomVerb()">🗑️ Delete</button>
       </div>
 
       <div class="control-group">
         <span class="control-label">View:</span>
-        <button id="view-all-btn" class="pill-btn active" onclick="setView('all')">All 5 Tenses Grid</button>
-        <button id="view-single-btn" class="pill-btn" onclick="setView('single')">Single Tense Focus</button>
+        <button id="view-all-btn" class="pill-btn active" onclick="setView('all')">All 6 Columns Grid</button>
+        <button id="view-single-btn" class="pill-btn" onclick="setView('single')">Single Column Focus</button>
       </div>
 
       <div class="control-group">
@@ -261,16 +299,53 @@
       </div>
     </div>
 
+    <!-- Dynamic HF Verb Builder Drawer -->
+    <div id="verb-builder" class="builder-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+        <strong style="font-size:0.92rem;">✨ Auto-Generate All 7 Pronouns + <code>si</code> Across All 6 Columns</strong>
+        <button class="pill-btn" onclick="exportCustomVerbsJSON()">📋 Copy Saved Verbs JSON</button>
+      </div>
+      <div class="builder-row">
+        <div>
+          <label class="field-label">1. Infinitive (-are / -ere / -ire)</label>
+          <input type="text" id="new-inf" placeholder="e.g. ascoltare, leggere, finire" />
+        </div>
+        <div>
+          <label class="field-label">2. Object / Rest of Phrase (Italian)</label>
+          <input type="text" id="new-obj" placeholder="e.g. la musica, un libro" />
+        </div>
+        <div>
+          <label class="field-label">3. English Meaning (base verb + object)</label>
+          <input type="text" id="new-en" placeholder="e.g. listen to music, read a book" />
+        </div>
+        <div>
+          <label class="field-label">4. Verb Pattern</label>
+          <select id="new-type" style="width:100%;border-radius:10px;">
+            <option value="regular">Regular (-are / -ere / -ire)</option>
+            <option value="isc">-IRE with -isc- (capire, finire, preferire)</option>
+            <option value="essere">Movement with essere (arrivare, partire, tornare)</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:0.7rem;display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+        <button class="pill-btn active" onclick="addCustomVerb()">✓ Generate &amp; Save to Matrix</button>
+        <button class="pill-btn" onclick="toggleBuilder()">Cancel</button>
+        <span id="builder-status" style="font-size:0.83rem;color:var(--green);"></span>
+      </div>
+    </div>
+
     <div id="single-tense-bar" style="display:none;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);" class="control-group">
-      <span class="control-label">Focus Tense:</span>
+      <span class="control-label">Focus Column:</span>
       <button class="pill-btn active" data-tense="presente" onclick="selectTense('presente')">1. Presente</button>
-      <button class="pill-btn" data-tense="progressivo" onclick="selectTense('progressivo')">2. Presente Progressivo</button>
+      <button class="pill-btn" data-tense="progressivo" onclick="selectTense('progressivo')">2. Progressivo</button>
       <button class="pill-btn" data-tense="passato" onclick="selectTense('passato')">3. Passato Prossimo</button>
       <button class="pill-btn" data-tense="imperfetto" onclick="selectTense('imperfetto')">4. Imperfetto</button>
-      <button class="pill-btn" data-tense="futuro" onclick="selectTense('futuro')">5. Futuro Semplice</button>
+      <button class="pill-btn" data-tense="futuro" onclick="selectTense('futuro')">5. Futuro</button>
+      <button class="pill-btn" data-tense="condizionale" onclick="selectTense('condizionale')">6. Condizionale (“would”)</button>
     </div>
   </section>
 
+  <!-- Live Sentence Spotlight -->
   <div class="spotlight" id="spotlight-banner">
     <div>
       <div class="spotlight-meta" id="spot-meta">IO · 1. PRESENTE (Habits &amp; Facts)</div>
@@ -280,10 +355,11 @@
     <div class="control-group">
       <button class="pill-btn" onclick="speakCurrent(0.75)">🐢 0.75x</button>
       <button class="pill-btn active" onclick="speakCurrent(0.95)">🔊 0.95x</button>
-      <button class="pill-btn" onclick="playRowSequence()">▶️ Play All 5 Tenses</button>
+      <button class="pill-btn" onclick="playRowSequence()">▶️ Play All 6 Forms</button>
     </div>
   </div>
 
+  <!-- Matrix Content -->
   <section class="card" id="matrix-container">
     <p style="color:var(--muted);margin:0;">Loading verb matrix...</p>
   </section>
@@ -295,7 +371,8 @@ const TENSES = [
   { key: "progressivo", label: "2. Progressivo", sub: "Right Now (stare + -ndo)" },
   { key: "passato", label: "3. Passato Prossimo", sub: "Completed Past" },
   { key: "imperfetto", label: "4. Imperfetto", sub: "Past Habit / Ongoing" },
-  { key: "futuro", label: "5. Futuro Semplice", sub: "Plans & Predictions" }
+  { key: "futuro", label: "5. Futuro", sub: "Will / Plans" },
+  { key: "condizionale", label: "6. Condizionale", sub: "“Would + verb”", isCond: true }
 ];
 
 const PRONOUNS = [
@@ -309,7 +386,7 @@ const PRONOUNS = [
   { key: "si", label: "si + verb", role: "Impersonal / Passive", isSi: true }
 ];
 
-const VERB_BANK = [
+const DEFAULT_VERBS = [
   {
     id: "prendere",
     title: "prendere una camomilla (to take/drink chamomile — regular -ere)",
@@ -319,56 +396,64 @@ const VERB_BANK = [
         progressivo: { it: "~Sto~ prend|endo una camomilla.", en: "I am drinking a chamomile tea." },
         passato: { it: "~Ho~ pres|o una camomilla.", en: "I drank a chamomile tea." },
         imperfetto: { it: "Prend|evo sempre una camomilla.", en: "I always used to drink chamomile." },
-        futuro: { it: "Prend|erò una camomilla stasera.", en: "I will drink chamomile tonight." }
+        futuro: { it: "Prend|erò una camomilla stasera.", en: "I will drink chamomile tonight." },
+        condizionale: { it: "Prend|erei una camomilla.", en: "I would drink a chamomile tea." }
       },
       tu: {
         presente: { it: "Prend|i una camomilla.", en: "You drink a chamomile tea." },
         progressivo: { it: "~Stai~ prend|endo una camomilla.", en: "You are drinking a chamomile tea." },
         passato: { it: "~Hai~ pres|o una camomilla.", en: "You drank a chamomile tea." },
         imperfetto: { it: "Prend|evi una camomilla la sera.", en: "You used to drink chamomile in the evening." },
-        futuro: { it: "Prend|erai una camomilla.", en: "You will drink chamomile a tea." }
+        futuro: { it: "Prend|erai una camomilla.", en: "You will drink a chamomile tea." },
+        condizionale: { it: "Prend|eresti una camomilla?", en: "Would you drink a chamomile tea?" }
       },
       luilei: {
         presente: { it: "Prend|e una camomilla.", en: "He/She drinks a chamomile tea." },
         progressivo: { it: "~Sta~ prend|endo una camomilla.", en: "He/She is drinking a chamomile tea." },
         passato: { it: "~Ha~ pres|o una camomilla.", en: "He/She drank a chamomile tea." },
         imperfetto: { it: "Prend|eva una camomilla.", en: "He/She used to drink chamomile." },
-        futuro: { it: "Prend|erà una camomilla.", en: "He/She will drink chamomile." }
+        futuro: { it: "Prend|erà una camomilla.", en: "He/She will drink chamomile." },
+        condizionale: { it: "Prend|erebbe una camomilla.", en: "He/She would drink a chamomile tea." }
       },
       esso: {
         presente: { it: "Fa| effetto subito.", en: "(It) takes effect right away." },
         progressivo: { it: "~Sta~ fac|endo effetto.", en: "(It) is taking effect." },
         passato: { it: "~Ha~ fatt|o effetto.", en: "(It) took effect." },
         imperfetto: { it: "Fac|eva sempre effetto.", en: "(It) always used to work." },
-        futuro: { it: "Far|à effetto presto.", en: "(It) will take effect soon." }
+        futuro: { it: "Far|à effetto presto.", en: "(It) will take effect soon." },
+        condizionale: { it: "Far|ebbe bene prima di dormire.", en: "(It) would do good before sleeping." }
       },
       noi: {
         presente: { it: "Prend|iamo una camomilla.", en: "We drink a chamomile tea." },
         progressivo: { it: "~Stiamo~ prend|endo una camomilla.", en: "We are drinking a chamomile tea." },
         passato: { it: "~Abbiamo~ pres|o una camomilla.", en: "We drank a chamomile tea." },
         imperfetto: { it: "Prend|evamo una camomilla insieme.", en: "We used to drink chamomile together." },
-        futuro: { it: "Prend|eremo una camomilla.", en: "We will drink a chamomile tea." }
+        futuro: { it: "Prend|eremo una camomilla.", en: "We will drink a chamomile tea." },
+        condizionale: { it: "Prend|eremmo una camomilla.", en: "We would drink a chamomile tea." }
       },
       voi: {
         presente: { it: "Prend|ete una camomilla.", en: "You all drink a chamomile tea." },
         progressivo: { it: "~State~ prend|endo una camomilla.", en: "You all are drinking chamomile." },
         passato: { it: "~Avete~ pres|o una camomilla.", en: "You all drank a chamomile tea." },
         imperfetto: { it: "Prend|evate una camomilla.", en: "You all used to drink chamomile." },
-        futuro: { it: "Prend|erete una camomilla.", en: "You all will drink chamomile." }
+        futuro: { it: "Prend|erete una camomilla.", en: "You all will drink chamomile." },
+        condizionale: { it: "Prend|ereste una camomilla?", en: "Would you all drink a chamomile tea?" }
       },
       loro: {
         presente: { it: "Prend|ono una camomilla.", en: "They drink a chamomile tea." },
         progressivo: { it: "~Stanno~ prend|endo una camomilla.", en: "They are drinking chamomile." },
         passato: { it: "~Hanno~ pres|o una camomilla.", en: "They drank a chamomile tea." },
         imperfetto: { it: "Prend|evano una camomilla.", en: "They used to drink chamomile." },
-        futuro: { it: "Prend|eranno una camomilla.", en: "They will drink chamomile." }
+        futuro: { it: "Prend|eranno una camomilla.", en: "They will drink chamomile." },
+        condizionale: { it: "Prend|erebbero una camomilla.", en: "They would drink a chamomile tea." }
       },
       si: {
         presente: { it: "La camomilla ~si~ prend|e la sera.", en: "Chamomile is drunk in the evening. (Passive sg.)" },
         progressivo: { it: "Oggi ~si~ ~sta~ prend|endo più tisana.", en: "Today people are drinking more herbal tea." },
         passato: { it: "~Si~ ~è~ pres|a una camomilla.", en: "One drank / A chamomile was taken. (essere agreement)" },
         imperfetto: { it: "In casa ~si~ prend|evano le tisane.", en: "At home herbal teas used to be taken. (Passive pl.)" },
-        futuro: { it: "Domani ~si~ prend|erà un caffè.", en: "Tomorrow people will have coffee." }
+        futuro: { it: "Domani ~si~ prend|erà un caffè.", en: "Tomorrow people will have coffee." },
+        condizionale: { it: "Volentieri ~si~ prend|erebbe un tè.", en: "One would gladly have a tea." }
       }
     }
   },
@@ -381,56 +466,64 @@ const VERB_BANK = [
         progressivo: { it: "~Sto~ and|ando al parco.", en: "I am going to the park." },
         passato: { it: "~Sono~ andat|o al parco.", itF: "~Sono~ andat|a al parco.", en: "I went to the park." },
         imperfetto: { it: "And|avo spesso al parco.", en: "I used to go to the park often." },
-        futuro: { it: "Andr|ò al parco domani.", en: "I will go to the park tomorrow." }
+        futuro: { it: "Andr|ò al parco domani.", en: "I will go to the park tomorrow." },
+        condizionale: { it: "Andr|ei al parco con piacere.", en: "I would gladly go to the park." }
       },
       tu: {
         presente: { it: "Va|i al parco.", en: "You go to the park." },
         progressivo: { it: "~Stai~ and|ando al parco.", en: "You are going to the park." },
         passato: { it: "~Sei~ andat|o al parco.", itF: "~Sei~ andat|a al parco.", en: "You went to the park." },
         imperfetto: { it: "And|avi al parco.", en: "You used to go to the park." },
-        futuro: { it: "Andr|ai al parco.", en: "You will go to the park." }
+        futuro: { it: "Andr|ai al parco.", en: "You will go to the park." },
+        condizionale: { it: "Andr|esti al parco oggi?", en: "Would you go to the park today?" }
       },
       luilei: {
         presente: { it: "V|a al parco.", en: "He/She goes to the park." },
         progressivo: { it: "~Sta~ and|ando al parco.", en: "He/She is going to the park." },
         passato: { it: "~È~ andat|o al parco.", itF: "~È~ andat|a al parco.", en: "He/She went to the park." },
         imperfetto: { it: "And|ava al parco.", en: "He/She used to go to the park." },
-        futuro: { it: "Andr|à al parco.", en: "He/She will go to the park." }
+        futuro: { it: "Andr|à al parco.", en: "He/She will go to the park." },
+        condizionale: { it: "Andr|ebbe al parco.", en: "He/She would go to the park." }
       },
       esso: {
         presente: { it: "V|a tutto bene.", en: "(It) goes all well / Everything is fine." },
         progressivo: { it: "~Sta~ and|ando bene.", en: "(It) is going well." },
         passato: { it: "~È~ andat|o tutto bene.", en: "(It) went all well." },
         imperfetto: { it: "And|ava tutto bene.", en: "(It) used to go well." },
-        futuro: { it: "Andr|à tutto bene.", en: "(It) will all go well." }
+        futuro: { it: "Andr|à tutto bene.", en: "(It) will all go well." },
+        condizionale: { it: "Andr|ebbe benissimo!", en: "(It) would go super well!" }
       },
       noi: {
         presente: { it: "And|iamo al parco.", en: "We go to the park." },
         progressivo: { it: "~Stiamo~ and|ando al parco.", en: "We are going to the park." },
         passato: { it: "~Siamo~ andat|i al parco.", itF: "~Siamo~ andat|e al parco.", en: "We went to the park." },
         imperfetto: { it: "And|avamo al parco.", en: "We used to go to the park." },
-        futuro: { it: "Andr|emo al parco.", en: "We will go to the park." }
+        futuro: { it: "Andr|emo al parco.", en: "We will go to the park." },
+        condizionale: { it: "Andr|emmo al parco insieme.", en: "We would go to the park together." }
       },
       voi: {
         presente: { it: "And|ate al parco.", en: "You all go to the park." },
         progressivo: { it: "~State~ and|ando al parco.", en: "You all are going to the park." },
         passato: { it: "~Siete~ andat|i al parco.", itF: "~Siete~ andat|e al parco.", en: "You all went to the park." },
         imperfetto: { it: "And|avate al parco.", en: "You all used to go to the park." },
-        futuro: { it: "Andr|ete al parco.", en: "You all will go to the park." }
+        futuro: { it: "Andr|ete al parco.", en: "You all will go to the park." },
+        condizionale: { it: "Andr|este al parco?", en: "Would you all go to the park?" }
       },
       loro: {
         presente: { it: "V|anno al parco.", en: "They go to the park." },
         progressivo: { it: "~Stanno~ and|ando al parco.", en: "They are going to the park." },
         passato: { it: "~Sono~ andat|i al parco.", itF: "~Sono~ andat|e al parco.", en: "They went to the park." },
         imperfetto: { it: "And|avano al parco.", en: "They used to go to the park." },
-        futuro: { it: "Andr|anno al parco.", en: "They will go to the park." }
+        futuro: { it: "Andr|anno al parco.", en: "They will go to the park." },
+        condizionale: { it: "Andr|ebbero al parco.", en: "They would go to the park." }
       },
       si: {
         presente: { it: "La domenica ~si~ v|a al parco.", en: "On Sundays people go to the park. (Impersonal)" },
-        progressivo: { it: "~Si~ ~sta~ and|ando verso la primavera.", en: "We/People are moving toward spring." },
-        passato: { it: "Ieri ~si~ ~è~ andat|i al parco.", en: "Yesterday people went to the park. (Impersonal plural -i)" },
+        progressivo: { it: "~Si~ ~sta~ and|ando verso la primavera.", en: "People are moving toward spring." },
+        passato: { it: "Ieri ~si~ ~è~ andat|i al parco.", en: "Yesterday people went to the park. (Impersonal pl. -i)" },
         imperfetto: { it: "Da giovani ~si~ and|ava a piedi.", en: "When young, people used to go on foot." },
-        futuro: { it: "Domani ~si~ andr|à al lago.", en: "Tomorrow people will go to the lake." }
+        futuro: { it: "Domani ~si~ andr|à al lago.", en: "Tomorrow people will go to the lake." },
+        condizionale: { it: "Col sole ~si~ andr|ebbe volentieri.", en: "In sunny weather one would gladly go." }
       }
     }
   },
@@ -443,62 +536,71 @@ const VERB_BANK = [
         progressivo: { it: "~Sto~ guard|ando gli uccelli.", en: "I am watching the birds." },
         passato: { it: "~Ho~ guard|ato gli uccelli.", en: "I watched the birds." },
         imperfetto: { it: "Guard|avo gli uccelli ogni mattina.", en: "I used to watch the birds every morning." },
-        futuro: { it: "Guard|erò gli uccelli domani.", en: "I will watch the birds tomorrow." }
+        futuro: { it: "Guard|erò gli uccelli domani.", en: "I will watch the birds tomorrow." },
+        condizionale: { it: "Guard|erei gli uccelli tutto il giorno.", en: "I would watch the birds all day." }
       },
       tu: {
         presente: { it: "Guard|i gli uccelli.", en: "You watch the birds." },
         progressivo: { it: "~Stai~ guard|ando gli uccelli.", en: "You are watching the birds." },
         passato: { it: "~Hai~ guard|ato gli uccelli.", en: "You watched the birds." },
         imperfetto: { it: "Guard|avi gli uccelli.", en: "You used to watch the birds." },
-        futuro: { it: "Guard|erai gli uccelli.", en: "You will watch the birds." }
+        futuro: { it: "Guard|erai gli uccelli.", en: "You will watch the birds." },
+        condizionale: { it: "Guard|eresti gli uccelli con me?", en: "Would you watch the birds with me?" }
       },
       luilei: {
         presente: { it: "Guard|a gli uccelli.", en: "He/She watches the birds." },
         progressivo: { it: "~Sta~ guard|ando gli uccelli.", en: "He/She is watching the birds." },
         passato: { it: "~Ha~ guard|ato gli uccelli.", en: "He/She watched the birds." },
         imperfetto: { it: "Guard|ava gli uccelli.", en: "He/She used to watch the birds." },
-        futuro: { it: "Guard|erà gli uccelli.", en: "He/She will watch the birds." }
+        futuro: { it: "Guard|erà gli uccelli.", en: "He/She will watch the birds." },
+        condizionale: { it: "Guard|erebbe gli uccelli.", en: "He/She would watch the birds." }
       },
       esso: {
         presente: { it: "Sembr|a un cardinale rosso.", en: "(It) looks like a red cardinal." },
         progressivo: { it: "~Sta~ cant|ando sul ramo.", en: "(It) is singing on the branch." },
         passato: { it: "~Ha~ cant|ato sul ramo.", en: "(It) sang on the branch." },
         imperfetto: { it: "Sembr|ava un cardinale.", en: "(It) looked like a cardinal." },
-        futuro: { it: "Torn|erà in primavera.", en: "(It) will return in spring." }
+        futuro: { it: "Torn|erà in primavera.", en: "(It) will return in spring." },
+        condizionale: { it: "Vol|erebbe via subito.", en: "(It) would fly away right away." }
       },
       noi: {
         presente: { it: "Guard|iamo gli uccelli.", en: "We watch the birds." },
         progressivo: { it: "~Stiamo~ guard|ando gli uccelli.", en: "We are watching the birds." },
         passato: { it: "~Abbiamo~ guard|ato gli uccelli.", en: "We watched the birds." },
         imperfetto: { it: "Guard|avamo gli uccelli al lago.", en: "We used to watch birds at the lake." },
-        futuro: { it: "Guard|eremo gli uccelli.", en: "We will watch the birds." }
+        futuro: { it: "Guard|eremo gli uccelli.", en: "We will watch the birds." },
+        condizionale: { it: "Guard|eremmo gli uccelli al parco.", en: "We would watch the birds at the park." }
       },
       voi: {
         presente: { it: "Guard|ate gli uccelli.", en: "You all watch the birds." },
         progressivo: { it: "~State~ guard|ando gli uccelli.", en: "You all are watching the birds." },
         passato: { it: "~Avete~ guard|ato gli uccelli.", en: "You all watched the birds." },
         imperfetto: { it: "Guard|avate gli uccelli.", en: "You all used to watch the birds." },
-        futuro: { it: "Guard|erete gli uccelli.", en: "You all will watch the birds." }
+        futuro: { it: "Guard|erete gli uccelli.", en: "You all will watch the birds." },
+        condizionale: { it: "Guard|ereste gli uccelli?", en: "Would you all watch the birds?" }
       },
       loro: {
         presente: { it: "Guard|ano gli uccelli.", en: "They watch the birds." },
         progressivo: { it: "~Stanno~ guard|ando gli uccelli.", en: "They are watching the birds." },
         passato: { it: "~Hanno~ guard|ato gli uccelli.", en: "They watched the birds." },
         imperfetto: { it: "Guard|avano gli uccelli.", en: "They used to watch the birds." },
-        futuro: { it: "Guard|eranno gli uccelli.", en: "They will watch the birds." }
+        futuro: { it: "Guard|eranno gli uccelli.", en: "They will watch the birds." },
+        condizionale: { it: "Guard|erebbero gli uccelli.", en: "They would watch the birds." }
       },
       si: {
         presente: { it: "A maggio ~si~ guard|ano gli uccelli.", en: "In May birds are watched / people watch birds." },
         progressivo: { it: "~Si~ ~sta~ guard|ando il cielo.", en: "People are watching the sky." },
         passato: { it: "~Si~ ~sono~ guard|ati molti uccelli.", en: "Many birds were watched. (Passive pl.)" },
         imperfetto: { it: "Dal sentiero ~si~ guard|ava il lago.", en: "From the trail one used to watch the lake." },
-        futuro: { it: "In maggio ~si~ guard|eranno le parule.", en: "In May warblers will be watched." }
+        futuro: { it: "In maggio ~si~ guard|eranno le parule.", en: "In May warblers will be watched." },
+        condizionale: { it: "Con il binocolo ~si~ guard|erebbero meglio.", en: "With binoculars they would be watched better." }
       }
     }
   }
 ];
 
 const state = {
+  customVerbs: JSON.parse(localStorage.getItem("tprs_custom_verbs") || "[]"),
   verbId: "prendere",
   view: "all",
   activeTense: "presente",
@@ -507,6 +609,201 @@ const state = {
   female: true,
   hideEnglish: false
 };
+
+function getAllVerbs() {
+  return [...DEFAULT_VERBS, ...state.customVerbs];
+}
+
+function cap(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function generateRegularVerbEntry(inf, obj, enBase, pattern) {
+  const cleanInf = inf.trim().toLowerCase();
+  const cleanObj = obj.trim();
+  const tail = cleanObj ? " " + cleanObj : "";
+  const enTail = enBase.trim() || cleanInf;
+
+  const group = cleanInf.slice(-3); // are, ere, ire
+  const stem = cleanInf.slice(0, -3);
+  if (!["are", "ere", "ire"].includes(group) || stem.length < 2) {
+    throw new Error("Please enter a valid infinitive ending in -are, -ere, or -ire.");
+  }
+
+  // Stem adjustments for -care/-gare (c -> ch, g -> gh before e/i)
+  const needsH = (group === "are") && /[cg]$/.test(stem);
+  const iStem = needsH ? stem + "h" : stem;
+  const fStem = (group === "are") ? (needsH ? stem + "her" : stem + "er") : stem + (group === "ere" ? "er" : "ir");
+
+  const isIsc = (group === "ire" && pattern === "isc");
+  const useEssere = (pattern === "essere");
+
+  // Presente endings
+  const pres = {
+    io: isIsc ? `${stem}|isco` : `${stem}|o`,
+    tu: isIsc ? `${stem}|isci` : `${iStem}|i`,
+    luilei: isIsc ? `${stem}|isce` : `${stem}|${group === "are" ? "a" : "e"}`,
+    noi: `${iStem}|iamo`,
+    voi: `${stem}|${group === "are" ? "ate" : group === "ere" ? "ete" : "ite"}`,
+    loro: isIsc ? `${stem}|iscono` : `${stem}|${group === "are" ? "ano" : "ono"}`
+  };
+
+  // Gerundio (-ando / -endo)
+  const gerund = `${stem}|${group === "are" ? "ando" : "endo"}`;
+
+  // Participio (-ato / -uto / -ito)
+  const partBase = `${stem}|${group === "are" ? "at" : group === "ere" ? "ut" : "it"}`;
+
+  // Imperfetto (-avo / -evo / -ivo)
+  const impVowel = group === "are" ? "a" : group === "ere" ? "e" : "i";
+
+  function buildPassato(pron) {
+    if (!useEssere) {
+      const auxMap = { io: "~Ho~", tu: "~Hai~", luilei: "~Ha~", esso: "~Ha~", noi: "~Abbiamo~", voi: "~Avete~", loro: "~Hanno~" };
+      return { it: `${auxMap[pron]} ${partBase}o${tail}.` };
+    } else {
+      if (pron === "io") return { it: `~Sono~ ${partBase}o${tail}.`, itF: `~Sono~ ${partBase}a${tail}.` };
+      if (pron === "tu") return { it: `~Sei~ ${partBase}o${tail}.`, itF: `~Sei~ ${partBase}a${tail}.` };
+      if (pron === "luilei") return { it: `~È~ ${partBase}o${tail}.`, itF: `~È~ ${partBase}a${tail}.` };
+      if (pron === "esso") return { it: `~È~ ${partBase}o${tail}.` };
+      if (pron === "noi") return { it: `~Siamo~ ${partBase}i${tail}.`, itF: `~Siamo~ ${partBase}e${tail}.` };
+      if (pron === "voi") return { it: `~Siete~ ${partBase}i${tail}.`, itF: `~Siete~ ${partBase}e${tail}.` };
+      if (pron === "loro") return { it: `~Sono~ ${partBase}i${tail}.`, itF: `~Sono~ ${partBase}e${tail}.` };
+    }
+  }
+
+  return {
+    id: `custom_${cleanInf}_${Date.now()}`,
+    isCustom: true,
+    title: `★ ${cleanInf}${tail} (${enTail})`,
+    rows: {
+      io: {
+        presente: { it: `${cap(pres.io)}${tail}.`, en: `I ${enTail}.` },
+        progressivo: { it: `~Sto~ ${gerund}${tail}.`, en: `I am [${enTail}].` },
+        passato: { ...buildPassato("io"), en: `I [${enTail}] (past).` },
+        imperfetto: { it: `${cap(stem)}|${impVowel}vo${tail}.`, en: `I used to ${enTail}.` },
+        futuro: { it: `${cap(fStem)}|ò${tail}.`, en: `I will ${enTail}.` },
+        condizionale: { it: `${cap(fStem)}|ei${tail}.`, en: `I would ${enTail}.` }
+      },
+      tu: {
+        presente: { it: `${cap(pres.tu)}${tail}.`, en: `You ${enTail}.` },
+        progressivo: { it: `~Stai~ ${gerund}${tail}.`, en: `You are [${enTail}].` },
+        passato: { ...buildPassato("tu"), en: `You [${enTail}] (past).` },
+        imperfetto: { it: `${cap(stem)}|${impVowel}vi${tail}.`, en: `You used to ${enTail}.` },
+        futuro: { it: `${cap(fStem)}|ai${tail}.`, en: `You will ${enTail}.` },
+        condizionale: { it: `${cap(fStem)}|esti${tail}?`, en: `Would you ${enTail}?` }
+      },
+      luilei: {
+        presente: { it: `${cap(pres.luilei)}${tail}.`, en: `He/She [${enTail}].` },
+        progressivo: { it: `~Sta~ ${gerund}${tail}.`, en: `He/She is [${enTail}].` },
+        passato: { ...buildPassato("luilei"), en: `He/She [${enTail}] (past).` },
+        imperfetto: { it: `${cap(stem)}|${impVowel}va${tail}.`, en: `He/She used to ${enTail}.` },
+        futuro: { it: `${cap(fStem)}|à${tail}.`, en: `He/She will ${enTail}.` },
+        condizionale: { it: `${cap(fStem)}|ebbe${tail}.`, en: `He/She would ${enTail}.` }
+      },
+      esso: {
+        presente: { it: `${cap(pres.luilei)}${tail}.`, en: `(It) [${enTail}].` },
+        progressivo: { it: `~Sta~ ${gerund}${tail}.`, en: `(It) is [${enTail}].` },
+        passato: { ...buildPassato("esso"), en: `(It) [${enTail}] (past).` },
+        imperfetto: { it: `${cap(stem)}|${impVowel}va${tail}.`, en: `(It) used to ${enTail}.` },
+        futuro: { it: `${cap(fStem)}|à${tail}.`, en: `(It) will ${enTail}.` },
+        condizionale: { it: `${cap(fStem)}|ebbe${tail}.`, en: `(It) would ${enTail}.` }
+      },
+      noi: {
+        presente: { it: `${cap(pres.noi)}${tail}.`, en: `We ${enTail}.` },
+        progressivo: { it: `~Stiamo~ ${gerund}${tail}.`, en: `We are [${enTail}].` },
+        passato: { ...buildPassato("noi"), en: `We [${enTail}] (past).` },
+        imperfetto: { it: `${cap(stem)}|${impVowel}vamo${tail}.`, en: `We used to ${enTail}.` },
+        futuro: { it: `${cap(fStem)}|emo${tail}.`, en: `We will ${enTail}.` },
+        condizionale: { it: `${cap(fStem)}|emmo${tail}.`, en: `We would ${enTail}.` }
+      },
+      voi: {
+        presente: { it: `${cap(pres.voi)}${tail}.`, en: `You all ${enTail}.` },
+        progressivo: { it: `~State~ ${gerund}${tail}.`, en: `You all are [${enTail}].` },
+        passato: { ...buildPassato("voi"), en: `You all [${enTail}] (past).` },
+        imperfetto: { it: `${cap(stem)}|${impVowel}vate${tail}.`, en: `You all used to ${enTail}.` },
+        futuro: { it: `${cap(fStem)}|ete${tail}.`, en: `You all will ${enTail}.` },
+        condizionale: { it: `${cap(fStem)}|este${tail}?`, en: `Would you all ${enTail}?` }
+      },
+      loro: {
+        presente: { it: `${cap(pres.loro)}${tail}.`, en: `They ${enTail}.` },
+        progressivo: { it: `~Stanno~ ${gerund}${tail}.`, en: `They are [${enTail}].` },
+        passato: { ...buildPassato("loro"), en: `They [${enTail}] (past).` },
+        imperfetto: { it: `${cap(stem)}|${impVowel}vano${tail}.`, en: `They used to ${enTail}.` },
+        futuro: { it: `${cap(fStem)}|anno${tail}.`, en: `They will ${enTail}.` },
+        condizionale: { it: `${cap(fStem)}|ebbero${tail}.`, en: `They would ${enTail}.` }
+      },
+      si: {
+        presente: { it: `~Si~ ${pres.luilei}${tail}.`, en: `One / People [${enTail}]. (Impersonal sg.)` },
+        progressivo: { it: `~Si~ ~sta~ ${gerund}${tail}.`, en: `People are [${enTail}].` },
+        passato: { it: `~Si~ ~è~ ${partBase}${useEssere ? "i" : "o"}${tail}.`, en: `People / One [${enTail}] (past).` },
+        imperfetto: { it: `~Si~ ${stem}|${impVowel}va${tail}.`, en: `People used to ${enTail}.` },
+        futuro: { it: `~Si~ ${fStem}|à${tail}.`, en: `People will ${enTail}.` },
+        condizionale: { it: `~Si~ ${fStem}|ebbe${tail}.`, en: `One / People would ${enTail}.` }
+      }
+    }
+  };
+}
+
+function toggleBuilder() {
+  const box = document.getElementById("verb-builder");
+  box.style.display = (box.style.display === "block") ? "none" : "block";
+}
+
+function addCustomVerb() {
+  const inf = document.getElementById("new-inf").value;
+  const obj = document.getElementById("new-obj").value;
+  const en = document.getElementById("new-en").value;
+  const type = document.getElementById("new-type").value;
+  const status = document.getElementById("builder-status");
+
+  try {
+    const entry = generateRegularVerbEntry(inf, obj, en, type);
+    state.customVerbs.push(entry);
+    localStorage.setItem("tprs_custom_verbs", JSON.stringify(state.customVerbs));
+    state.verbId = entry.id;
+    populateVerbSelect();
+    render();
+    status.textContent = `✓ Added "${inf}" across all 7 pronouns + si and all 6 tenses!`;
+    document.getElementById("new-inf").value = "";
+    document.getElementById("new-obj").value = "";
+    document.getElementById("new-en").value = "";
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+function deleteCurrentCustomVerb() {
+  const verb = getAllVerbs().find(v => v.id === state.verbId);
+  if (!verb || !verb.isCustom) return;
+  if (!confirm(`Remove "${verb.title}" from your saved verbs?`)) return;
+
+  state.customVerbs = state.customVerbs.filter(v => v.id !== state.verbId);
+  localStorage.setItem("tprs_custom_verbs", JSON.stringify(state.customVerbs));
+  state.verbId = DEFAULT_VERBS[0].id;
+  populateVerbSelect();
+  render();
+}
+
+function exportCustomVerbsJSON() {
+  if (state.customVerbs.length === 0) {
+    alert("Add at least one custom HF verb first!");
+    return;
+  }
+  navigator.clipboard.writeText(JSON.stringify(state.customVerbs, null, 2)).then(() => {
+    const status = document.getElementById("builder-status");
+    if (status) status.textContent = "✓ Copied saved custom verbs JSON to clipboard!";
+  });
+}
+
+function populateVerbSelect() {
+  const all = getAllVerbs();
+  const sel = document.getElementById("verb-select");
+  sel.innerHTML = all.map(v => `<option value="${v.id}" ${v.id === state.verbId ? "selected" : ""}>${v.title}</option>`).join("");
+  const current = all.find(v => v.id === state.verbId);
+  const delBtn = document.getElementById("delete-custom-btn");
+  if (delBtn) delBtn.style.display = (current && current.isCustom) ? "inline-block" : "none";
+}
 
 function getRawText(cellObj) {
   const raw = (state.female && cellObj.itF) ? cellObj.itF : cellObj.it;
@@ -530,7 +827,7 @@ function speak(text, rate = 0.95) {
 }
 
 function speakCurrent(rate) {
-  const verb = VERB_BANK.find(v => v.id === state.verbId);
+  const verb = getAllVerbs().find(v => v.id === state.verbId);
   const cell = verb.rows[state.selectedPronoun][state.selectedTense];
   speak(getRawText(cell), rate);
 }
@@ -538,7 +835,7 @@ function speakCurrent(rate) {
 function playRowSequence() {
   if (!("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
-  const verb = VERB_BANK.find(v => v.id === state.verbId);
+  const verb = getAllVerbs().find(v => v.id === state.verbId);
   const row = verb.rows[state.selectedPronoun];
   TENSES.forEach(t => {
     const u = new SpeechSynthesisUtterance(getRawText(row[t.key]));
@@ -557,6 +854,7 @@ function selectCell(pronounKey, tenseKey, speakRate = null) {
 
 function selectVerb(id) {
   state.verbId = id;
+  populateVerbSelect();
   render();
 }
 
@@ -594,7 +892,7 @@ function toggleEnglish() {
 }
 
 function renderSpotlight() {
-  const verb = VERB_BANK.find(v => v.id === state.verbId);
+  const verb = getAllVerbs().find(v => v.id === state.verbId) || DEFAULT_VERBS[0];
   const pObj = PRONOUNS.find(p => p.key === state.selectedPronoun);
   const tObj = TENSES.find(t => t.key === state.selectedTense);
   const cell = verb.rows[state.selectedPronoun][state.selectedTense];
@@ -608,7 +906,7 @@ function renderSpotlight() {
 
 function render() {
   renderSpotlight();
-  const verb = VERB_BANK.find(v => v.id === state.verbId);
+  const verb = getAllVerbs().find(v => v.id === state.verbId) || DEFAULT_VERBS[0];
   const container = document.getElementById("matrix-container");
 
   if (state.view === "all") {
@@ -618,7 +916,7 @@ function render() {
           <thead>
             <tr>
               <th>Pronoun / Pattern</th>
-              ${TENSES.map(t => `<th>${t.label}<small>${t.sub}</small></th>`).join("")}
+              ${TENSES.map(t => `<th class="${t.isCond ? "cond-col" : ""}">${t.label}<small>${t.sub}</small></th>`).join("")}
             </tr>
           </thead>
           <tbody>
@@ -672,6 +970,7 @@ function render() {
   }
 }
 
+populateVerbSelect();
 render();
 </script>
 </body>
