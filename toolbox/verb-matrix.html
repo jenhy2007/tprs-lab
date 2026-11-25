@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verb & Pronoun Matrix (Core 5 Tenses + Si) — TPRS Lab</title>
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --card: #ffffff;
+      --text: #292524;
+      --muted: #78716c;
+      --border: #e7e5e4;
+      --blue: #2563eb;
+      --blue-soft: #dbeafe;
+      --amber: #d97706;
+      --amber-soft: #fef3c7;
+      --green: #059669;
+      --green-soft: #d1fae5;
+      --purple: #7c3aed;
+      --purple-soft: #ede9fe;
+      --rose: #e11d48;
+      --rose-soft: #ffe4e6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      padding: 1.25rem 1rem 4rem;
+    }
+    .shell { max-width: 1120px; margin: 0 auto; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    header h1 { margin: 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; }
+    header p { margin: 0.2rem 0 0; font-size: 0.85rem; color: var(--muted); }
+
+    .back-link {
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 500;
+    }
+    .back-link:hover { background: #f5f5f4; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    .controls-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .control-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .control-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-right: 0.25rem;
+    }
+
+    select, .pill-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 0.4rem 0.82rem;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .pill-btn:hover { background: #f5f5f4; }
+    .pill-btn.active { background: #292524; color: #fff; border-color: #292524; }
+
+    /* Spotlight Banner */
+    .spotlight {
+      background: linear-gradient(135deg, #fffbeb 0%, #f0fdf4 100%);
+      border: 1px solid #fde68a;
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+    .spotlight-meta {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--amber);
+    }
+    .spotlight-it {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 0.2rem 0;
+    }
+    .spotlight-en {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+    .hidden-en { filter: blur(5px); user-select: none; cursor: pointer; }
+    .hidden-en:hover { filter: blur(0); }
+
+    /* Stem + Ending Color Coding */
+    .stem { color: var(--text); }
+    .ending {
+      color: var(--blue);
+      font-weight: 700;
+      background: var(--blue-soft);
+      padding: 0 3px;
+      border-radius: 4px;
+    }
+    .aux {
+      color: var(--purple);
+      font-weight: 600;
+    }
+
+    /* Matrix Table */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      min-width: 820px;
+    }
+    th {
+      text-align: left;
+      padding: 0.65rem 0.6rem;
+      background: #f5f5f4;
+      border-bottom: 2px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text);
+      vertical-align: top;
+    }
+    th small {
+      display: block;
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+    td {
+      padding: 0.6rem;
+      border-bottom: 1px solid #f0efed;
+      vertical-align: top;
+    }
+    tr:hover td { background: #fafaf9; }
+    tr.si-row td { background: #fefce8; border-top: 2px solid #fde68a; }
+
+    .pronoun-cell {
+      font-weight: 700;
+      white-space: nowrap;
+      width: 145px;
+    }
+    .pronoun-sub {
+      display: block;
+      font-weight: 400;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .pro-drop-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      background: var(--amber-soft);
+      color: #92400e;
+      padding: 0.08rem 0.4rem;
+      border-radius: 4px;
+      margin-top: 0.15rem;
+    }
+
+    .matrix-cell {
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.12s;
+    }
+    .matrix-cell.selected {
+      background: #eff6ff !important;
+      outline: 2px solid var(--blue);
+    }
+    .cell-sentence { font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .cell-actions { display: flex; gap: 0.25rem; }
+    .mini-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 999px;
+      padding: 0.12rem 0.45rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    .mini-btn:hover { background: #efede8; }
+
+    /* Single Tense Spotlight Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+    }
+    .p-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem;
+      background: #fafaf9;
+      cursor: pointer;
+    }
+    .p-card.selected { background: #eff6ff; border-color: var(--blue); }
+    .p-card.si-card { background: #fefce8; border-color: #fde68a; }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <div>
+      <h1>🧭 Verb &amp; Pronoun Matrix — Core 5 Tenses + <code>si</code></h1>
+      <p>7 Subject Pronouns + Impersonal/Passive <code>si + verb</code> · Stem/Ending Color-Coding · 0.75x / 0.95x Italian Audio</p>
+    </div>
+    <a href="../index.html" class="back-link">← Back to TPRS Lab</a>
+  </header>
+
+  <section class="card">
+    <div class="controls-grid">
+      <div class="control-group">
+        <span class="control-label">Sentence / Verb:</span>
+        <select id="verb-select" onchange="selectVerb(this.value)"></select>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">View:</span>
+        <button id="view-all-btn" class="pill-btn active" onclick="setView('all')">All 5 Tenses Grid</button>
+        <button id="view-single-btn" class="pill-btn" onclick="setView('single')">Single Tense Focus</button>
+      </div>
+
+      <div class="control-group">
+        <button id="gender-btn" class="pill-btn active" onclick="toggleGender()">👩 Female Speaker (-a/-e)</button>
+        <button id="en-btn" class="pill-btn" onclick="toggleEnglish()">👁️ Hide English Buffer</button>
+      </div>
+    </div>
+
+    <div id="single-tense-bar" style="display:none;margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);" class="control-group">
+      <span class="control-label">Focus Tense:</span>
+      <button class="pill-btn active" data-tense="presente" onclick="selectTense('presente')">1. Presente</button>
+      <button class="pill-btn" data-tense="progressivo" onclick="selectTense('progressivo')">2. Presente Progressivo</button>
+      <button class="pill-btn" data-tense="passato" onclick="selectTense('passato')">3. Passato Prossimo</button>
+      <button class="pill-btn" data-tense="imperfetto" onclick="selectTense('imperfetto')">4. Imperfetto</button>
+      <button class="pill-btn" data-tense="futuro" onclick="selectTense('futuro')">5. Futuro Semplice</button>
+    </div>
+  </section>
+
+  <!-- Live Sentence Spotlight -->
+  <div class="spotlight" id="spotlight-banner">
+    <div>
+      <div class="spotlight-meta" id="spot-meta">IO · PRESENTE</div>
+      <div class="spotlight-it" id="spot-it">Prendo una camomilla ogni sera.</div>
+      <div class="spotlight-en" id="spot-en">I drink/take a chamomile tea every evening.</div>
+    </div>
+    <div class="control-group">
+      <button class="pill-btn" onclick="speakCurrent(0.75)">🐢 0.75x</button>
+      <button class="pill-btn active" onclick="speakCurrent(0.95)">🔊 0.95x</button>
+      <button class="pill-btn" onclick="playRowSequence()">▶️ Play All 5 Tenses</button>
+    </div>
+  </div>
+
+  <!-- Matrix Content -->
+  <section class="card" id="matrix-container"></section>
+</div>
+
+<script>
+const TENSES = [
+  { key: "presente", label: "1. Presente", sub: "Habits & Facts" },
+  { key: "progressivo", label: "2. Progressivo", sub: "Right Now (stare + -ndo)" },
+  { key: "passato", label: "3. Passato Prossimo", sub: "Completed Past" },
+  { key: "imperfetto", label: "4. Imperfetto", sub: "Past Habit / Ongoing" },
+  { key: "futuro", label: "5. Futuro Semplice", sub: "Plans & Predictions" }
+];
+
+const PRONOUNS = [
+  { key: "io", label: "io", role: "I (1st sg.)" },
+  { key: "tu", label: "tu", role: "you (2nd sg.)" },
+  { key: "luilei", label: "lui / lei", role: "he / she (3rd sg.)" },
+  { key: "esso", label: "(esso / essa)", role: "it (3rd sg. pro-drop)", proDrop: true },
+  { key: "noi",
