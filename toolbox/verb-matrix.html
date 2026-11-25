@@ -98,6 +98,7 @@
     input[type="text"] {
       border-radius: 10px;
       background: #fafaf9;
+      width: 100%;
     }
     .pill-btn { cursor: pointer; transition: all 0.15s ease; }
     .pill-btn:hover { background: #f5f5f4; }
@@ -127,6 +128,23 @@
       color: var(--muted);
       margin-bottom: 0.2rem;
     }
+    .irreg-chips {
+      margin-top: 0.55rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .irreg-pill {
+      display: inline-block;
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 0 0.38rem;
+      margin: 0.1rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .irreg-pill:hover { background: var(--amber-soft); border-color: #fcd34d; }
 
     /* Spotlight Banner */
     .spotlight {
@@ -273,7 +291,7 @@
   <header>
     <div>
       <h1>🧭 Verb &amp; Pronoun Matrix — Core 5 Tenses + Condizionale (“would”) + <code>si</code></h1>
-      <p>7 Subject Pronouns + Impersonal/Passive <code>si + verb</code> · Live HF Verb Builder · 0.75x / 0.95x Italian Audio</p>
+      <p>7 Subject Pronouns + Impersonal/Passive <code>si + verb</code> · Smart Regular &amp; Irregular Builder · 0.75x / 0.95x Audio</p>
     </div>
     <a href="../index.html" class="back-link">← Back to TPRS Lab</a>
   </header>
@@ -307,25 +325,29 @@
       </div>
       <div class="builder-row">
         <div>
-          <label class="field-label">1. Infinitive (-are / -ere / -ire)</label>
-          <input type="text" id="new-inf" placeholder="e.g. ascoltare, leggere, finire" />
+          <label class="field-label">1. Infinitive (Regular OR Irregular)</label>
+          <input type="text" id="new-inf" placeholder="e.g. bere, dire, venire, leggere" />
         </div>
         <div>
           <label class="field-label">2. Object / Rest of Phrase (Italian)</label>
-          <input type="text" id="new-obj" placeholder="e.g. la musica, un libro" />
+          <input type="text" id="new-obj" placeholder="e.g. un caffè, la verità, a casa" />
         </div>
         <div>
           <label class="field-label">3. English Meaning (base verb + object)</label>
-          <input type="text" id="new-en" placeholder="e.g. listen to music, read a book" />
+          <input type="text" id="new-en" placeholder="e.g. drink a coffee, tell the truth" />
         </div>
         <div>
-          <label class="field-label">4. Verb Pattern</label>
+          <label class="field-label">4. Regular Pattern (auto-skipped for irregulars)</label>
           <select id="new-type" style="width:100%;border-radius:10px;">
             <option value="regular">Regular (-are / -ere / -ire)</option>
             <option value="isc">-IRE with -isc- (capire, finire, preferire)</option>
             <option value="essere">Movement with essere (arrivare, partire, tornare)</option>
           </select>
         </div>
+      </div>
+      <div class="irreg-chips">
+        <strong>Built-in DUO Irregulars (tap to fill):</strong>
+        <span id="irreg-list"></span>
       </div>
       <div style="margin-top:0.7rem;display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
         <button class="pill-btn active" onclick="addCustomVerb()">✓ Generate &amp; Save to Matrix</button>
@@ -385,6 +407,82 @@ const PRONOUNS = [
   { key: "loro", label: "loro", role: "they (3rd pl.)" },
   { key: "si", label: "si + verb", role: "Impersonal / Passive", isSi: true }
 ];
+
+// Built-in Offline Dictionary of High-Frequency DUO Irregular Verbs
+const IRREGULAR_DICT = {
+  fare: {
+    pres: { io: "facc|io", tu: "fa|i", luilei: "f|a", noi: "facc|iamo", voi: "fat|e", loro: "f|anno" },
+    ger: "fac|endo", part: "fatt", imp: "fac|ev", fut: "far", essere: false
+  },
+  bere: {
+    pres: { io: "bev|o", tu: "bev|i", luilei: "bev|e", noi: "bev|iamo", voi: "bev|ete", loro: "bev|ono" },
+    ger: "bev|endo", part: "bevut", imp: "bev|ev", fut: "berr", essere: false
+  },
+  dire: {
+    pres: { io: "dic|o", tu: "dic|i", luilei: "dic|e", noi: "dic|iamo", voi: "dit|e", loro: "dic|ono" },
+    ger: "dic|endo", part: "dett", imp: "dic|ev", fut: "dir", essere: false
+  },
+  venire: {
+    pres: { io: "veng|o", tu: "vien|i", luilei: "vien|e", noi: "ven|iamo", voi: "ven|ite", loro: "veng|ono" },
+    ger: "ven|endo", part: "venut", imp: "ven|iv", fut: "verr", essere: true
+  },
+  uscire: {
+    pres: { io: "esc|o", tu: "esc|i", luilei: "esc|e", noi: "usc|iamo", voi: "usc|ite", loro: "esc|ono" },
+    ger: "usc|endo", part: "uscit", imp: "usc|iv", fut: "uscir", essere: true
+  },
+  volere: {
+    pres: { io: "vogli|o", tu: "vuo|i", luilei: "vuol|e", noi: "vogl|iamo", voi: "vol|ete", loro: "vogli|ono" },
+    ger: "vol|endo", part: "volut", imp: "vol|ev", fut: "vorr", essere: false
+  },
+  potere: {
+    pres: { io: "poss|o", tu: "puo|i", luilei: "pu|ò", noi: "poss|iamo", voi: "pot|ete", loro: "poss|ono" },
+    ger: "pot|endo", part: "potut", imp: "pot|ev", fut: "potr", essere: false
+  },
+  dovere: {
+    pres: { io: "dev|o", tu: "dev|i", luilei: "dev|e", noi: "dobb|iamo", voi: "dov|ete", loro: "dev|ono" },
+    ger: "dov|endo", part: "dovut", imp: "dov|ev", fut: "dovr", essere: false
+  },
+  stare: {
+    pres: { io: "st|o", tu: "sta|i", luilei: "st|a", noi: "st|iamo", voi: "stat|e", loro: "st|anno" },
+    ger: "st|ando", part: "stat", imp: "st|av", fut: "star", essere: true
+  },
+  dare: {
+    pres: { io: "d|o", tu: "da|i", luilei: "d|à", noi: "d|iamo", voi: "dat|e", loro: "d|anno" },
+    ger: "d|ando", part: "dat", imp: "d|av", fut: "dar", essere: false
+  },
+  sapere: {
+    pres: { io: "s|o", tu: "sa|i", luilei: "s|a", noi: "sapp|iamo", voi: "sap|ete", loro: "s|anno" },
+    ger: "sap|endo", part: "saput", imp: "sap|ev", fut: "sapr", essere: false
+  },
+  vedere: {
+    pres: { io: "ved|o", tu: "ved|i", luilei: "ved|e", noi: "ved|iamo", voi: "ved|ete", loro: "ved|ono" },
+    ger: "ved|endo", part: "vist", imp: "ved|ev", fut: "vedr", essere: false
+  },
+  avere: {
+    pres: { io: "h|o", tu: "ha|i", luilei: "h|a", noi: "abb|iamo", voi: "av|ete", loro: "h|anno" },
+    ger: "av|endo", part: "avut", imp: "av|ev", fut: "avr", essere: false
+  },
+  essere: {
+    pres: { io: "son|o", tu: "se|i", luilei: "|è", noi: "s|iamo", voi: "siet|e", loro: "son|o" },
+    ger: "ess|endo", part: "stat", imp: "er", fut: "sar", essere: true
+  },
+  rimanere: {
+    pres: { io: "rimang|o", tu: "riman|i", luilei: "riman|e", noi: "riman|iamo", voi: "riman|ete", loro: "rimang|ono" },
+    ger: "riman|endo", part: "rimast", imp: "riman|ev", fut: "rimarr", essere: true
+  },
+  tenere: {
+    pres: { io: "teng|o", tu: "tien|i", luilei: "tien|e", noi: "ten|iamo", voi: "ten|ete", loro: "teng|ono" },
+    ger: "ten|endo", part: "tenut", imp: "ten|ev", fut: "terr", essere: false
+  },
+  scegliere: {
+    pres: { io: "scelg|o", tu: "scegl|i", luilei: "scegl|ie", noi: "scegl|iamo", voi: "scegl|iete", loro: "scelg|ono" },
+    ger: "scegl|iendo", part: "scelt", imp: "scegl|iev", fut: "sceglier", essere: false
+  },
+  morire: {
+    pres: { io: "muoi|o", tu: "muor|i", luilei: "muor|e", noi: "mor|iamo", voi: "mor|ite", loro: "muoi|ono" },
+    ger: "mor|endo", part: "mort", imp: "mor|iv", fut: "morir", essere: true
+  }
+};
 
 const DEFAULT_VERBS = [
   {
@@ -458,8 +556,78 @@ const DEFAULT_VERBS = [
     }
   },
   {
+    id: "fare_passeggiata",
+    title: "fare una passeggiata (to take a walk / do — irregular)",
+    rows: {
+      io: {
+        presente: { it: "Facc|io una passeggiata.", en: "I take a walk." },
+        progressivo: { it: "~Sto~ fac|endo una passeggiata.", en: "I am taking a walk." },
+        passato: { it: "~Ho~ fatt|o una passeggiata.", en: "I took a walk." },
+        imperfetto: { it: "Fac|evo sempre una passeggiata.", en: "I always used to take a walk." },
+        futuro: { it: "Far|ò una passeggiata.", en: "I will take a walk." },
+        condizionale: { it: "Far|ei una passeggiata volentieri.", en: "I would gladly take a walk." }
+      },
+      tu: {
+        presente: { it: "Fa|i una passeggiata.", en: "You take a walk." },
+        progressivo: { it: "~Stai~ fac|endo una passeggiata.", en: "You are taking a walk." },
+        passato: { it: "~Hai~ fatt|o una passeggiata.", en: "You took a walk." },
+        imperfetto: { it: "Fac|evi una passeggiata.", en: "You used to take a walk." },
+        futuro: { it: "Far|ai una passeggiata.", en: "You will take a walk." },
+        condizionale: { it: "Far|esti una passeggiata?", en: "Would you take a walk?" }
+      },
+      luilei: {
+        presente: { it: "F|a una passeggiata.", en: "He/She takes a walk." },
+        progressivo: { it: "~Sta~ fac|endo una passeggiata.", en: "He/She is taking a walk." },
+        passato: { it: "~Ha~ fatt|o una passeggiata.", en: "He/She took a walk." },
+        imperfetto: { it: "Fac|eva una passeggiata.", en: "He/She used to take a walk." },
+        futuro: { it: "Far|à una passeggiata.", en: "He/She will take a walk." },
+        condizionale: { it: "Far|ebbe una passeggiata.", en: "He/She would take a walk." }
+      },
+      esso: {
+        presente: { it: "F|a molto bene alla salute.", en: "(It) does a lot of good for health." },
+        progressivo: { it: "~Sta~ fac|endo freddo.", en: "(It) is getting/being cold." },
+        passato: { it: "~Ha~ fatt|o bel tempo.", en: "(It) was nice weather." },
+        imperfetto: { it: "Fac|eva sempre caldo.", en: "(It) always used to be warm." },
+        futuro: { it: "Far|à bel tempo domani.", en: "(It) will be nice weather tomorrow." },
+        condizionale: { it: "Far|ebbe bene a tutti.", en: "(It) would be good for everyone." }
+      },
+      noi: {
+        presente: { it: "Facc|iamo una passeggiata.", en: "We take a walk." },
+        progressivo: { it: "~Stiamo~ fac|endo una passeggiata.", en: "We are taking a walk." },
+        passato: { it: "~Abbiamo~ fatt|o una passeggiata.", en: "We took a walk." },
+        imperfetto: { it: "Fac|evamo una passeggiata insieme.", en: "We used to take a walk together." },
+        futuro: { it: "Far|emo una passeggiata.", en: "We will take a walk." },
+        condizionale: { it: "Far|emmo una passeggiata al lago.", en: "We would take a walk by the lake." }
+      },
+      voi: {
+        presente: { it: "Fat|e una passeggiata.", en: "You all take a walk." },
+        progressivo: { it: "~State~ fac|endo una passeggiata.", en: "You all are taking a walk." },
+        passato: { it: "~Avete~ fatt|o una passeggiata.", en: "You all took a walk." },
+        imperfetto: { it: "Fac|evate una passeggiata.", en: "You all used to take a walk." },
+        futuro: { it: "Far|ete una passeggiata.", en: "You all will take a walk." },
+        condizionale: { it: "Far|este una passeggiata?", en: "Would you all take a walk?" }
+      },
+      loro: {
+        presente: { it: "F|anno una passeggiata.", en: "They take a walk." },
+        progressivo: { it: "~Stanno~ fac|endo una passeggiata.", en: "They are taking a walk." },
+        passato: { it: "~Hanno~ fatt|o una passeggiata.", en: "They took a walk." },
+        imperfetto: { it: "Fac|evano una passeggiata.", en: "They used to take a walk." },
+        futuro: { it: "Far|anno una passeggiata.", en: "They will take a walk." },
+        condizionale: { it: "Far|ebbero una passeggiata.", en: "They would take a walk." }
+      },
+      si: {
+        presente: { it: "La sera ~si~ f|a una passeggiata.", en: "In the evening people take a walk. (Impersonal)" },
+        progressivo: { it: "~Si~ ~sta~ fac|endo tardi.", en: "It is getting late." },
+        passato: { it: "Ieri ~si~ ~è~ fatt|a una passeggiata.", en: "Yesterday a walk was taken. (Passive sg. -a)" },
+        imperfetto: { it: "Dopo cena ~si~ fac|eva due passi.", en: "After dinner people used to take a stroll." },
+        futuro: { it: "Domani ~si~ far|à una gita.", en: "Tomorrow people will take a trip." },
+        condizionale: { it: "Col fresco ~si~ far|ebbe volentieri.", en: "In cool weather one would gladly do it." }
+      }
+    }
+  },
+  {
     id: "andare",
-    title: "andare al parco (to go to the park — movement verb with essere)",
+    title: "andare al parco (to go to the park — irregular movement with essere)",
     rows: {
       io: {
         presente: { it: "Vad|o al parco.", en: "I go to the park." },
@@ -520,7 +688,7 @@ const DEFAULT_VERBS = [
       si: {
         presente: { it: "La domenica ~si~ v|a al parco.", en: "On Sundays people go to the park. (Impersonal)" },
         progressivo: { it: "~Si~ ~sta~ and|ando verso la primavera.", en: "People are moving toward spring." },
-        passato: { it: "Ieri ~si~ ~è~ andat|i al parco.", en: "Yesterday people went to the park. (Impersonal pl. -i)" },
+        passato: { it: "Ieri ~si~ ~è~ andat|i al parco.", en: "Yesterday people went to the park. (Impersonal plural -i)" },
         imperfetto: { it: "Da giovani ~si~ and|ava a piedi.", en: "When young, people used to go on foot." },
         futuro: { it: "Domani ~si~ andr|à al lago.", en: "Tomorrow people will go to the lake." },
         condizionale: { it: "Col sole ~si~ andr|ebbe volentieri.", en: "In sunny weather one would gladly go." }
@@ -615,73 +783,93 @@ function getAllVerbs() {
 }
 
 function cap(str) {
+  if (!str) return "";
+  if (str.startsWith("|")) return "|" + str.charAt(1).toUpperCase() + str.slice(2);
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function generateRegularVerbEntry(inf, obj, enBase, pattern) {
+function generateVerbEntry(inf, obj, enBase, pattern) {
   const cleanInf = inf.trim().toLowerCase();
   const cleanObj = obj.trim();
   const tail = cleanObj ? " " + cleanObj : "";
   const enTail = enBase.trim() || cleanInf;
 
-  const group = cleanInf.slice(-3); // are, ere, ire
-  const stem = cleanInf.slice(0, -3);
-  if (!["are", "ere", "ire"].includes(group) || stem.length < 2) {
-    throw new Error("Please enter a valid infinitive ending in -are, -ere, or -ire.");
+  const irreg = IRREGULAR_DICT[cleanInf];
+  let pres, gerund, partBase, impStem, fStem, useEssere, tagLabel;
+
+  if (irreg) {
+    pres = irreg.pres;
+    gerund = irreg.ger;
+    partBase = irreg.part;
+    impStem = irreg.imp;
+    fStem = irreg.fut;
+    useEssere = irreg.essere;
+    tagLabel = "irregular";
+  } else {
+    const group = cleanInf.slice(-3); // are, ere, ire
+    const stem = cleanInf.slice(0, -3);
+    if (!["are", "ere", "ire"].includes(group) || stem.length < 2) {
+      throw new Error("Please enter a valid infinitive ending in -are, -ere, or -ire (or tap one of the built-in irregulars).");
+    }
+
+    const needsH = (group === "are") && /[cg]$/.test(stem);
+    const iStem = needsH ? stem + "h" : stem;
+    fStem = (group === "are") ? (needsH ? stem + "her" : stem + "er") : stem + (group === "ere" ? "er" : "ir");
+
+    const isIsc = (group === "ire" && pattern === "isc");
+    useEssere = (pattern === "essere");
+    tagLabel = isIsc ? "-ire (-isc-)" : `regular -${group}`;
+
+    pres = {
+      io: isIsc ? `${stem}|isco` : `${stem}|o`,
+      tu: isIsc ? `${stem}|isci` : `${iStem}|i`,
+      luilei: isIsc ? `${stem}|isce` : `${stem}|${group === "are" ? "a" : "e"}`,
+      noi: `${iStem}|iamo`,
+      voi: `${stem}|${group === "are" ? "ate" : group === "ere" ? "ete" : "ite"}`,
+      loro: isIsc ? `${stem}|iscono` : `${stem}|${group === "are" ? "ano" : "ono"}`
+    };
+    gerund = `${stem}|${group === "are" ? "ando" : "endo"}`;
+    partBase = `${stem}|${group === "are" ? "at" : group === "ere" ? "ut" : "it"}`;
+    const impVowel = group === "are" ? "a" : group === "ere" ? "e" : "i";
+    impStem = `${stem}|${impVowel}v`;
   }
 
-  // Stem adjustments for -care/-gare (c -> ch, g -> gh before e/i)
-  const needsH = (group === "are") && /[cg]$/.test(stem);
-  const iStem = needsH ? stem + "h" : stem;
-  const fStem = (group === "are") ? (needsH ? stem + "her" : stem + "er") : stem + (group === "ere" ? "er" : "ir");
-
-  const isIsc = (group === "ire" && pattern === "isc");
-  const useEssere = (pattern === "essere");
-
-  // Presente endings
-  const pres = {
-    io: isIsc ? `${stem}|isco` : `${stem}|o`,
-    tu: isIsc ? `${stem}|isci` : `${iStem}|i`,
-    luilei: isIsc ? `${stem}|isce` : `${stem}|${group === "are" ? "a" : "e"}`,
-    noi: `${iStem}|iamo`,
-    voi: `${stem}|${group === "are" ? "ate" : group === "ere" ? "ete" : "ite"}`,
-    loro: isIsc ? `${stem}|iscono` : `${stem}|${group === "are" ? "ano" : "ono"}`
-  };
-
-  // Gerundio (-ando / -endo)
-  const gerund = `${stem}|${group === "are" ? "ando" : "endo"}`;
-
-  // Participio (-ato / -uto / -ito)
-  const partBase = `${stem}|${group === "are" ? "at" : group === "ere" ? "ut" : "it"}`;
-
-  // Imperfetto (-avo / -evo / -ivo)
-  const impVowel = group === "are" ? "a" : group === "ere" ? "e" : "i";
+  function buildImperfetto(pron) {
+    if (cleanInf === "essere") {
+      const map = { io: "er|o", tu: "er|i", luilei: "er|a", esso: "er|a", noi: "er|avamo", voi: "er|avate", loro: "er|ano" };
+      return `${cap(map[pron])}${tail}.`;
+    }
+    const endMap = { io: "o", tu: "i", luilei: "a", esso: "a", noi: "amo", voi: "ate", loro: "ano" };
+    return `${cap(impStem)}${endMap[pron]}${tail}.`;
+  }
 
   function buildPassato(pron) {
     if (!useEssere) {
       const auxMap = { io: "~Ho~", tu: "~Hai~", luilei: "~Ha~", esso: "~Ha~", noi: "~Abbiamo~", voi: "~Avete~", loro: "~Hanno~" };
-      return { it: `${auxMap[pron]} ${partBase}o${tail}.` };
+      return { it: `${auxMap[pron]} ${partBase}|o${tail}.` };
     } else {
-      if (pron === "io") return { it: `~Sono~ ${partBase}o${tail}.`, itF: `~Sono~ ${partBase}a${tail}.` };
-      if (pron === "tu") return { it: `~Sei~ ${partBase}o${tail}.`, itF: `~Sei~ ${partBase}a${tail}.` };
-      if (pron === "luilei") return { it: `~È~ ${partBase}o${tail}.`, itF: `~È~ ${partBase}a${tail}.` };
-      if (pron === "esso") return { it: `~È~ ${partBase}o${tail}.` };
-      if (pron === "noi") return { it: `~Siamo~ ${partBase}i${tail}.`, itF: `~Siamo~ ${partBase}e${tail}.` };
-      if (pron === "voi") return { it: `~Siete~ ${partBase}i${tail}.`, itF: `~Siete~ ${partBase}e${tail}.` };
-      if (pron === "loro") return { it: `~Sono~ ${partBase}i${tail}.`, itF: `~Sono~ ${partBase}e${tail}.` };
+      if (pron === "io") return { it: `~Sono~ ${partBase}|o${tail}.`, itF: `~Sono~ ${partBase}|a${tail}.` };
+      if (pron === "tu") return { it: `~Sei~ ${partBase}|o${tail}.`, itF: `~Sei~ ${partBase}|a${tail}.` };
+      if (pron === "luilei") return { it: `~È~ ${partBase}|o${tail}.`, itF: `~È~ ${partBase}|a${tail}.` };
+      if (pron === "esso") return { it: `~È~ ${partBase}|o${tail}.` };
+      if (pron === "noi") return { it: `~Siamo~ ${partBase}|i${tail}.`, itF: `~Siamo~ ${partBase}|e${tail}.` };
+      if (pron === "voi") return { it: `~Siete~ ${partBase}|i${tail}.`, itF: `~Siete~ ${partBase}|e${tail}.` };
+      if (pron === "loro") return { it: `~Sono~ ${partBase}|i${tail}.`, itF: `~Sono~ ${partBase}|e${tail}.` };
     }
   }
+
+  const siImp = (cleanInf === "essere") ? "er|a" : `${impStem}a`;
 
   return {
     id: `custom_${cleanInf}_${Date.now()}`,
     isCustom: true,
-    title: `★ ${cleanInf}${tail} (${enTail})`,
+    title: `★ ${cleanInf}${tail} (${enTail} — ${tagLabel})`,
     rows: {
       io: {
         presente: { it: `${cap(pres.io)}${tail}.`, en: `I ${enTail}.` },
         progressivo: { it: `~Sto~ ${gerund}${tail}.`, en: `I am [${enTail}].` },
         passato: { ...buildPassato("io"), en: `I [${enTail}] (past).` },
-        imperfetto: { it: `${cap(stem)}|${impVowel}vo${tail}.`, en: `I used to ${enTail}.` },
+        imperfetto: { it: buildImperfetto("io"), en: `I used to ${enTail}.` },
         futuro: { it: `${cap(fStem)}|ò${tail}.`, en: `I will ${enTail}.` },
         condizionale: { it: `${cap(fStem)}|ei${tail}.`, en: `I would ${enTail}.` }
       },
@@ -689,7 +877,7 @@ function generateRegularVerbEntry(inf, obj, enBase, pattern) {
         presente: { it: `${cap(pres.tu)}${tail}.`, en: `You ${enTail}.` },
         progressivo: { it: `~Stai~ ${gerund}${tail}.`, en: `You are [${enTail}].` },
         passato: { ...buildPassato("tu"), en: `You [${enTail}] (past).` },
-        imperfetto: { it: `${cap(stem)}|${impVowel}vi${tail}.`, en: `You used to ${enTail}.` },
+        imperfetto: { it: buildImperfetto("tu"), en: `You used to ${enTail}.` },
         futuro: { it: `${cap(fStem)}|ai${tail}.`, en: `You will ${enTail}.` },
         condizionale: { it: `${cap(fStem)}|esti${tail}?`, en: `Would you ${enTail}?` }
       },
@@ -697,7 +885,7 @@ function generateRegularVerbEntry(inf, obj, enBase, pattern) {
         presente: { it: `${cap(pres.luilei)}${tail}.`, en: `He/She [${enTail}].` },
         progressivo: { it: `~Sta~ ${gerund}${tail}.`, en: `He/She is [${enTail}].` },
         passato: { ...buildPassato("luilei"), en: `He/She [${enTail}] (past).` },
-        imperfetto: { it: `${cap(stem)}|${impVowel}va${tail}.`, en: `He/She used to ${enTail}.` },
+        imperfetto: { it: buildImperfetto("luilei"), en: `He/She used to ${enTail}.` },
         futuro: { it: `${cap(fStem)}|à${tail}.`, en: `He/She will ${enTail}.` },
         condizionale: { it: `${cap(fStem)}|ebbe${tail}.`, en: `He/She would ${enTail}.` }
       },
@@ -705,7 +893,7 @@ function generateRegularVerbEntry(inf, obj, enBase, pattern) {
         presente: { it: `${cap(pres.luilei)}${tail}.`, en: `(It) [${enTail}].` },
         progressivo: { it: `~Sta~ ${gerund}${tail}.`, en: `(It) is [${enTail}].` },
         passato: { ...buildPassato("esso"), en: `(It) [${enTail}] (past).` },
-        imperfetto: { it: `${cap(stem)}|${impVowel}va${tail}.`, en: `(It) used to ${enTail}.` },
+        imperfetto: { it: buildImperfetto("esso"), en: `(It) used to ${enTail}.` },
         futuro: { it: `${cap(fStem)}|à${tail}.`, en: `(It) will ${enTail}.` },
         condizionale: { it: `${cap(fStem)}|ebbe${tail}.`, en: `(It) would ${enTail}.` }
       },
@@ -713,7 +901,7 @@ function generateRegularVerbEntry(inf, obj, enBase, pattern) {
         presente: { it: `${cap(pres.noi)}${tail}.`, en: `We ${enTail}.` },
         progressivo: { it: `~Stiamo~ ${gerund}${tail}.`, en: `We are [${enTail}].` },
         passato: { ...buildPassato("noi"), en: `We [${enTail}] (past).` },
-        imperfetto: { it: `${cap(stem)}|${impVowel}vamo${tail}.`, en: `We used to ${enTail}.` },
+        imperfetto: { it: buildImperfetto("noi"), en: `We used to ${enTail}.` },
         futuro: { it: `${cap(fStem)}|emo${tail}.`, en: `We will ${enTail}.` },
         condizionale: { it: `${cap(fStem)}|emmo${tail}.`, en: `We would ${enTail}.` }
       },
@@ -721,7 +909,7 @@ function generateRegularVerbEntry(inf, obj, enBase, pattern) {
         presente: { it: `${cap(pres.voi)}${tail}.`, en: `You all ${enTail}.` },
         progressivo: { it: `~State~ ${gerund}${tail}.`, en: `You all are [${enTail}].` },
         passato: { ...buildPassato("voi"), en: `You all [${enTail}] (past).` },
-        imperfetto: { it: `${cap(stem)}|${impVowel}vate${tail}.`, en: `You all used to ${enTail}.` },
+        imperfetto: { it: buildImperfetto("voi"), en: `You all used to ${enTail}.` },
         futuro: { it: `${cap(fStem)}|ete${tail}.`, en: `You all will ${enTail}.` },
         condizionale: { it: `${cap(fStem)}|este${tail}?`, en: `Would you all ${enTail}?` }
       },
@@ -729,15 +917,15 @@ function generateRegularVerbEntry(inf, obj, enBase, pattern) {
         presente: { it: `${cap(pres.loro)}${tail}.`, en: `They ${enTail}.` },
         progressivo: { it: `~Stanno~ ${gerund}${tail}.`, en: `They are [${enTail}].` },
         passato: { ...buildPassato("loro"), en: `They [${enTail}] (past).` },
-        imperfetto: { it: `${cap(stem)}|${impVowel}vano${tail}.`, en: `They used to ${enTail}.` },
+        imperfetto: { it: buildImperfetto("loro"), en: `They used to ${enTail}.` },
         futuro: { it: `${cap(fStem)}|anno${tail}.`, en: `They will ${enTail}.` },
         condizionale: { it: `${cap(fStem)}|ebbero${tail}.`, en: `They would ${enTail}.` }
       },
       si: {
         presente: { it: `~Si~ ${pres.luilei}${tail}.`, en: `One / People [${enTail}]. (Impersonal sg.)` },
         progressivo: { it: `~Si~ ~sta~ ${gerund}${tail}.`, en: `People are [${enTail}].` },
-        passato: { it: `~Si~ ~è~ ${partBase}${useEssere ? "i" : "o"}${tail}.`, en: `People / One [${enTail}] (past).` },
-        imperfetto: { it: `~Si~ ${stem}|${impVowel}va${tail}.`, en: `People used to ${enTail}.` },
+        passato: { it: `~Si~ ~è~ ${partBase}|${useEssere ? "i" : "o"}${tail}.`, en: `People / One [${enTail}] (past).` },
+        imperfetto: { it: `~Si~ ${siImp}${tail}.`, en: `People used to ${enTail}.` },
         futuro: { it: `~Si~ ${fStem}|à${tail}.`, en: `People will ${enTail}.` },
         condizionale: { it: `~Si~ ${fStem}|ebbe${tail}.`, en: `One / People would ${enTail}.` }
       }
@@ -750,6 +938,11 @@ function toggleBuilder() {
   box.style.display = (box.style.display === "block") ? "none" : "block";
 }
 
+function fillIrregular(inf) {
+  document.getElementById("new-inf").value = inf;
+  document.getElementById("new-inf").focus();
+}
+
 function addCustomVerb() {
   const inf = document.getElementById("new-inf").value;
   const obj = document.getElementById("new-obj").value;
@@ -758,13 +951,13 @@ function addCustomVerb() {
   const status = document.getElementById("builder-status");
 
   try {
-    const entry = generateRegularVerbEntry(inf, obj, en, type);
+    const entry = generateVerbEntry(inf, obj, en, type);
     state.customVerbs.push(entry);
     localStorage.setItem("tprs_custom_verbs", JSON.stringify(state.customVerbs));
     state.verbId = entry.id;
     populateVerbSelect();
     render();
-    status.textContent = `✓ Added "${inf}" across all 7 pronouns + si and all 6 tenses!`;
+    status.textContent = `✓ Added "${inf}" across all 7 pronouns + si and all 6 columns!`;
     document.getElementById("new-inf").value = "";
     document.getElementById("new-obj").value = "";
     document.getElementById("new-en").value = "";
@@ -813,7 +1006,7 @@ function getRawText(cellObj) {
 function formatHTML(cellObj) {
   let raw = (state.female && cellObj.itF) ? cellObj.itF : cellObj.it;
   raw = raw.replace(/~([^~]+)~/g, '<span class="aux">$1</span>');
-  raw = raw.replace(/([a-zA-ZàèéìòùÀÈÉÌÒÙ]+)\|([a-zA-ZàèéìòùÀÈÉÌÒÙ]+)/g, '<span class="stem">$1</span><span class="ending">$2</span>');
+  raw = raw.replace(/([a-zA-ZàèéìòùÀÈÉÌÒÙ]*)\|([a-zA-ZàèéìòùÀÈÉÌÒÙ]+)/g, '<span class="stem">$1</span><span class="ending">$2</span>');
   return raw;
 }
 
@@ -969,6 +1162,10 @@ function render() {
     `;
   }
 }
+
+document.getElementById("irreg-list").innerHTML = Object.keys(IRREGULAR_DICT)
+  .map(k => `<span class="irreg-pill" onclick="fillIrregular('${k}')">${k}</span>`)
+  .join(" ");
 
 populateVerbSelect();
 render();
