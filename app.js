@@ -638,4 +638,459 @@ async function processTrackBInput() {
     statusEl.textContent = "✨ Decoding expressions & translating line-by-line with Gemini AI...";
     try {
       baseLesson.trackB = await decodeWithGeminiAPI(title, rawText, url);
-    } catch
+    } catch (err) {
+      statusEl.textContent = `⚠️ Gemini Key Note (${err.message}) — translating line-by-line automatically...`;
+      baseLesson.trackB = await buildRuleBasedTrackB(title, rawText, url);
+    }
+  } else {
+    statusEl.textContent = "⏳ Cleaning transcript & translating line-by-line...";
+    baseLesson.trackB = await buildRuleBasedTrackB(title, rawText, url);
+  }
+
+  STATE.currentLesson = baseLesson;
+  saveToLocalLibrary(baseLesson);
+  STATE.track = "trackB";
+  STATE.stageView = 1;
+  setBranch("branch1");
+}
+
+function copyPromptForGemini() {
+  const url = document.getElementById("web-url-box").value.trim();
+  const rawText = document.getElementById("web-raw-box").value.trim();
+  if (!rawText) return alert("Paste the transcript first!");
+
+  const payload = `Decode this Track B Fun-Italian transcript (${url || "web clip"}) in two steps (English only, no Chinese):
+1a. Explain any expressions or grammar that differ from English word-for-word logic.
+1b. Deduplicate any loops and provide clean line-by-line Italian + English translations.
+2. Output the complete Track B JSON for my TPRS Lab:
+
+${rawText}`;
+
+  navigator.clipboard.writeText(payload).then(() => {
+    alert("✓ Copied structured prompt! Paste it into your Gemini chat.");
+  });
+}
+
+function importFullLessonJSON() {
+  try {
+    const raw = document.getElementById("json-import-box").value.trim();
+    const parsed = JSON.parse(raw);
+    const today = new Date().toISOString().slice(0, 10);
+
+    if (parsed.trackB) {
+      STATE.currentLesson = parsed;
+    } else if (parsed.stage1_rawInput) {
+      const base = STATE.currentLesson ? JSON.parse(JSON.stringify(STATE.currentLesson)) : JSON.parse(JSON.stringify(DEFAULT_LESSON));
+      base.date = today;
+      base.trackB = parsed;
+      STATE.currentLesson = base;
+    } else {
+      throw new Error("Unrecognized JSON shape");
+    }
+
+    saveToLocalLibrary(STATE.currentLesson);
+    STATE.track = "trackB";
+    STATE.stageView = 1;
+    setBranch("branch1");
+  } catch (e) {
+    alert("⚠️ Invalid JSON format. Make sure you copied the entire JSON block.");
+  }
+}
+
+function render() {
+  const app = document.getElementById("app");
+  if (STATE.branch === "branch1") app.innerHTML = renderBranch1();
+  else if (STATE.branch === "input") app.innerHTML = renderInputCard();
+  else app.innerHTML = renderBranch2();
+}
+
+function renderInputCard() {
+  return `
+    <section class="card">
+      <span class="stage-badge s2">Track B · Fun-Italian Link & Transcript Decoder</span>
+      <h2>🎬 Paste Link & Transcript (Read → Comprehend → Listen)</h2>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:-0.4rem;">
+        Paste any Facebook Reel / YouTube link and its raw transcript below. Every decoded clip auto-translates inline and saves to your library.
+      </p>
+      <input type="url" id="web-url-box" placeholder="Link: https://www.facebook.com/reel/..." />
+      <input type="text" id="web-title-box" placeholder="Clip Title (optional, e.g., Pace per tutti)" />
+      <textarea id="web-raw-box" rows="5" placeholder="Paste raw Italian transcript here (even messy or repeating captions)..."></textarea>
+      <div id="decode-status" style="font-size:0.85rem;color:var(--green);margin-top:0.4rem;"></div>
+      <div style="margin-top:0.65rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="pill-btn active" onclick="processTrackBInput()">
+          ${STATE.geminiApiKey ? "✨ AI Decode & Load into Track B" : "▶ Decode & Load into Track B"}
+        </button>
+        <button class="pill-btn" onclick="copyPromptForGemini()">📋 Copy Prompt for Gemini Chat</button>
+      </div>
+
+      <details style="margin-top:1rem;">
+        <summary>🔑 Optional: Gemini API Key for Deep Grammar & Idiom Notes (${STATE.geminiApiKey ? "Active ✓" : "Off"})</summary>
+        <p style="font-size:0.84rem;color:var(--muted);margin:0.4rem 0;">
+          Stored privately in your browser's <code>localStorage</code> only (never uploaded to GitHub).
+        </p>
+        <div style="display:flex;gap:0.4rem;align-items:center;">
+          <input type="text" id="gemini-key-input" value="${escapeAttr(STATE.geminiApiKey)}" placeholder="AIzaSy..." style="margin-top:0;" />
+          <button class="pill-btn" onclick="saveGeminiKey()">Save</button>
+        </div>
+      </details>
+
+      <details style="margin-top:0.6rem;">
+        <summary>☁️ Optional: GitHub Auto-Archive Token (${STATE.githubToken ? "Connected ✓" : "Not Set"})</summary>
+        <p style="font-size:0.84rem;color:var(--muted);margin:0.4rem 0;">
+          Stored privately in your browser's <code>localStorage</code> only. Saves daily lessons directly to <code>data/lessons/YYYY-MM-DD.json</code> in <code>${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}</code>.
+        </p>
+        <div style="display:flex;gap:0.4rem;align-items:center;">
+          <input type="text" id="github-token-input" value="${escapeAttr(STATE.githubToken)}" placeholder="github_pat_..." style="margin-top:0;" />
+          <button class="pill-btn" onclick="saveGithubToken()">Save</button>
+        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s3">Optional · Paste JSON from Gemini Chat</span>
+      <h2>⚡ Quick-Load Gemini JSON</h2>
+      <textarea id="json-import-box" rows="3" placeholder="Paste full JSON (or trackB JSON) from Gemini here..."></textarea>
+      <div style="margin-top:0.6rem;">
+        <button class="pill-btn" onclick="importFullLessonJSON()">✨ Load JSON into Lab</button>
+      </div>
+    </section>
+  `;
+}
+
+function renderBranch1() {
+  const lesson = STATE.currentLesson || DEFAULT_LESSON;
+  const data = lesson[STATE.track];
+  const v = STATE.stageView;
+  const hasOptions = STATE.localLessons.length > 0 || STATE.manifest.length > 0;
+
+  return `
+    <div class="sub-bar">
+      <div>
+        <button class="pill-btn ${STATE.track === 'trackB' ? 'active' : ''}" onclick="setTrack('trackB')">Track B: Fun-Italian</button>
+        <button class="pill-btn ${STATE.track === 'trackA' ? 'active' : ''}" onclick="setTrack('trackA')">Track A: DUO</button>
+      </div>
+      ${hasOptions ? `
+        <select onchange="changeDate(this.value)">
+          ${STATE.localLessons.length > 0 ? `
+            <optgroup label="💻 Browser Saved Lessons">
+              ${STATE.localLessons.map(l => `<option value="${l.id}" ${STATE.activeLessonId === l.id ? 'selected' : ''}>📌 ${l.date} — ${l.title}</option>`).join("")}
+            </optgroup>
+          ` : ""}
+          ${STATE.manifest.length > 0 ? `
+            <optgroup label="☁️ GitHub Archived Lessons">
+              ${STATE.manifest.map(m => `<option value="${m.file}" ${STATE.activeLessonId === m.file ? 'selected' : ''}>📅 ${m.date} — ${m.title}</option>`).join("")}
+            </optgroup>
+          ` : ""}
+        </select>
+      ` : `<span style="font-size:0.84rem;color:var(--muted);">📅 ${lesson.date || "Today"}</span>`}
+    </div>
+
+    <div class="stage-bar">
+      <button class="pill-btn ${v === 1 ? 'active' : ''}" onclick="setStageView(1)">1. Read & Listen</button>
+      <button class="pill-btn ${v === 2 ? 'active' : ''}" onclick="setStageView(2)">2. TPRS Drills (0–5)</button>
+      <button class="pill-btn ${v === 3 ? 'active' : ''}" onclick="setStageView(3)">3. Speak & Reflect</button>
+      <button class="pill-btn ${v === 'all' ? 'active' : ''}" onclick="setStageView('all')">All 3 Stages</button>
+    </div>
+
+    ${(v === 1 || v === "all") ? renderStage1(data) : ""}
+    ${(v === 2 || v === "all") ? renderStage2(data) : ""}
+    ${(v === 3 || v === "all") ? renderStage3(data) : ""}
+
+    ${v !== "all" ? `
+      <div class="pager">
+        <button class="pill-btn" onclick="setStageView(${v - 1})" ${v === 1 ? "disabled" : ""}>← Prev Stage</button>
+        <span>Stage ${v} of 3</span>
+        <button class="pill-btn" onclick="setStageView(${v + 1})" ${v === 3 ? "disabled" : ""}>Next Stage →</button>
+      </div>
+    ` : ""}
+  `;
+}
+
+function renderStage1(data) {
+  const sourceUrl = data.stage1_rawInput.sourceUrl;
+  return `
+    <section class="card">
+      <span class="stage-badge s1">Step 1 · Comprehensible Reading & Listening</span>
+      <h2>${data.stage1_rawInput.title}</h2>
+      ${sourceUrl ? `<p style="margin:-0.5rem 0 0.8rem;font-size:0.84rem;">🔗 <a href="${escapeAttr(sourceUrl)}" target="_blank" rel="noopener" style="color:var(--blue);">${sourceUrl}</a></p>` : ""}
+
+      <details open style="margin-bottom:0.9rem;background:#fefce8;border-color:#fde68a;">
+        <summary style="color:#92400e;">💡 1a. Non-English Logic & Expressions (Read This First)</summary>
+        <ul style="margin:0.4rem 0;padding-left:1.2rem;">
+          ${data.stage1_rawInput.anchors.map(a => `<li style="margin-bottom:0.3rem;">${a}</li>`).join("")}
+        </ul>
+      </details>
+
+      <h3 style="margin-top:0.5rem;">1b. Line-by-Line Comprehension & Ear Training (🐢 0.75x / 🔊 0.95x)</h3>
+      ${data.stage1_rawInput.items.map((item, idx) => `
+        <div class="line-item">
+          <div class="line-top">
+            <strong style="font-size:1.06rem;">${item.it}</strong>
+            ${audioButtons(item.it, idx)}
+          </div>
+          <div id="gloss-${idx}" style="color:var(--muted);font-size:0.9rem;margin-top:0.2rem;">${item.en}</div>
+        </div>
+      `).join("")}
+
+      <div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+        <button class="pill-btn active" onclick="saveLessonToGitHub()">☁️ Save to GitHub</button>
+        <button class="pill-btn" onclick="downloadCurrentLessonJSON()">⬇️ Download JSON</button>
+        <span id="lesson-export-status" style="font-size:0.84rem;color:var(--green);"></span>
+      </div>
+    </section>
+  `;
+}
+
+function renderStage2(data) {
+  const t = data.stage2_tprs;
+  const levelKey = "level" + STATE.scaffoldingLevel;
+  const activeText = t.step4_scaffolding[levelKey];
+  const safeStem = escapeAttr(t.step2_singleSlot.stem);
+
+  return `
+    <section class="card">
+      <span class="stage-badge s2">Step 2 · TPRS Listening & Pattern Drills (0 → 5)</span>
+      <h2>0. Umbrella Frame: “${t.step0_umbrella.frame}”</h2>
+      <p style="color:var(--muted);font-size:0.88rem;margin-top:-0.4rem;">${t.step0_umbrella.cue}</p>
+
+      <h3>1. HF-Vocab Extraction & Chunking (Tap ☆ to Pin to Toolbox)</h3>
+      <div>
+        ${t.step1_hfChunks.map(c => {
+          const safeIt = escapeAttr(c.it);
+          const safeEn = escapeAttr(c.en);
+          return `
+            <span class="chunk-chip">
+              <span style="cursor:pointer;" data-it="${safeIt}" onclick="speak(this.dataset.it)">🔊 <strong>${c.it}</strong> (${c.en})</span>
+              <button class="pin-btn" title="Pin to Toolbox" data-it="${safeIt}" data-en="${safeEn}" onclick="togglePinChunk(this.dataset.it, this.dataset.en)">
+                ${isPinned(c.it) ? "★" : "☆"}
+              </button>
+            </span>`;
+        }).join("")}
+      </div>
+
+      <h3>2. S+V+O Single-Slot Replacement Drill</h3>
+      <div class="level-box">
+        <div>Locked Stem: <strong>${t.step2_singleSlot.stem}</strong> <span id="slot-preview" style="color:var(--amber);font-weight:700;">[ ___ ]</span></div>
+        <div style="margin-top:0.45rem;">
+          ${t.step2_singleSlot.variables.map(v => {
+            const safeVar = escapeAttr(v);
+            return `
+              <button class="pill-btn" style="margin:0.15rem;" data-stem="${safeStem}" data-var="${safeVar}"
+                onclick="document.getElementById('slot-preview').textContent=this.dataset.var; speak(this.dataset.stem + ' ' + this.dataset.var)">
+                ${v}
+              </button>`;
+          }).join("")}
+        </div>
+      </div>
+
+      <h3>3. Circling Q&A (Statement → Yes/No → Either/Or → Wh-)</h3>
+      <details>
+        <summary>▸ Open Circling Sequence (${t.step3_circling.length} steps)</summary>
+        <ol style="margin:0.4rem 0;padding-left:1.2rem;">
+          ${t.step3_circling.map(q => `<li style="margin-bottom:0.35rem;"><strong>${q.type}:</strong> ${q.q} <em style="color:var(--muted);">(${q.a})</em></li>`).join("")}
+        </ol>
+      </details>
+
+      <h3>4. Scaffolding Comprehension (3-Level Toggle)</h3>
+      <div>
+        <button class="pill-btn ${STATE.scaffoldingLevel === 1 ? 'active' : ''}" onclick="STATE.scaffoldingLevel=1;render()">Level 1: Skeleton</button>
+        <button class="pill-btn ${STATE.scaffoldingLevel === 2 ? 'active' : ''}" onclick="STATE.scaffoldingLevel=2;render()">Level 2: Details</button>
+        <button class="pill-btn ${STATE.scaffoldingLevel === 3 ? 'active' : ''}" onclick="STATE.scaffoldingLevel=3;render()">Level 3: Complex</button>
+      </div>
+      <div class="level-box" style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.6rem;">
+        <span>${activeText}</span>
+        ${audioButtons(activeText)}
+      </div>
+
+      <h3>5. Write Output (Need-Based Prompt)</h3>
+      <p style="font-size:0.88rem;color:var(--muted);margin:0;">${t.step5_writeOutput.prompt}</p>
+      <input type="text" placeholder="Scrivi qui..." />
+    </section>
+  `;
+}
+
+function renderStage3(data) {
+  const o = data.stage3_output;
+  return `
+    <section class="card">
+      <span class="stage-badge s3">Step 3 · Output & Gentle Cognitive Assessment</span>
+      <h2>1. Alive Q&A & 2. Thought-Slice Feedback</h2>
+      <p style="margin-bottom:0.3rem;"><strong>Prompt:</strong> ${o.aliveQA.question}</p>
+      <input type="text" id="alive-input" placeholder="Rispondi in italiano..." />
+      <div style="margin-top:0.55rem;">
+        <button class="pill-btn" onclick="document.getElementById('thought-slice-box').style.display='block'">✨ Reflect & Compare</button>
+      </div>
+      <div class="thought-slice" id="thought-slice-box">
+        <strong>🧠 Diagnostic Thought Slice (No Red Xs):</strong><br>
+        ${o.gentleFeedback.thoughtSlice}<br><br>
+        <em>Native Model:</em> “${o.gentleFeedback.modelAnswer}” ${audioButtons(o.gentleFeedback.modelAnswer)}
+      </div>
+
+      <h3>3. Personal Storytelling (1st-Person POV)</h3>
+      <p style="font-size:0.88rem;color:var(--muted);margin:0;">${o.personalStory.prompt}</p>
+      <textarea id="pov-story" rows="3" placeholder="Io..."></textarea>
+      <div style="margin-top:0.45rem;display:flex;gap:0.5rem;align-items:center;">
+        <button class="pill-btn" onclick="speak(document.getElementById('pov-story').value, 0.75)">🐢 Read Slowly</button>
+        <button class="pill-btn" onclick="speak(document.getElementById('pov-story').value, 0.95)">🔊 Read Story</button>
+        <button class="pill-btn" onclick="localStorage.setItem('tprs_pov_draft', document.getElementById('pov-story').value)">💾 Save Draft</button>
+      </div>
+    </section>
+  `;
+}
+
+function renderBranch2() {
+  const tb = STATE.toolbox;
+  const allChunks = [...(tb.hfChunks || []), ...STATE.pinnedChunks];
+  return `
+    <section class="card">
+      <span class="stage-badge s3">Toolbox · Interactive Mini-Apps</span>
+      <h2>🧭 Verb & Pronoun Matrix (Core 5 Tenses + Si)</h2>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:-0.4rem;">
+        Shift sentences across all <strong>7 Subject Pronouns</strong> (including implicit <em>esso/essa</em>) + <strong><code>si + verb</code></strong> across the Core 5 tenses with 🐢 0.75x / 🔊 0.95x Italian audio.
+      </p>
+      <div style="margin-top:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <a href="toolbox/verb-matrix.html" target="_blank" rel="noopener" class="pill-btn active" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;">
+          🚀 Open Verb & Pronoun Matrix →
+        </a>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s2">Toolbox · Duolingo Pattern Decoder</span>
+      <h2>⚖️ Quick Card: “si + verb” vs. “would + verb” (Condizionale)</h2>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:-0.35rem;">
+        <strong>Key Rule:</strong> Impersonal/Passive <code>si</code> only uses 2 forms (Singular vs. Plural), whereas <em>“would + verb”</em> changes across all 7 pronouns.
+      </p>
+
+      <h3>A. Impersonal &amp; Passive <code>si + verb</code> (Only 2 Forms!)</h3>
+      <div style="display:grid;gap:0.45rem;font-size:0.88rem;">
+        <div class="level-box" style="margin-top:0;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+          <div><strong>1. General / Singular Object (3rd sg.):</strong> <em>In Italia <strong>si beve</strong> molto caffè.</em> <span style="color:var(--muted);">(People drink / Coffee is drunk)</span></div>
+          ${audioButtons("In Italia si beve molto caffè.")}
+        </div>
+        <div class="level-box" style="margin-top:0;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+          <div><strong>2. Plural Objects (3rd pl.):</strong> <em>Le medicine <strong>si prendono</strong> dopo cena.</em> <span style="color:var(--muted);">(Medicines are taken)</span></div>
+          ${audioButtons("Le medicine si prendono dopo cena.")}
+        </div>
+        <div class="level-box" style="margin-top:0;background:#fefce8;border-color:#fde68a;">
+          <strong>⚠️ Don't confuse with Reflexive:</strong> When the person changes (<em>io <strong>mi</strong> alzo, tu <strong>ti</strong> alzi, lui <strong>si</strong> alza, noi <strong>ci</strong> alziamo</em>), that's doing an action to oneself—not impersonal <code>si</code>.
+        </div>
+      </div>
+
+      <h3 style="margin-top:1.1rem;">B. “Would + Verb” (Condizionale — 7 Pronouns)</h3>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:0.86rem;">
+          <thead>
+            <tr style="background:#f5f5f4;text-align:left;">
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">Pronoun</th>
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">Ending</th>
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">Example (<em>bere / essere</em>)</th>
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">Listen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:0.4rem;"><strong>io</strong></td><td>-rei</td><td><em><strong>Berrei</strong> una camomilla.</em> (I would drink...)</td><td>${audioButtons("Berrei una camomilla.")}</td></tr>
+            <tr><td style="padding:0.4rem;"><strong>tu</strong></td><td>-resti</td><td><em><strong>Berresti</strong> un caffè?</em> (Would you drink...)</td><td>${audioButtons("Berresti un caffè?")}</td></tr>
+            <tr><td style="padding:0.4rem;"><strong>lui / lei</strong></td><td>-rebbe</td><td><em><strong>Berrebbe</strong> volentieri.</em> (He/She would drink...)</td><td>${audioButtons("Berrebbe volentieri.")}</td></tr>
+            <tr><td style="padding:0.4rem;"><strong>(esso) [it]</strong></td><td>-rebbe</td><td><em><strong>Sarebbe</strong> perfetto!</em> (It would be...)</td><td>${audioButtons("Sarebbe perfetto!")}</td></tr>
+            <tr><td style="padding:0.4rem;"><strong>noi</strong></td><td>-remmo</td><td><em><strong>Berremmo</strong> un tè.</em> (We would drink...)</td><td>${audioButtons("Berremmo un tè.")}</td></tr>
+            <tr><td style="padding:0.4rem;"><strong>voi</strong></td><td>-reste</td><td><em><strong>Berreste</strong> acqua?</em> (Would you all drink...)</td><td>${audioButtons("Berreste acqua?")}</td></tr>
+            <tr><td style="padding:0.4rem;"><strong>loro</strong></td><td>-rebbero</td><td><em><strong>Berrebbero</strong> vino.</em> (They would drink...)</td><td>${audioButtons("Berrebbero vino.")}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s1">Toolbox · Architecture & Methodology</span>
+      <h2>🗺️ TPRS Lab Mind Map (Acquisition Flow)</h2>
+      <div style="background:#fafaf9;border:1px solid var(--border);border-radius:12px;padding:1rem;font-size:0.88rem;line-height:1.7;">
+        <div style="font-weight:700;color:var(--text);margin-bottom:0.35rem;">🇮🇹 Italian with DUO · 不甘退休的TPRS 实验室</div>
+        <div style="padding-left:0.9rem;border-left:2px solid #d6d3d1;">
+          <div><strong>├── 1. Add Input (输入语料)</strong></div>
+          <div style="padding-left:1.1rem;color:var(--muted);">
+            ├── Track B: Fun-Italian (Web links, Reels & transcripts)<br>
+            └── Track A: DUO (Unit stories & listening PDFs)
+          </div>
+          <div style="margin-top:0.35rem;"><strong>├── 2. Learning Lab (习得实验室)</strong></div>
+          <div style="padding-left:1.1rem;color:var(--muted);">
+            ├── <strong>Stage 1 · Comprehensible Reading & Listening:</strong> Non-English logic notes + IT/EN line glosses + 🐢 0.75x / 🔊 0.95x ear training<br>
+            ├── <strong>Stage 2 · TPRS Engine (0 → 5):</strong> Umbrella Frame → HF Chunks → Single-Slot → Circling → 3-Level Scaffolding → Cloze Output<br>
+            └── <strong>Stage 3 · Output & Reflection:</strong> Alive Q&A → Diagnostic Thought Slice (no red Xs) → 1st-Person POV Story
+          </div>
+          <div style="margin-top:0.35rem;"><strong>└── 3. Toolbox (语言工具箱)</strong></div>
+          <div style="padding-left:1.1rem;color:var(--muted);">
+            ├── Interactive Mini-Apps (Verb & Pronoun Matrix)<br>
+            ├── Duolingo Pattern Decoder (si + verb vs. Condizionale)<br>
+            ├── Mind Map & TPRS Transformation Methods<br>
+            ├── High-Frequency Chunks (Core + ★ Pinned)<br>
+            ├── Grammar Mechanics (Non-English Logic)<br>
+            └── Daily Reflection Archive
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:1.25rem;">⚙️ TPRS Transformation Methods (Steps 0 → 5)</h3>
+      <div style="display:grid;gap:0.55rem;font-size:0.88rem;">
+        <div class="level-box" style="margin-top:0;">
+          <strong>Step 0 · Umbrella Frame (保护伞句型):</strong> Isolate one high-utility sentence skeleton (e.g., <em>"Siamo [adj] con [chi...]"</em>) with a vivid mental image so grammar feels like a single visual scene.
+        </div>
+        <div class="level-box" style="margin-top:0;">
+          <strong>Step 1 · HF-Vocab Chunking (高频语块提取):</strong> Extract 3–5 reusable multi-word chunks (not isolated dictionary words) and tap <strong>☆</strong> to pin favorites into your Toolbox.
+        </div>
+        <div class="level-box" style="margin-top:0;">
+          <strong>Step 2 · S+V+O Single-Slot Replacement (单槽替换操练):</strong> Lock the subject + verb stem and swap only one final slot at a time while listening aloud to build automatic muscle memory.
+        </div>
+        <div class="level-box" style="margin-top:0;">
+          <strong>Step 3 · Circling Q&A (环绕式问答):</strong> Loop around one fact from four angles—<em>Statement → Yes/No → Either/Or → Open Wh-</em>—to get 4x comprehensible repetitions without boredom.
+        </div>
+        <div class="level-box" style="margin-top:0;">
+          <strong>Step 4 · 3-Level Scaffolding (三阶脚手架阅读):</strong> Read and listen across <em>Level 1 (Skeleton) → Level 2 (Details) → Level 3 (Complex/Native)</em> so complex clauses unlock gradually.
+        </div>
+        <div class="level-box" style="margin-top:0;">
+          <strong>Step 5 · Need-Based Output & Thought Slices (需求驱动输出):</strong> Answer a personal prompt in 1st-person POV and compare with a native model using gentle diagnostic notes instead of red-pen corrections.
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s2">Toolbox · Cumulative Reference</span>
+      <h2>1. High-Frequency Chunks (Core + ★ Pinned)</h2>
+      <div>
+        ${allChunks.map(c => {
+          const safeIt = escapeAttr(c.it);
+          const safeEn = escapeAttr(c.en);
+          return `
+            <span class="chunk-chip">
+              <span style="cursor:pointer;" data-it="${safeIt}" onclick="speak(this.dataset.it)">🔊 <strong>${c.it}</strong> — ${c.en}</span>
+              ${isPinned(c.it) ? `<button class="pin-btn" title="Unpin" data-it="${safeIt}" data-en="${safeEn}" onclick="togglePinChunk(this.dataset.it, this.dataset.en)">★</button>` : ""}
+            </span>`;
+        }).join("")}
+      </div>
+      ${STATE.pinnedChunks.length > 0 ? `
+        <div style="margin-top:0.85rem;padding-top:0.75rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;align-items:center;">
+          <button class="pill-btn" onclick="exportPinnedJSON()">📋 Copy Pinned JSON (for toolbox.json)</button>
+          <span id="export-status" style="font-size:0.84rem;color:var(--green);"></span>
+        </div>
+      ` : ""}
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s1">Toolbox · Structural Backbone</span>
+      <h2>2. Grammar Mechanics (Non-English Logic)</h2>
+      <ul style="padding-left:1.2rem;margin:0.4rem 0;">
+        ${(tb.grammarMechanics || []).map(g => `<li style="margin-bottom:0.45rem;"><strong>${g.topic}:</strong> ${g.rule} <em style="color:var(--muted);">(${g.example})</em></li>`).join("")}
+      </ul>
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s3">Toolbox · Reflection Archive</span>
+      <h2>3. Daily Questions & Thought Slices</h2>
+      <ul style="padding-left:1.2rem;margin:0.4rem 0;">
+        ${(tb.dailyQuestions || []).map(q => `<li style="margin-bottom:0.45rem;"><strong>${q.date}:</strong> ${q.question} → <span style="color:var(--green);">${q.insight}</span></li>`).join("")}
+      </ul>
+    </section>
+  `;
+}
+
+init();
