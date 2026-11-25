@@ -16,11 +16,7 @@
       --amber: #d97706;
       --amber-soft: #fef3c7;
       --green: #059669;
-      --green-soft: #d1fae5;
       --purple: #7c3aed;
-      --purple-soft: #ede9fe;
-      --rose: #e11d48;
-      --rose-soft: #ffe4e6;
     }
     * { box-sizing: border-box; }
     body {
@@ -100,7 +96,6 @@
     .pill-btn:hover { background: #f5f5f4; }
     .pill-btn.active { background: #292524; color: #fff; border-color: #292524; }
 
-    /* Spotlight Banner */
     .spotlight {
       background: linear-gradient(135deg, #fffbeb 0%, #f0fdf4 100%);
       border: 1px solid #fde68a;
@@ -132,7 +127,6 @@
     .hidden-en { filter: blur(5px); user-select: none; cursor: pointer; }
     .hidden-en:hover { filter: blur(0); }
 
-    /* Stem + Ending Color Coding */
     .stem { color: var(--text); }
     .ending {
       color: var(--blue);
@@ -146,7 +140,6 @@
       font-weight: 600;
     }
 
-    /* Matrix Table */
     .table-wrap { overflow-x: auto; }
     table {
       width: 100%;
@@ -219,7 +212,6 @@
     }
     .mini-btn:hover { background: #efede8; }
 
-    /* Single Tense Spotlight Grid */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -250,7 +242,11 @@
     <div class="controls-grid">
       <div class="control-group">
         <span class="control-label">Sentence / Verb:</span>
-        <select id="verb-select" onchange="selectVerb(this.value)"></select>
+        <select id="verb-select" onchange="selectVerb(this.value)">
+          <option value="prendere">prendere una camomilla (to take/drink chamomile — regular -ere)</option>
+          <option value="andare">andare al parco (to go to the park — movement verb with essere)</option>
+          <option value="guardare">guardare gli uccelli (to watch birds — regular -are)</option>
+        </select>
       </div>
 
       <div class="control-group">
@@ -275,12 +271,11 @@
     </div>
   </section>
 
-  <!-- Live Sentence Spotlight -->
   <div class="spotlight" id="spotlight-banner">
     <div>
-      <div class="spotlight-meta" id="spot-meta">IO · PRESENTE</div>
-      <div class="spotlight-it" id="spot-it">Prendo una camomilla ogni sera.</div>
-      <div class="spotlight-en" id="spot-en">I drink/take a chamomile tea every evening.</div>
+      <div class="spotlight-meta" id="spot-meta">IO · 1. PRESENTE (Habits &amp; Facts)</div>
+      <div class="spotlight-it" id="spot-it">Prendo una camomilla.</div>
+      <div class="spotlight-en" id="spot-en">I drink a chamomile tea.</div>
     </div>
     <div class="control-group">
       <button class="pill-btn" onclick="speakCurrent(0.75)">🐢 0.75x</button>
@@ -289,8 +284,9 @@
     </div>
   </div>
 
-  <!-- Matrix Content -->
-  <section class="card" id="matrix-container"></section>
+  <section class="card" id="matrix-container">
+    <p style="color:var(--muted);margin:0;">Loading verb matrix...</p>
+  </section>
 </div>
 
 <script>
@@ -307,4 +303,376 @@ const PRONOUNS = [
   { key: "tu", label: "tu", role: "you (2nd sg.)" },
   { key: "luilei", label: "lui / lei", role: "he / she (3rd sg.)" },
   { key: "esso", label: "(esso / essa)", role: "it (3rd sg. pro-drop)", proDrop: true },
-  { key: "noi",
+  { key: "noi", label: "noi", role: "we (1st pl.)" },
+  { key: "voi", label: "voi", role: "you all (2nd pl.)" },
+  { key: "loro", label: "loro", role: "they (3rd pl.)" },
+  { key: "si", label: "si + verb", role: "Impersonal / Passive", isSi: true }
+];
+
+const VERB_BANK = [
+  {
+    id: "prendere",
+    title: "prendere una camomilla (to take/drink chamomile — regular -ere)",
+    rows: {
+      io: {
+        presente: { it: "Prend|o una camomilla.", en: "I drink a chamomile tea." },
+        progressivo: { it: "~Sto~ prend|endo una camomilla.", en: "I am drinking a chamomile tea." },
+        passato: { it: "~Ho~ pres|o una camomilla.", en: "I drank a chamomile tea." },
+        imperfetto: { it: "Prend|evo sempre una camomilla.", en: "I always used to drink chamomile." },
+        futuro: { it: "Prend|erò una camomilla stasera.", en: "I will drink chamomile tonight." }
+      },
+      tu: {
+        presente: { it: "Prend|i una camomilla.", en: "You drink a chamomile tea." },
+        progressivo: { it: "~Stai~ prend|endo una camomilla.", en: "You are drinking a chamomile tea." },
+        passato: { it: "~Hai~ pres|o una camomilla.", en: "You drank a chamomile tea." },
+        imperfetto: { it: "Prend|evi una camomilla la sera.", en: "You used to drink chamomile in the evening." },
+        futuro: { it: "Prend|erai una camomilla.", en: "You will drink chamomile a tea." }
+      },
+      luilei: {
+        presente: { it: "Prend|e una camomilla.", en: "He/She drinks a chamomile tea." },
+        progressivo: { it: "~Sta~ prend|endo una camomilla.", en: "He/She is drinking a chamomile tea." },
+        passato: { it: "~Ha~ pres|o una camomilla.", en: "He/She drank a chamomile tea." },
+        imperfetto: { it: "Prend|eva una camomilla.", en: "He/She used to drink chamomile." },
+        futuro: { it: "Prend|erà una camomilla.", en: "He/She will drink chamomile." }
+      },
+      esso: {
+        presente: { it: "Fa| effetto subito.", en: "(It) takes effect right away." },
+        progressivo: { it: "~Sta~ fac|endo effetto.", en: "(It) is taking effect." },
+        passato: { it: "~Ha~ fatt|o effetto.", en: "(It) took effect." },
+        imperfetto: { it: "Fac|eva sempre effetto.", en: "(It) always used to work." },
+        futuro: { it: "Far|à effetto presto.", en: "(It) will take effect soon." }
+      },
+      noi: {
+        presente: { it: "Prend|iamo una camomilla.", en: "We drink a chamomile tea." },
+        progressivo: { it: "~Stiamo~ prend|endo una camomilla.", en: "We are drinking a chamomile tea." },
+        passato: { it: "~Abbiamo~ pres|o una camomilla.", en: "We drank a chamomile tea." },
+        imperfetto: { it: "Prend|evamo una camomilla insieme.", en: "We used to drink chamomile together." },
+        futuro: { it: "Prend|eremo una camomilla.", en: "We will drink a chamomile tea." }
+      },
+      voi: {
+        presente: { it: "Prend|ete una camomilla.", en: "You all drink a chamomile tea." },
+        progressivo: { it: "~State~ prend|endo una camomilla.", en: "You all are drinking chamomile." },
+        passato: { it: "~Avete~ pres|o una camomilla.", en: "You all drank a chamomile tea." },
+        imperfetto: { it: "Prend|evate una camomilla.", en: "You all used to drink chamomile." },
+        futuro: { it: "Prend|erete una camomilla.", en: "You all will drink chamomile." }
+      },
+      loro: {
+        presente: { it: "Prend|ono una camomilla.", en: "They drink a chamomile tea." },
+        progressivo: { it: "~Stanno~ prend|endo una camomilla.", en: "They are drinking chamomile." },
+        passato: { it: "~Hanno~ pres|o una camomilla.", en: "They drank a chamomile tea." },
+        imperfetto: { it: "Prend|evano una camomilla.", en: "They used to drink chamomile." },
+        futuro: { it: "Prend|eranno una camomilla.", en: "They will drink chamomile." }
+      },
+      si: {
+        presente: { it: "La camomilla ~si~ prend|e la sera.", en: "Chamomile is drunk in the evening. (Passive sg.)" },
+        progressivo: { it: "Oggi ~si~ ~sta~ prend|endo più tisana.", en: "Today people are drinking more herbal tea." },
+        passato: { it: "~Si~ ~è~ pres|a una camomilla.", en: "One drank / A chamomile was taken. (essere agreement)" },
+        imperfetto: { it: "In casa ~si~ prend|evano le tisane.", en: "At home herbal teas used to be taken. (Passive pl.)" },
+        futuro: { it: "Domani ~si~ prend|erà un caffè.", en: "Tomorrow people will have coffee." }
+      }
+    }
+  },
+  {
+    id: "andare",
+    title: "andare al parco (to go to the park — movement verb with essere)",
+    rows: {
+      io: {
+        presente: { it: "Vad|o al parco.", en: "I go to the park." },
+        progressivo: { it: "~Sto~ and|ando al parco.", en: "I am going to the park." },
+        passato: { it: "~Sono~ andat|o al parco.", itF: "~Sono~ andat|a al parco.", en: "I went to the park." },
+        imperfetto: { it: "And|avo spesso al parco.", en: "I used to go to the park often." },
+        futuro: { it: "Andr|ò al parco domani.", en: "I will go to the park tomorrow." }
+      },
+      tu: {
+        presente: { it: "Va|i al parco.", en: "You go to the park." },
+        progressivo: { it: "~Stai~ and|ando al parco.", en: "You are going to the park." },
+        passato: { it: "~Sei~ andat|o al parco.", itF: "~Sei~ andat|a al parco.", en: "You went to the park." },
+        imperfetto: { it: "And|avi al parco.", en: "You used to go to the park." },
+        futuro: { it: "Andr|ai al parco.", en: "You will go to the park." }
+      },
+      luilei: {
+        presente: { it: "V|a al parco.", en: "He/She goes to the park." },
+        progressivo: { it: "~Sta~ and|ando al parco.", en: "He/She is going to the park." },
+        passato: { it: "~È~ andat|o al parco.", itF: "~È~ andat|a al parco.", en: "He/She went to the park." },
+        imperfetto: { it: "And|ava al parco.", en: "He/She used to go to the park." },
+        futuro: { it: "Andr|à al parco.", en: "He/She will go to the park." }
+      },
+      esso: {
+        presente: { it: "V|a tutto bene.", en: "(It) goes all well / Everything is fine." },
+        progressivo: { it: "~Sta~ and|ando bene.", en: "(It) is going well." },
+        passato: { it: "~È~ andat|o tutto bene.", en: "(It) went all well." },
+        imperfetto: { it: "And|ava tutto bene.", en: "(It) used to go well." },
+        futuro: { it: "Andr|à tutto bene.", en: "(It) will all go well." }
+      },
+      noi: {
+        presente: { it: "And|iamo al parco.", en: "We go to the park." },
+        progressivo: { it: "~Stiamo~ and|ando al parco.", en: "We are going to the park." },
+        passato: { it: "~Siamo~ andat|i al parco.", itF: "~Siamo~ andat|e al parco.", en: "We went to the park." },
+        imperfetto: { it: "And|avamo al parco.", en: "We used to go to the park." },
+        futuro: { it: "Andr|emo al parco.", en: "We will go to the park." }
+      },
+      voi: {
+        presente: { it: "And|ate al parco.", en: "You all go to the park." },
+        progressivo: { it: "~State~ and|ando al parco.", en: "You all are going to the park." },
+        passato: { it: "~Siete~ andat|i al parco.", itF: "~Siete~ andat|e al parco.", en: "You all went to the park." },
+        imperfetto: { it: "And|avate al parco.", en: "You all used to go to the park." },
+        futuro: { it: "Andr|ete al parco.", en: "You all will go to the park." }
+      },
+      loro: {
+        presente: { it: "V|anno al parco.", en: "They go to the park." },
+        progressivo: { it: "~Stanno~ and|ando al parco.", en: "They are going to the park." },
+        passato: { it: "~Sono~ andat|i al parco.", itF: "~Sono~ andat|e al parco.", en: "They went to the park." },
+        imperfetto: { it: "And|avano al parco.", en: "They used to go to the park." },
+        futuro: { it: "Andr|anno al parco.", en: "They will go to the park." }
+      },
+      si: {
+        presente: { it: "La domenica ~si~ v|a al parco.", en: "On Sundays people go to the park. (Impersonal)" },
+        progressivo: { it: "~Si~ ~sta~ and|ando verso la primavera.", en: "We/People are moving toward spring." },
+        passato: { it: "Ieri ~si~ ~è~ andat|i al parco.", en: "Yesterday people went to the park. (Impersonal plural -i)" },
+        imperfetto: { it: "Da giovani ~si~ and|ava a piedi.", en: "When young, people used to go on foot." },
+        futuro: { it: "Domani ~si~ andr|à al lago.", en: "Tomorrow people will go to the lake." }
+      }
+    }
+  },
+  {
+    id: "guardare",
+    title: "guardare gli uccelli (to watch birds — regular -are)",
+    rows: {
+      io: {
+        presente: { it: "Guard|o gli uccelli.", en: "I watch the birds." },
+        progressivo: { it: "~Sto~ guard|ando gli uccelli.", en: "I am watching the birds." },
+        passato: { it: "~Ho~ guard|ato gli uccelli.", en: "I watched the birds." },
+        imperfetto: { it: "Guard|avo gli uccelli ogni mattina.", en: "I used to watch the birds every morning." },
+        futuro: { it: "Guard|erò gli uccelli domani.", en: "I will watch the birds tomorrow." }
+      },
+      tu: {
+        presente: { it: "Guard|i gli uccelli.", en: "You watch the birds." },
+        progressivo: { it: "~Stai~ guard|ando gli uccelli.", en: "You are watching the birds." },
+        passato: { it: "~Hai~ guard|ato gli uccelli.", en: "You watched the birds." },
+        imperfetto: { it: "Guard|avi gli uccelli.", en: "You used to watch the birds." },
+        futuro: { it: "Guard|erai gli uccelli.", en: "You will watch the birds." }
+      },
+      luilei: {
+        presente: { it: "Guard|a gli uccelli.", en: "He/She watches the birds." },
+        progressivo: { it: "~Sta~ guard|ando gli uccelli.", en: "He/She is watching the birds." },
+        passato: { it: "~Ha~ guard|ato gli uccelli.", en: "He/She watched the birds." },
+        imperfetto: { it: "Guard|ava gli uccelli.", en: "He/She used to watch the birds." },
+        futuro: { it: "Guard|erà gli uccelli.", en: "He/She will watch the birds." }
+      },
+      esso: {
+        presente: { it: "Sembr|a un cardinale rosso.", en: "(It) looks like a red cardinal." },
+        progressivo: { it: "~Sta~ cant|ando sul ramo.", en: "(It) is singing on the branch." },
+        passato: { it: "~Ha~ cant|ato sul ramo.", en: "(It) sang on the branch." },
+        imperfetto: { it: "Sembr|ava un cardinale.", en: "(It) looked like a cardinal." },
+        futuro: { it: "Torn|erà in primavera.", en: "(It) will return in spring." }
+      },
+      noi: {
+        presente: { it: "Guard|iamo gli uccelli.", en: "We watch the birds." },
+        progressivo: { it: "~Stiamo~ guard|ando gli uccelli.", en: "We are watching the birds." },
+        passato: { it: "~Abbiamo~ guard|ato gli uccelli.", en: "We watched the birds." },
+        imperfetto: { it: "Guard|avamo gli uccelli al lago.", en: "We used to watch birds at the lake." },
+        futuro: { it: "Guard|eremo gli uccelli.", en: "We will watch the birds." }
+      },
+      voi: {
+        presente: { it: "Guard|ate gli uccelli.", en: "You all watch the birds." },
+        progressivo: { it: "~State~ guard|ando gli uccelli.", en: "You all are watching the birds." },
+        passato: { it: "~Avete~ guard|ato gli uccelli.", en: "You all watched the birds." },
+        imperfetto: { it: "Guard|avate gli uccelli.", en: "You all used to watch the birds." },
+        futuro: { it: "Guard|erete gli uccelli.", en: "You all will watch the birds." }
+      },
+      loro: {
+        presente: { it: "Guard|ano gli uccelli.", en: "They watch the birds." },
+        progressivo: { it: "~Stanno~ guard|ando gli uccelli.", en: "They are watching the birds." },
+        passato: { it: "~Hanno~ guard|ato gli uccelli.", en: "They watched the birds." },
+        imperfetto: { it: "Guard|avano gli uccelli.", en: "They used to watch the birds." },
+        futuro: { it: "Guard|eranno gli uccelli.", en: "They will watch the birds." }
+      },
+      si: {
+        presente: { it: "A maggio ~si~ guard|ano gli uccelli.", en: "In May birds are watched / people watch birds." },
+        progressivo: { it: "~Si~ ~sta~ guard|ando il cielo.", en: "People are watching the sky." },
+        passato: { it: "~Si~ ~sono~ guard|ati molti uccelli.", en: "Many birds were watched. (Passive pl.)" },
+        imperfetto: { it: "Dal sentiero ~si~ guard|ava il lago.", en: "From the trail one used to watch the lake." },
+        futuro: { it: "In maggio ~si~ guard|eranno le parule.", en: "In May warblers will be watched." }
+      }
+    }
+  }
+];
+
+const state = {
+  verbId: "prendere",
+  view: "all",
+  activeTense: "presente",
+  selectedPronoun: "io",
+  selectedTense: "presente",
+  female: true,
+  hideEnglish: false
+};
+
+function getRawText(cellObj) {
+  const raw = (state.female && cellObj.itF) ? cellObj.itF : cellObj.it;
+  return raw.replace(/\|/g, "").replace(/~/g, "");
+}
+
+function formatHTML(cellObj) {
+  let raw = (state.female && cellObj.itF) ? cellObj.itF : cellObj.it;
+  raw = raw.replace(/~([^~]+)~/g, '<span class="aux">$1</span>');
+  raw = raw.replace(/([a-zA-ZàèéìòùÀÈÉÌÒÙ]+)\|([a-zA-ZàèéìòùÀÈÉÌÒÙ]+)/g, '<span class="stem">$1</span><span class="ending">$2</span>');
+  return raw;
+}
+
+function speak(text, rate = 0.95) {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "it-IT";
+  u.rate = rate;
+  window.speechSynthesis.speak(u);
+}
+
+function speakCurrent(rate) {
+  const verb = VERB_BANK.find(v => v.id === state.verbId);
+  const cell = verb.rows[state.selectedPronoun][state.selectedTense];
+  speak(getRawText(cell), rate);
+}
+
+function playRowSequence() {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const verb = VERB_BANK.find(v => v.id === state.verbId);
+  const row = verb.rows[state.selectedPronoun];
+  TENSES.forEach(t => {
+    const u = new SpeechSynthesisUtterance(getRawText(row[t.key]));
+    u.lang = "it-IT";
+    u.rate = 0.9;
+    window.speechSynthesis.speak(u);
+  });
+}
+
+function selectCell(pronounKey, tenseKey, speakRate = null) {
+  state.selectedPronoun = pronounKey;
+  state.selectedTense = tenseKey;
+  render();
+  if (speakRate) speakCurrent(speakRate);
+}
+
+function selectVerb(id) {
+  state.verbId = id;
+  render();
+}
+
+function setView(v) {
+  state.view = v;
+  document.getElementById("view-all-btn").classList.toggle("active", v === "all");
+  document.getElementById("view-single-btn").classList.toggle("active", v === "single");
+  document.getElementById("single-tense-bar").style.display = v === "single" ? "flex" : "none";
+  render();
+}
+
+function selectTense(tKey) {
+  state.activeTense = tKey;
+  state.selectedTense = tKey;
+  document.querySelectorAll("#single-tense-bar .pill-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tense === tKey);
+  });
+  render();
+}
+
+function toggleGender() {
+  state.female = !state.female;
+  const btn = document.getElementById("gender-btn");
+  btn.classList.toggle("active", state.female);
+  btn.textContent = state.female ? "👩 Female Speaker (-a/-e)" : "👨 Male / Default (-o/-i)";
+  render();
+}
+
+function toggleEnglish() {
+  state.hideEnglish = !state.hideEnglish;
+  const btn = document.getElementById("en-btn");
+  btn.classList.toggle("active", state.hideEnglish);
+  btn.textContent = state.hideEnglish ? "🙈 English Hidden (Hover to Peek)" : "👁️ Hide English Buffer";
+  render();
+}
+
+function renderSpotlight() {
+  const verb = VERB_BANK.find(v => v.id === state.verbId);
+  const pObj = PRONOUNS.find(p => p.key === state.selectedPronoun);
+  const tObj = TENSES.find(t => t.key === state.selectedTense);
+  const cell = verb.rows[state.selectedPronoun][state.selectedTense];
+
+  document.getElementById("spot-meta").textContent = `${pObj.label.toUpperCase()} · ${tObj.label.toUpperCase()} (${tObj.sub})`;
+  document.getElementById("spot-it").innerHTML = formatHTML(cell);
+  const enEl = document.getElementById("spot-en");
+  enEl.textContent = cell.en;
+  enEl.className = "spotlight-en" + (state.hideEnglish ? " hidden-en" : "");
+}
+
+function render() {
+  renderSpotlight();
+  const verb = VERB_BANK.find(v => v.id === state.verbId);
+  const container = document.getElementById("matrix-container");
+
+  if (state.view === "all") {
+    container.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pronoun / Pattern</th>
+              ${TENSES.map(t => `<th>${t.label}<small>${t.sub}</small></th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            ${PRONOUNS.map(p => `
+              <tr class="${p.isSi ? "si-row" : ""}">
+                <td class="pronoun-cell">
+                  ${p.label}
+                  <span class="pronoun-sub">${p.role}</span>
+                  ${p.proDrop ? `<span class="pro-drop-badge">Pro-drop (omitted)</span>` : ""}
+                </td>
+                ${TENSES.map(t => {
+                  const cell = verb.rows[p.key][t.key];
+                  const isSel = state.selectedPronoun === p.key && state.selectedTense === t.key;
+                  return `
+                    <td class="matrix-cell ${isSel ? "selected" : ""}" onclick="selectCell('${p.key}', '${t.key}')">
+                      <div class="cell-sentence">${formatHTML(cell)}</div>
+                      <div class="cell-actions">
+                        <button class="mini-btn" title="Slow 0.75x" onclick="event.stopPropagation(); selectCell('${p.key}', '${t.key}', 0.75)">🐢</button>
+                        <button class="mini-btn" title="Normal 0.95x" onclick="event.stopPropagation(); selectCell('${p.key}', '${t.key}', 0.95)">🔊</button>
+                      </div>
+                    </td>`;
+                }).join("")}
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  } else {
+    const tKey = state.activeTense;
+    container.innerHTML = `
+      <div class="cards-grid">
+        ${PRONOUNS.map(p => {
+          const cell = verb.rows[p.key][tKey];
+          const isSel = state.selectedPronoun === p.key && state.selectedTense === tKey;
+          return `
+            <div class="p-card ${isSel ? "selected" : ""} ${p.isSi ? "si-card" : ""}" onclick="selectCell('${p.key}', '${tKey}', 0.95)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">
+                <strong>${p.label} <span style="font-weight:400;font-size:0.78rem;color:var(--muted);">(${p.role})</span></strong>
+                <div class="cell-actions">
+                  <button class="mini-btn" onclick="event.stopPropagation(); selectCell('${p.key}', '${tKey}', 0.75)">🐢</button>
+                  <button class="mini-btn" onclick="event.stopPropagation(); selectCell('${p.key}', '${tKey}', 0.95)">🔊</button>
+                </div>
+              </div>
+              <div style="font-size:1.02rem;margin-bottom:0.25rem;">${formatHTML(cell)}</div>
+              <div class="${state.hideEnglish ? "hidden-en" : ""}" style="font-size:0.82rem;color:var(--muted);">${cell.en}</div>
+            </div>`;
+        }).join("")}
+      </div>
+    `;
+  }
+}
+
+render();
+</script>
+</body>
+</html>
