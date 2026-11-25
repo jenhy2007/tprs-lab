@@ -956,8 +956,88 @@ function renderBranch2() {
     </section>
 
     <section class="card">
-      <span class="stage-badge s2">Toolbox · Duolingo Pattern Decoder</span>
-      <h2>⚖️ Quick Card: “si + verb” vs. “would + verb” (Condizionale)</h2>
+      <span class="stage-badge s1">Toolbox · Regular Verb Endings (7 Pronouns)</span>
+      <h2>🎯 Regular HF Verbs: -ARE / -ERE / -IRE (Presente)</h2>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:-0.35rem;">
+        <strong>Shortcut:</strong> <code>io</code> is always <strong>-o</strong>, <code>tu</code> is always <strong>-i</strong>, and <code>noi</code> is always <strong>-iamo</strong> across all three regular families.
+      </p>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+          <thead>
+            <tr style="background:#f5f5f4;text-align:left;">
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">Pronoun</th>
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">-ARE (<em>guardare</em>)</th>
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">-ERE (<em>prendere</em>)</th>
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">-IRE (<em>dormire</em>)</th>
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">-IRE (-isc-) (<em>capire</em>)</th>
+              <th style="padding:0.45rem;border-bottom:1px solid var(--border);">Listen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:0.42rem;"><strong>io</strong> (I)</td>
+              <td>guard<strong>o</strong></td>
+              <td>prend<strong>o</strong></td>
+              <td>dorm<strong>o</strong></td>
+              <td>cap<strong>isco</strong></td>
+              <td>${audioButtons("Guardo, prendo, dormo, capisco.")}</td>
+            </tr>
+            <tr>
+              <td style="padding:0.42rem;"><strong>tu</strong> (you)</td>
+              <td>guard<strong>i</strong></td>
+              <td>prend<strong>i</strong></td>
+              <td>dorm<strong>i</strong></td>
+              <td>cap<strong>isci</strong></td>
+              <td>${audioButtons("Guardi, prendi, dormi, capisci.")}</td>
+            </tr>
+            <tr>
+              <td style="padding:0.42rem;"><strong>lui / lei</strong> (he/she)</td>
+              <td>guard<strong>a</strong></td>
+              <td>prend<strong>e</strong></td>
+              <td>dorm<strong>e</strong></td>
+              <td>cap<strong>isce</strong></td>
+              <td>${audioButtons("Guarda, prende, dorme, capisce.")}</td>
+            </tr>
+            <tr style="background:#fffbeb;">
+              <td style="padding:0.42rem;"><strong>(esso/essa)</strong> [it]</td>
+              <td>funzion<strong>a</strong></td>
+              <td>serv<strong>e</strong></td>
+              <td>part<strong>e</strong></td>
+              <td>fin<strong>isce</strong></td>
+              <td>${audioButtons("Funziona, serve, parte, finisce.")}</td>
+            </tr>
+            <tr>
+              <td style="padding:0.42rem;"><strong>noi</strong> (we)</td>
+              <td>guard<strong>iamo</strong></td>
+              <td>prend<strong>iamo</strong></td>
+              <td>dorm<strong>iamo</strong></td>
+              <td>cap<strong>iamo</strong></td>
+              <td>${audioButtons("Guardiamo, prendiamo, dormiamo, capiamo.")}</td>
+            </tr>
+            <tr>
+              <td style="padding:0.42rem;"><strong>voi</strong> (you all)</td>
+              <td>guard<strong>ate</strong></td>
+              <td>prend<strong>ete</strong></td>
+              <td>dorm<strong>ite</strong></td>
+              <td>cap<strong>ite</strong></td>
+              <td>${audioButtons("Guardate, prendete, dormite, capite.")}</td>
+            </tr>
+            <tr>
+              <td style="padding:0.42rem;"><strong>loro</strong> (they)</td>
+              <td>guard<strong>ano</strong></td>
+              <td>prend<strong>ono</strong></td>
+              <td>dorm<strong>ono</strong></td>
+              <td>cap<strong>iscono</strong></td>
+              <td>${audioButtons("Guardano, prendono, dormono, capiscono.")}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="stage-badge s2">Toolbox · Duolingo Pattern &amp; Look-Alike Decoder</span>
+      <h2>⚖️ Quick Card: “si + verb” vs. “would + verb” &amp; Look-Alikes</h2>
       <p style="font-size:0.88rem;color:var(--muted);margin-top:-0.35rem;">
         <strong>Key Rule:</strong> Impersonal/Passive <code>si</code> only uses 2 forms (Singular vs. Plural), whereas <em>“would + verb”</em> changes across all 7 pronouns.
       </p>
@@ -999,6 +1079,26 @@ function renderBranch2() {
           </tbody>
         </table>
       </div>
+
+      <h3 style="margin-top:1.1rem;">C. Duolingo Look-Alike Traps (Quick Untangler)</h3>
+      <div style="display:grid;gap:0.45rem;font-size:0.87rem;">
+        <div class="level-box" style="margin-top:0;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+          <div><strong>se vs. si vs. sa:</strong> <em>Non <strong>so se</strong> viene</em> (I don't know <strong>if</strong> he's coming) · <em>Lei <strong>sa</strong> nuotare</em> (She <strong>knows how</strong> to swim) · <em>Come <strong>si</strong> dice?</em> (How does <strong>one</strong> say?)</div>
+          ${audioButtons("Non so se viene. Lei sa nuotare. Come si dice?")}
+        </div>
+        <div class="level-box" style="margin-top:0;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+          <div><strong>ma vs. mai:</strong> <em>Vorrei uscire, <strong>ma</strong> piove</em> (<strong>but</strong>) · <em>Non bevo <strong>mai</strong> caffè</em> (<strong>never</strong>) · <em>Sei <strong>mai</strong> stato in Italia?</em> (<strong>ever</strong>)</div>
+          ${audioButtons("Vorrei uscire, ma piove. Non bevo mai caffè. Sei mai stato in Italia?")}
+        </div>
+        <div class="level-box" style="margin-top:0;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+          <div><strong>ce si vs. ci si:</strong> <em>In Italia <strong>ce si</strong> va volentieri</em> (People go <strong>there</strong>) · <em>La domenica <strong>ci si</strong> alza tardi</em> (People get <strong>themselves</strong> up late)</div>
+          ${audioButtons("In Italia ce si va volentieri. La domenica ci si alza tardi.")}
+        </div>
+        <div class="level-box" style="margin-top:0;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+          <div><strong>c'è vs. ci sono vs. ce ne sono:</strong> <em><strong>C'è</strong> tempo</em> (There is, sg.) · <em><strong>Ci sono</strong> tre opzioni</em> (There are, pl.) · <em><strong>Ce ne sono</strong> due</em> (There are two <strong>of them</strong>)</div>
+          ${audioButtons("C'è tempo. Ci sono tre opzioni. Ce ne sono due.")}
+        </div>
+      </div>
     </section>
 
     <section class="card">
@@ -1021,7 +1121,8 @@ function renderBranch2() {
           <div style="margin-top:0.35rem;"><strong>└── 3. Toolbox (语言工具箱)</strong></div>
           <div style="padding-left:1.1rem;color:var(--muted);">
             ├── Interactive Mini-Apps (Verb & Pronoun Matrix)<br>
-            ├── Duolingo Pattern Decoder (si + verb vs. Condizionale)<br>
+            ├── Regular HF Verb Endings (-are / -ere / -ire · 7 Pronouns)<br>
+            ├── Duolingo Pattern & Look-Alike Decoder<br>
             ├── Mind Map & TPRS Transformation Methods<br>
             ├── High-Frequency Chunks (Core + ★ Pinned)<br>
             ├── Grammar Mechanics (Non-English Logic)<br>
