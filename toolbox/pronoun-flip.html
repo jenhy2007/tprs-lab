@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TPRS Pronoun Flip — Vista Vocale</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #0f766e;
+      --primary-soft: #ccfbf1;
+      --pronoun: #b45309;
+      --pronoun-bg: #fef3c7;
+      --verb: #1d4ed8;
+      --verb-bg: #dbeafe;
+      --subject: #047857;
+      --subject-bg: #d1fae5;
+      --formal-badge: #7c3aed;
+      --formal-bg: #ede9fe;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 1.35rem;
+      margin: 0;
+      color: var(--primary);
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 2px 0 0;
+    }
+
+    .top-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    button:hover { border-color: var(--primary); }
+    button.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .mode-tab {
+      padding: 12px;
+      text-align: left;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--card);
+    }
+
+    .mode-tab.active {
+      border-color: var(--primary);
+      background: #f0fdfa;
+      color: var(--text);
+    }
+
+    .mode-tab .tab-title {
+      display: block;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--primary);
+    }
+
+    .mode-tab .tab-desc {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .row-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      min-width: 82px;
+    }
+
+    /* Hero Stage */
+    .stage {
+      text-align: center;
+      padding: 20px 14px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px dashed #cbd5e1;
+      margin-bottom: 14px;
+    }
+
+    .sentence-blocks {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .block {
+      padding: 10px 16px;
+      border-radius: 10px;
+      min-width: 110px;
+    }
+
+    .block-tag {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+      opacity: 0.85;
+    }
+
+    .block-word {
+      font-size: 1.45rem;
+      font-weight: 800;
+    }
+
+    .block-pronoun { background: var(--pronoun-bg); color: var(--pronoun); }
+    .block-verb { background: var(--verb-bg); color: var(--verb); }
+    .block-subject { background: var(--subject-bg); color: var(--subject); }
+
+    .literal-bridge {
+      font-size: 0.92rem;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .english-meaning {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      transition: filter 0.2s ease;
+    }
+
+    .blur-en .english-meaning,
+    .blur-en .en-col {
+      filter: blur(6px);
+      user-select: none;
+    }
+
+    .audio-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .audio-btn {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .audio-btn.slow {
+      background: #fff;
+      color: var(--primary);
+    }
+
+    /* All-8 Grid */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th {
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr.selected-row {
+      background: #f0fdfa;
+    }
+
+    tr:hover { background: #f8fafc; cursor: pointer; }
+
+    .badge-formal {
+      display: inline-block;
+      background: var(--formal-bg);
+      color: var(--formal-badge);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      margin-left: 4px;
+    }
+
+    .c-pron { color: var(--pronoun); font-weight: 800; }
+    .c-verb { color: var(--verb); font-weight: 700; }
+    .c-subj { color: var(--subject); font-weight: 700; }
+
+    .mini-play {
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      margin-right: 4px;
+    }
+
+    @media (max-width: 640px) {
+      .mode-tabs { grid-template-columns: 1fr; }
+      .block-word { font-size: 1.2rem; }
+      .row-label { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <header>
+      <div>
+        <h1>🔄 TPRS Pronoun Flip</h1>
+        <p class="subtitle">Indirect Pronouns (宾语调到主语位置) &amp; Combined <em>me lo / glielo</em></p>
+      </div>
+      <div class="top-controls">
+        <button id="toggleEnBtn" onclick="toggleBlur()">👁️ Hide English</button>
+        <button onclick="playCascade()">▶ Play All 8 (0.95x)</button>
+        <a href="verb-matrix.html" style="text-decoration:none;"><button>← Verb Matrix</button></a>
+      </div>
+    </header>
+
+    <!-- Mode Switcher -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tabA" onclick="setMode('A')">
+        <span class="tab-title">Mode A: Reverse-Logic Flip (piacere, servire...)</span>
+        <span class="tab-desc">Person moves to front (mi/ti/gli/le/Le...) · Verb agrees with the THING</span>
+      </button>
+      <button class="mode-tab" id="tabB" onclick="setMode('B')">
+        <span class="tab-title">Mode B: "To Whom + It" Combo (me lo, glielo...)</span>
+        <span class="tab-desc">Indirect (-i → -e) + Direct (lo/la/li/le) · e.g. "Glielo regalo!"</span>
+      </button>
+    </div>
+
+    <!-- Controls Panel -->
+    <div class="panel" id="controlsPanel"></div>
+
+    <!-- Active Sentence Stage -->
+    <div class="panel">
+      <div class="stage" id="heroStage"></div>
+
+      <!-- Full 8-Pronoun Reference & Click-to-Hear Table -->
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Pronoun</th>
+              <th>Role / Who</th>
+              <th>Italian Sentence</th>
+              <th>English Meaning</th>
+              <th>Listen</th>
+            </tr>
+          </thead>
+          <tbody id="matrixBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PRONOUNS = [
+      { id: 'mi',   ind: 'mi',  comb: 'me',   whoEn: 'to me (io)',           whoZh: '对我', formal: false, subjPron: 'I' },
+      { id: 'ti',   ind: 'ti',  comb: 'te',   whoEn: 'to you (tu)',          whoZh: '对你', formal: false, subjPron: 'you' },
+      { id: 'gliM', ind: 'gli', comb: 'glie', whoEn: 'to him (lui)',         whoZh: '对他', formal: false, subjPron: 'he' },
+      { id: 'leF',  ind: 'le',  comb: 'glie', whoEn: 'to her (lei)',         whoZh: '对她', formal: false, subjPron: 'she' },
+      { id: 'Le',   ind: 'Le',  comb: 'glie', whoEn: 'to You (Lei — M/F)',   whoZh: '对您(男女通用)', formal: true,  subjPron: 'You (formal)' },
+      { id: 'ci',   ind: 'ci',  comb: 'ce',   whoEn: 'to us (noi)',          whoZh: '对我们', formal: false, subjPron: 'we' },
+      { id: 'vi',   ind: 'vi',  comb: 've',   whoEn: 'to you all (voi)',     whoZh: '对你们', formal: false, subjPron: 'you all' },
+      { id: 'gliP', ind: 'gli', comb: 'glie', whoEn: 'to them (loro)',       whoZh: '对他们', formal: false, subjPron: 'they' }
+    ];
+
+    const VERBS_A = [
+      { id: 'piacere',     inf: 'piacere',     sg: 'piace',     pl: 'piacciono', litSg: 'is pleasing', litPl: 'are pleasing', enVerb: 'like(s)' },
+      { id: 'servire',     inf: 'servire',     sg: 'serve',     pl: 'servono',   litSg: 'is needed',   litPl: 'are needed',   enVerb: 'need(s)' },
+      { id: 'mancare',     inf: 'mancare',     sg: 'manca',     pl: 'mancano',   litSg: 'is missing',  litPl: 'are missing',  enVerb: 'miss(es)' },
+      { id: 'sembrare',    inf: 'sembrare',    sg: 'sembra',    pl: 'sembrano',  litSg: 'seems',       litPl: 'seem',         enVerb: 'think(s) it seems' },
+      { id: 'bastare',     inf: 'bastare',     sg: 'basta',     pl: 'bastano',   litSg: 'is enough',   litPl: 'are enough',   enVerb: 'have enough of' },
+      { id: 'interessare', inf: 'interessare', sg: 'interessa', pl: 'interessano', litSg: 'interests', litPl: 'interest',     enVerb: 'am/is/are interested in' }
+    ];
+
+    const OBJECTS_A = [
+      { sgIt: 'il caffè',       sgEn: 'coffee',           plIt: 'i cannoli',       plEn: 'cannoli' },
+      { sgIt: 'questo fiore',   sgEn: 'this flower',      plIt: 'questi fiori',    plEn: 'these flowers' },
+      { sgIt: 'la Sicilia',     sgEn: 'Sicily',           plIt: 'gli uccelli',     plEn: 'birds' },
+      { sgIt: 'un biglietto',   sgEn: 'one ticket',       plIt: 'due biglietti',   plEn: 'two tickets' }
+    ];
+
+    const VERBS_B = [
+      { id: 'regalo',  verbIt: 'regalo',  enAction: 'I gift',    speaker: 'I' },
+      { id: 'porto',   verbIt: 'porto',   enAction: 'I bring',   speaker: 'I' },
+      { id: 'dico',    verbIt: 'dico',    enAction: 'I tell',    speaker: 'I' },
+      { id: 'spiego',  verbIt: 'spiego',  enAction: 'I explain', speaker: 'I' },
+      { id: 'auguro',  verbIt: 'auguro',  enAction: 'I wish',    speaker: 'I' }
+    ];
+
+    const DIRECT_OBJS_B = [
+      { id: 'lo', it: 'lo', label: 'lo (it — masc. sg., e.g. il fiore)', en: 'it' },
+      { id: 'la', it: 'la', label: 'la (it — fem. sg., e.g. la giornata)', en: 'it' },
+      { id: 'li', it: 'li', label: 'li (them — masc. pl., e.g. i fiori)', en: 'them' },
+      { id: 'le', it: 'le', label: 'le (them — fem. pl., e.g. le arance)', en: 'them' }
+    ];
+
+    let state = {
+      mode: 'A',
+      selectedPronId: 'Le',
+      verbA: 'piacere',
+      objAIdx: 0,
+      isPluralA: false,
+      verbB: 'regalo',
+      dirObjB: 'lo',
+      blurEn: false
+    };
+
+    function setMode(m) {
+      state.mode = m;
+      document.getElementById('tabA').classList.toggle('active', m === 'A');
+      document.getElementById('tabB').classList.toggle('active', m === 'B');
+      render();
+    }
+
+    function toggleBlur() {
+      state.blurEn = !state.blurEn;
+      document.getElementById('app').classList.toggle('blur-en', state.blurEn);
+      document.getElementById('toggleEnBtn').textContent = state.blurEn ? '👁️ Show English' : '👁️ Hide English';
+    }
+
+    function speakIt(text, rate = 0.95) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'it-IT';
+      utter.rate = rate;
+      const voices = window.speechSynthesis.getVoices();
+      const itVoice = voices.find(v => v.lang.toLowerCase().startsWith('it'));
+      if (itVoice) utter.voice = itVoice;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function buildSentence(pronObj) {
+      if (state.mode === 'A') {
+        const v = VERBS_A.find(x => x.id === state.verbA);
+        const obj = OBJECTS_A[state.objAIdx];
+        const verbWord = state.isPluralA ? v.pl : v.sg;
+        const subjWord = state.isPluralA ? obj.plIt : obj.sgIt;
+        const litVerb = state.isPluralA ? v.litPl : v.litSg;
+        const enObj = state.isPluralA ? obj.plEn : obj.sgEn;
+
+        const fullIt = `${pronObj.ind} ${verbWord} ${subjWord}`;
+        const literal = `[${pronObj.whoEn.split(' (')[0]}] + [${litVerb}] + [${enObj}]`;
+        const natural = `${pronObj.subjPron} ${v.enVerb} ${enObj}`;
+        return {
+          pronPart: pronObj.ind,
+          verbPart: verbWord,
+          subjPart: subjWord,
+          fullIt,
+          literal,
+          natural
+        };
+      } else {
+        const vb = VERBS_B.find(x => x.id === state.verbB);
+        const dobj = DIRECT_OBJS_B.find(x => x.id === state.dirObjB);
+        const combined = pronObj.comb === 'glie'
+          ? `glie${dobj.it}`
+          : `${pronObj.comb} ${dobj.it}`;
+        const fullIt = `${combined} ${vb.verbIt}`;
+        const toWhom = pronObj.whoEn.split(' (')[0];
+        const literal = `[${toWhom} + ${dobj.en}] + [${vb.enAction}]`;
+        const natural = `${vb.enAction} ${dobj.en} ${toWhom}`;
+        return {
+          pronPart: combined,
+          verbPart: vb.verbIt,
+          subjPart: '',
+          fullIt,
+          literal,
+          natural
+        };
+      }
+    }
+
+    function renderControls() {
+      const panel = document.getElementById('controlsPanel');
+      if (state.mode === 'A') {
+        panel.innerHTML = `
+          <div class="pill-row">
+            <span class="row-label">1. Verb:</span>
+            ${VERBS_A.map(v => `
+              <button class="${state.verbA === v.id ? 'active' : ''}" onclick="state.verbA='${v.id}';render()">
+                ${v.inf} (${v.sg} / ${v.pl})
+              </button>
+            `).join('')}
+          </div>
+          <div class="pill-row">
+            <span class="row-label">2. Thing:</span>
+            ${OBJECTS_A.map((o, idx) => `
+              <button class="${state.objAIdx === idx ? 'active' : ''}" onclick="state.objAIdx=${idx};render()">
+                ${state.isPluralA ? o.plIt : o.sgIt}
+              </button>
+            `).join('')}
+          </div>
+          <div class="pill-row" style="margin-bottom:0;">
+            <span class="row-label">3. Number:</span>
+            <button class="${!state.isPluralA ? 'active' : ''}" onclick="state.isPluralA=false;render()">
+              1 Thing (Singular → -e)
+            </button>
+            <button class="${state.isPluralA ? 'active' : ''}" onclick="state.isPluralA=true;render()">
+              2+ Things (Plural → -ono / -ano)
+            </button>
+          </div>
+        `;
+      } else {
+        panel.innerHTML = `
+          <div class="pill-row">
+            <span class="row-label">1. "It/Them":</span>
+            ${DIRECT_OBJS_B.map(d => `
+              <button class="${state.dirObjB === d.id ? 'active' : ''}" onclick="state.dirObjB='${d.id}';render()">
+                ${d.label}
+              </button>
+            `).join('')}
+          </div>
+          <div class="pill-row" style="margin-bottom:0;">
+            <span class="row-label">2. Action:</span>
+            ${VERBS_B.map(v => `
+              <button class="${state.verbB === v.id ? 'active' : ''}" onclick="state.verbB='${v.id}';render()">
+                ${v.verbIt} (${v.enAction})
+              </button>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    function renderHero() {
+      const p = PRONOUNS.find(x => x.id === state.selectedPronId);
+      const s = buildSentence(p);
+      const formalNote = p.formal
+        ? `<span class="badge-formal">Formal Lei = always feminine Le (even for a Signore!)</span>`
+        : '';
+
+      document.getElementById('heroStage').innerHTML = `
+        <div style="margin-bottom:8px; font-size:0.85rem; color:var(--muted);">
+          Target: <strong>${p.whoEn}</strong> · ${p.whoZh} ${formalNote}
+        </div>
+        <div class="sentence-blocks">
+          <div class="block block-pronoun">
+            <span class="block-tag">${state.mode === 'A' ? '1. To Whom (Front)' : '1. To Whom + It'}</span>
+            <span class="block-word">${s.pronPart}</span>
+          </div>
+          <div class="block block-verb">
+            <span class="block-tag">${state.mode === 'A' ? '2. Verb (Agrees w/ Thing)' : '2. Action Verb'}</span>
+            <span class="block-word">${s.verbPart}</span>
+          </div>
+          ${s.subjPart ? `
+          <div class="block block-subject">
+            <span class="block-tag">3. The Thing (Real Subject)</span>
+            <span class="block-word">${s.subjPart}</span>
+          </div>` : ''}
+        </div>
+        <div class="literal-bridge">Literal Brain Bridge: <strong>${s.literal}</strong></div>
+        <div class="english-meaning">Natural English: "${s.natural}"</div>
+        <div class="audio-bar">
+          <button class="audio-btn slow" onclick="speakIt('${s.fullIt.replace(/'/g, "\\'")}', 0.75)">🐢 Listen 0.75x</button>
+          <button class="audio-btn" onclick="speakIt('${s.fullIt.replace(/'/g, "\\'")}', 0.95)">🔊 Listen 0.95x</button>
+        </div>
+      `;
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('matrixBody');
+      tbody.innerHTML = PRONOUNS.map(p => {
+        const s = buildSentence(p);
+        const isSel = p.id === state.selectedPronId;
+        const formalTag = p.formal ? `<span class="badge-formal">Formal M/F</span>` : '';
+        return `
+          <tr class="${isSel ? 'selected-row' : ''}" onclick="state.selectedPronId='${p.id}';render();speakIt('${s.fullIt.replace(/'/g, "\\'")}', 0.95)">
+            <td><span class="c-pron">${s.pronPart}</span></td>
+            <td>${p.whoEn} <span style="color:var(--muted);font-size:0.82rem;">(${p.whoZh})</span>${formalTag}</td>
+            <td>
+              <span class="c-pron">${s.pronPart}</span>
+              <span class="c-verb">${s.verbPart}</span>
+              <span class="c-subj">${s.subjPart}</span>
+            </td>
+            <td class="en-col">${s.natural}</td>
+            <td onclick="event.stopPropagation()">
+              <button class="mini-play" onclick="speakIt('${s.fullIt.replace(/'/g, "\\'")}', 0.75)">0.75x</button>
+              <button class="mini-play" onclick="speakIt('${s.fullIt.replace(/'/g, "\\'")}', 0.95)">0.95x</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function playCascade() {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const voices = window.speechSynthesis.getVoices();
+      const itVoice = voices.find(v => v.lang.toLowerCase().startsWith('it'));
+
+      PRONOUNS.forEach((p, idx) => {
+        const s = buildSentence(p);
+        const u = new SpeechSynthesisUtterance(s.fullIt);
+        u.lang = 'it-IT';
+        u.rate = 0.95;
+        if (itVoice) u.voice = itVoice;
+        u.onstart = () => {
+          state.selectedPronId = p.id;
+          renderHero();
+          renderTable();
+        };
+        window.speechSynthesis.speak(u);
+      });
+    }
+
+    function render() {
+      renderControls();
+      renderHero();
+      renderTable();
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {};
+    }
+    render();
+  </script>
+</body>
+</html>
