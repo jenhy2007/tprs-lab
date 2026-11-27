@@ -1,0 +1,286 @@
+{
+  "date": "2026-11-27",
+  "trackA": {
+    "stage1_rawInput": {
+      "title": "DUO Unit 40: Describe Family Health Habits",
+      "items": [
+        {
+          "it": "Oggi al nonno gli fa male la schiena.",
+          "en": "Today Grandpa's back hurts.",
+          "zh": "今天爷爷背疼。"
+        },
+        {
+          "it": "Il dottore gli dà una medicina e lui la prende.",
+          "en": "The doctor gives him medicine and he takes it.",
+          "zh": "医生给他药，他吃了。"
+        }
+      ],
+      "anchors": [
+        "Indirect object 'gli' (to him) vs. Direct object 'la' (it, feminine).",
+        "Reflexive daily habit: alzarsi (si alza) & riposarsi (si riposa)."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Gli fa male [X]",
+        "cue": "Visual: Grandpa holding his back; Audio: 'Ahi, la schiena!'"
+      },
+      "step1_hfChunks": [
+        {
+          "it": "gli fa male",
+          "en": "his ... hurts"
+        },
+        {
+          "it": "gli dà",
+          "en": "gives to him"
+        },
+        {
+          "it": "la prende",
+          "en": "takes it (f.)"
+        }
+      ],
+      "step2_singleSlot": {
+        "stem": "Oggi al nonno gli fa male",
+        "variables": [
+          "la schiena",
+          "la testa",
+          "la gola",
+          "lo stomaco"
+        ]
+      },
+      "step3_circling": [
+        {
+          "type": "Statement",
+          "q": "Al nonno gli fa male la schiena.",
+          "a": "Sì, gli fa male la schiena."
+        },
+        {
+          "type": "Yes/No",
+          "q": "Gli fa male la testa?",
+          "a": "No, non gli fa male la testa, gli fa male la schiena!"
+        },
+        {
+          "type": "Either/Or",
+          "q": "Il nonno prende un caffè o una medicina?",
+          "a": "Prende una medicina!"
+        },
+        {
+          "type": "Open Wh-",
+          "q": "Chi gli dà la medicina?",
+          "a": "Il dottore gli dà la medicina."
+        }
+      ],
+      "step4_scaffolding": {
+        "level1": "Il nonno sta male. Prende una medicina.",
+        "level2": "Oggi al nonno gli fa male la schiena, allora il dottore gli dà una medicina.",
+        "level3": "Anche se ogni mattina si alza presto, oggi al nonno gli fa male la schiena e il dottore gli dà una medicina che lui prende subito."
+      },
+      "step5_writeOutput": {
+        "prompt": "Summary Cloze: Il dottore ___ (to him) dà la medicina e il nonno ___ (it) prende."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "Quando ti fa male la testa, che cosa prendi?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "Notice how Italian keeps the object pronoun right in front of 'prendo' (S + O + V), rather than after the verb like English.",
+        "modelAnswer": "Quando mi fa male la testa, prendo un'aspirina e la prendo con acqua."
+      },
+      "personalStory": {
+        "prompt": "Write 2–3 sentences in 1st-person POV about how you keep healthy every morning."
+      }
+    }
+  },
+  "trackB": {
+    "stage1_rawInput": {
+      "title": "La Stanza (房间）",
+      "sourceUrl": "https://www.facebook.com/reel/1153465927412378",
+      "items": [
+        {
+          "it": "La stanza.",
+          "en": "The room."
+        },
+        {
+          "it": "La porta.",
+          "en": "The door."
+        },
+        {
+          "it": "La finestra.",
+          "en": "The window."
+        },
+        {
+          "it": "Il letto.",
+          "en": "The bed."
+        },
+        {
+          "it": "Il cuscino.",
+          "en": "The pillow."
+        },
+        {
+          "it": "La coperta.",
+          "en": "The blanket."
+        },
+        {
+          "it": "L'armadio.",
+          "en": "The wardrobe / The closet."
+        },
+        {
+          "it": "La scrivania.",
+          "en": "The desk."
+        },
+        {
+          "it": "La sedia.",
+          "en": "The chair."
+        },
+        {
+          "it": "La lampada.",
+          "en": "The lamp."
+        },
+        {
+          "it": "Il comodino.",
+          "en": "The nightstand."
+        },
+        {
+          "it": "Lo specchio.",
+          "en": "The mirror."
+        },
+        {
+          "it": "Il tappeto.",
+          "en": "The rug / The carpet."
+        },
+        {
+          "it": "La tenda.",
+          "en": "The curtain."
+        },
+        {
+          "it": "La parete.",
+          "en": "The wall (inside)."
+        },
+        {
+          "it": "Il pavimento.",
+          "en": "The floor."
+        },
+        {
+          "it": "Il soffitto.",
+          "en": "The ceiling."
+        },
+        {
+          "it": "La mensola.",
+          "en": "The shelf."
+        },
+        {
+          "it": "Il cassetto.",
+          "en": "The drawer."
+        },
+        {
+          "it": "La sveglia.",
+          "en": "The alarm clock."
+        },
+        {
+          "it": "Impara italiano.",
+          "en": "Learn Italian."
+        },
+        {
+          "it": "Italiano facile.",
+          "en": "Easy Italian."
+        },
+        {
+          "it": "Camera da letto.",
+          "en": "Bedroom."
+        },
+        {
+          "it": "Mobili.",
+          "en": "Furniture."
+        }
+      ],
+      "anchors": [
+        "**Gendered Nouns & Definite Articles:** Unlike English, where 'the' is a single word, Italian nouns are either masculine or feminine and require different definite articles (e.g., 'il', 'la', 'l'', 'lo') that agree in gender and number. For instance, 'la stanza' (the room) uses 'la' because 'stanza' is feminine, while 'il letto' (the bed) uses 'il' because 'letto' is masculine. 'L'' is a contraction for both masculine and feminine nouns starting with a vowel (e.g., 'l'armadio'), and 'lo' is used for masculine nouns starting with 's' + consonant, 'z', 'gn', 'ps', 'x', 'y' (e.g., 'lo specchio').",
+        "**Imperative Mood:** The phrase 'Impara italiano' (Learn Italian) uses the informal (tu) imperative form of the verb 'imparare' (to learn). This directly commands or suggests an action, similar to how we use 'Learn!' in English, but with a specific verb conjugation.",
+        "**Compound Nouns:** 'Camera da letto' (bedroom) is a common type of compound noun in Italian, often formed as 'noun + da + noun'. It literally translates to 'room for bed' or 'room of bed', illustrating how concepts can be expressed differently than a single compound word in English.",
+        "**Adjective Placement:** 'Italiano facile' (Easy Italian) demonstrates that adjectives often follow the noun they modify in Italian, which is the opposite of the typical English structure where adjectives usually precede the noun (e.g., 'easy Italian')."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Understanding nouns and their definite articles in Italian.",
+        "cue": "Listen closely for how 'the' changes based on the object's gender and starting letter. Notice also how to give a command."
+      },
+      "step1_hfChunks": [
+        {
+          "it": "la stanza",
+          "en": "the room"
+        },
+        {
+          "it": "il letto",
+          "en": "the bed"
+        },
+        {
+          "it": "l'armadio",
+          "en": "the wardrobe"
+        },
+        {
+          "it": "lo specchio",
+          "en": "the mirror"
+        },
+        {
+          "it": "impara italiano",
+          "en": "learn Italian"
+        },
+        {
+          "it": "camera da letto",
+          "en": "bedroom"
+        },
+        {
+          "it": "mobili",
+          "en": "furniture"
+        }
+      ],
+      "step2_singleSlot": {
+        "stem": "Come si dice 'the' per 'sedia'? È ____ sedia.",
+        "variables": [
+          "la",
+          "il",
+          "lo"
+        ]
+      },
+      "step3_circling": [
+        {
+          "type": "Statement",
+          "q": "È vero che in una camera da letto troviamo il letto e la coperta?",
+          "a": "Sì, è vero. In una camera da letto troviamo il letto e la coperta."
+        },
+        {
+          "type": "Yes/No",
+          "q": "La sveglia è un mobile?",
+          "a": "No, la sveglia non è un mobile, è un oggetto."
+        },
+        {
+          "type": "Open Wh-",
+          "q": "Che cosa significa 'impara italiano'?",
+          "a": "'Impara italiano' significa 'Learn Italian' in inglese."
+        }
+      ],
+      "step4_scaffolding": {
+        "level1": "Name three items you can find on a 'scrivania'.",
+        "level2": "Imagine you are inviting a friend to learn. How would you say 'Learn Italian!' using an imperative, and then suggest it's 'easy Italian'?",
+        "level3": "Describe your ideal 'camera da letto' using at least four different vocabulary words from the list, making sure to use the correct definite articles. Then, tell someone to 'look!' at your favorite item."
+      },
+      "step5_writeOutput": {
+        "prompt": "Write a short paragraph in Italian (2-3 sentences) describing your own bedroom, using at least five vocabulary words from the list, and try to include a definite article (il, la, l', lo) correctly for each noun."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "Qual è la tua parola preferita da questa lista, e perché? È 'la finestra', 'il tappeto', o un'altra?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "Many English speakers find Italian definite articles tricky at first because English only has one word for 'the' (il, la, l', lo, i, le, gli). Remembering gender and the special rules for vowel/consonant beginnings takes practice. Also, 'impara' is an important command form, similar to how we say 'Learn!'. Don't worry if it's not perfect right away!",
+        "modelAnswer": "La mia parola preferita è 'lo specchio' perché è un buon esempio della regola speciale per 'lo' con 's + consonante'. Mi piace anche 'impara italiano' perché è un ottimo incoraggiamento!"
+      },
+      "personalStory": {
+        "prompt": "Can you share a short personal anecdote about learning Italian, perhaps a funny mistake you made with an article or an imperative? Or, what is one item from this list that you use every day in your own bedroom?"
+      }
+    }
+  }
+}
