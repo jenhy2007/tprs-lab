@@ -94,192 +94,130 @@
   },
   "trackB": {
     "stage1_rawInput": {
-      "title": "La Stanza (房间）",
-      "sourceUrl": "https://www.facebook.com/reel/1153465927412378",
+      "title": "Il caffe al banco buongiorno alla citta (城市咖啡）",
+      "sourceUrl": "https://www.facebook.com/reel/1810899973455340",
       "items": [
         {
-          "it": "La stanza.",
-          "en": "The room."
+          "it": "Il caffè al banco: buongiorno alla città.",
+          "en": "Coffee at the counter: good morning to the city."
         },
         {
-          "it": "La porta.",
-          "en": "The door."
+          "it": "Riccia, pure frolla: la felicità!",
+          "en": "Riccia [pastry], and also frolla [pastry]: happiness!"
         },
         {
-          "it": "La finestra.",
-          "en": "The window."
+          "it": "La sfogliatella lascia briciole sul cuore.",
+          "en": "The sfogliatella leaves crumbs on the heart."
         },
         {
-          "it": "Il letto.",
-          "en": "The bed."
+          "it": "Il babà pieno di rum.",
+          "en": "The babà [cake] full of rum."
         },
         {
-          "it": "Il cuscino.",
-          "en": "The pillow."
+          "it": "Ci mette il buonumore una pizza a portafoglio.",
+          "en": "A 'wallet pizza' puts us in a good mood."
         },
         {
-          "it": "La coperta.",
-          "en": "The blanket."
+          "it": "Due passi in compagnia, assaggi ancora caldi.",
+          "en": "A short walk in company, still warm samples/bites."
         },
         {
-          "it": "L'armadio.",
-          "en": "The wardrobe / The closet."
+          "it": "Già mi sento a casa mia.",
+          "en": "Already I feel at home."
         },
         {
-          "it": "La scrivania.",
-          "en": "The desk."
+          "it": "Salsiccia e friarielli: un panino diviso a metà.",
+          "en": "Sausage and friarielli: a sandwich divided in half."
         },
         {
-          "it": "La sedia.",
-          "en": "The chair."
-        },
-        {
-          "it": "La lampada.",
-          "en": "The lamp."
-        },
-        {
-          "it": "Il comodino.",
-          "en": "The nightstand."
-        },
-        {
-          "it": "Lo specchio.",
-          "en": "The mirror."
-        },
-        {
-          "it": "Il tappeto.",
-          "en": "The rug / The carpet."
-        },
-        {
-          "it": "La tenda.",
-          "en": "The curtain."
-        },
-        {
-          "it": "La parete.",
-          "en": "The wall (inside)."
-        },
-        {
-          "it": "Il pavimento.",
-          "en": "The floor."
-        },
-        {
-          "it": "Il soffitto.",
-          "en": "The ceiling."
-        },
-        {
-          "it": "La mensola.",
-          "en": "The shelf."
-        },
-        {
-          "it": "Il cassetto.",
-          "en": "The drawer."
-        },
-        {
-          "it": "La sveglia.",
-          "en": "The alarm clock."
-        },
-        {
-          "it": "Impara italiano.",
-          "en": "Learn Italian."
-        },
-        {
-          "it": "Italiano facile.",
-          "en": "Easy Italian."
-        },
-        {
-          "it": "Camera da letto.",
-          "en": "Bedroom."
-        },
-        {
-          "it": "Mobili.",
-          "en": "Furniture."
+          "it": "Certe cose, senza dirle, le capisce chi sta qua.",
+          "en": "Certain things, without saying them, those who are here understand them."
         }
       ],
       "anchors": [
-        "**Gendered Nouns & Definite Articles:** Unlike English, where 'the' is a single word, Italian nouns are either masculine or feminine and require different definite articles (e.g., 'il', 'la', 'l'', 'lo') that agree in gender and number. For instance, 'la stanza' (the room) uses 'la' because 'stanza' is feminine, while 'il letto' (the bed) uses 'il' because 'letto' is masculine. 'L'' is a contraction for both masculine and feminine nouns starting with a vowel (e.g., 'l'armadio'), and 'lo' is used for masculine nouns starting with 's' + consonant, 'z', 'gn', 'ps', 'x', 'y' (e.g., 'lo specchio').",
-        "**Imperative Mood:** The phrase 'Impara italiano' (Learn Italian) uses the informal (tu) imperative form of the verb 'imparare' (to learn). This directly commands or suggests an action, similar to how we use 'Learn!' in English, but with a specific verb conjugation.",
-        "**Compound Nouns:** 'Camera da letto' (bedroom) is a common type of compound noun in Italian, often formed as 'noun + da + noun'. It literally translates to 'room for bed' or 'room of bed', illustrating how concepts can be expressed differently than a single compound word in English.",
-        "**Adjective Placement:** 'Italiano facile' (Easy Italian) demonstrates that adjectives often follow the noun they modify in Italian, which is the opposite of the typical English structure where adjectives usually precede the noun (e.g., 'easy Italian')."
+        "Dropped subjects: Italian often omits subject pronouns (like 'io', 'tu', 'lui/lei') when the verb conjugation makes the subject clear. E.g., 'Ci mette il buonumore' (It puts us in a good mood) where 'it' (the pizza) is implied by the context. Similarly, 'Già mi sento' implies 'io' (I).",
+        "Pre-verb pronouns: Pronouns like 'ci' (us) and 'le' (them) often come before the verb in Italian. E.g., 'Ci mette' (puts *us*), 'Le capisce' (understands *them*).",
+        "'Chi' as 'whoever' or 'those who': 'Chi' can function as a relative pronoun meaning 'whoever' or 'those who' (plural). E.g., 'Chi sta qua' (whoever is here / those who are here).",
+        "Idiomatic expressions: 'al banco' (at the counter, specifically for coffee/bar service), 'due passi' (literally 'two steps', meaning a short walk), 'pizza a portafoglio' (a folded pizza, easy to eat on the go, literally 'wallet pizza'), 'mettere il buonumore' (to put in a good mood).",
+        "Possessive adjectives after nouns for 'home': 'a casa mia' (at my home). In English, 'my' usually precedes 'home', but in Italian, for 'casa', the possessive often follows.",
+        "Word order for adjectives: 'pieno di rum' (full of rum) comes after 'babà'. Adjectives often follow the noun in Italian."
       ]
     },
     "stage2_tprs": {
       "step0_umbrella": {
-        "frame": "Understanding nouns and their definite articles in Italian.",
-        "cue": "Listen closely for how 'the' changes based on the object's gender and starting letter. Notice also how to give a command."
+        "frame": "In Italian, we often don't say 'It' or 'I' when the meaning is clear from the verb. The verb itself tells us who or what is doing the action.",
+        "cue": "Listen for *who* is doing the action, even if the word 'it' or 'I' isn't explicitly there."
       },
       "step1_hfChunks": [
         {
-          "it": "la stanza",
-          "en": "the room"
+          "it": "Ci mette il buonumore",
+          "en": "It puts us in a good mood"
         },
         {
-          "it": "il letto",
-          "en": "the bed"
+          "it": "Già mi sento",
+          "en": "Already I feel"
         },
         {
-          "it": "l'armadio",
-          "en": "the wardrobe"
+          "it": "Le capisce",
+          "en": "Understands them"
         },
         {
-          "it": "lo specchio",
-          "en": "the mirror"
+          "it": "chi sta qua",
+          "en": "whoever is here / those who are here"
         },
         {
-          "it": "impara italiano",
-          "en": "learn Italian"
+          "it": "due passi",
+          "en": "a short walk"
         },
         {
-          "it": "camera da letto",
-          "en": "bedroom"
-        },
-        {
-          "it": "mobili",
-          "en": "furniture"
+          "it": "a portafoglio",
+          "en": "like a wallet / folded"
         }
       ],
       "step2_singleSlot": {
-        "stem": "Come si dice 'the' per 'sedia'? È ____ sedia.",
+        "stem": "Il caffè al banco ___ il buonumore.",
         "variables": [
-          "la",
-          "il",
-          "lo"
+          "ci mette",
+          "mi mette",
+          "ti mette"
         ]
       },
       "step3_circling": [
         {
           "type": "Statement",
-          "q": "È vero che in una camera da letto troviamo il letto e la coperta?",
-          "a": "Sì, è vero. In una camera da letto troviamo il letto e la coperta."
+          "q": "La sfogliatella lascia briciole sul cuore. Lascia briciole sul cuore la sfogliatella?",
+          "a": "Sì, la sfogliatella lascia briciole sul cuore."
         },
         {
           "type": "Yes/No",
-          "q": "La sveglia è un mobile?",
-          "a": "No, la sveglia non è un mobile, è un oggetto."
+          "q": "Il babà è pieno di birra?",
+          "a": "No, il babà non è pieno di birra. È pieno di rum."
         },
         {
           "type": "Open Wh-",
-          "q": "Che cosa significa 'impara italiano'?",
-          "a": "'Impara italiano' significa 'Learn Italian' in inglese."
+          "q": "Secondo il testo, cosa capisce chi sta qua senza che nessuno lo dica?",
+          "a": "Chi sta qua capisce certe cose senza che nessuno le dica."
         }
       ],
       "step4_scaffolding": {
-        "level1": "Name three items you can find on a 'scrivania'.",
-        "level2": "Imagine you are inviting a friend to learn. How would you say 'Learn Italian!' using an imperative, and then suggest it's 'easy Italian'?",
-        "level3": "Describe your ideal 'camera da letto' using at least four different vocabulary words from the list, making sure to use the correct definite articles. Then, tell someone to 'look!' at your favorite item."
+        "level1": "I feel at home. (Mi sento a casa mia.)",
+        "level2": "I *already* feel at home. (Già mi sento a casa mia.)",
+        "level3": "Already I feel at home with *sausage and friarielli*. (Già mi sento a casa mia con salsiccia e friarielli.)"
       },
       "step5_writeOutput": {
-        "prompt": "Write a short paragraph in Italian (2-3 sentences) describing your own bedroom, using at least five vocabulary words from the list, and try to include a definite article (il, la, l', lo) correctly for each noun."
+        "prompt": "Describe your ideal street food experience in an Italian city, incorporating elements from the text like feeling at home, specific foods, and walking around. Use at least two pre-verb pronouns or implied subjects."
       }
     },
     "stage3_output": {
       "aliveQA": {
-        "question": "Qual è la tua parola preferita da questa lista, e perché? È 'la finestra', 'il tappeto', o un'altra?"
+        "question": "Secondo il testo, cosa ti mette il buonumore?"
       },
       "gentleFeedback": {
-        "thoughtSlice": "Many English speakers find Italian definite articles tricky at first because English only has one word for 'the' (il, la, l', lo, i, le, gli). Remembering gender and the special rules for vowel/consonant beginnings takes practice. Also, 'impara' is an important command form, similar to how we say 'Learn!'. Don't worry if it's not perfect right away!",
-        "modelAnswer": "La mia parola preferita è 'lo specchio' perché è un buon esempio della regola speciale per 'lo' con 's + consonante'. Mi piace anche 'impara italiano' perché è un ottimo incoraggiamento!"
+        "thoughtSlice": "Great job using specific vocabulary! When you said 'mi piace molto', you correctly used 'mi' before the verb. Remember that for actions someone *does* to *us* (like 'puts in a good mood'), we often use 'ci' for 'us' before the verb, as in 'ci mette il buonumore'. For an action *I* do, like 'I feel', it's 'mi sento'.",
+        "modelAnswer": "Per me, il caffè al banco mi mette subito il buonumore. Poi, una pizza a portafoglio ci fa sentire felici. Mi sento subito a casa quando assaggio cose buone."
       },
       "personalStory": {
-        "prompt": "Can you share a short personal anecdote about learning Italian, perhaps a funny mistake you made with an article or an imperative? Or, what is one item from this list that you use every day in your own bedroom?"
+        "prompt": "Tell me about a place or food that makes *you* feel 'at home,' even if you're far away. What specific details make it so comforting? Use at least one Italian phrase from the text, like 'Già mi sento a casa mia' or 'mette il buonumore'."
       }
     }
   }
