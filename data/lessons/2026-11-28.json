@@ -1,0 +1,255 @@
+{
+  "date": "2026-11-28",
+  "trackA": {
+    "stage1_rawInput": {
+      "title": "DUO Unit 40: Describe Family Health Habits",
+      "items": [
+        {
+          "it": "Oggi al nonno gli fa male la schiena.",
+          "en": "Today Grandpa's back hurts.",
+          "zh": "今天爷爷背疼。"
+        },
+        {
+          "it": "Il dottore gli dà una medicina e lui la prende.",
+          "en": "The doctor gives him medicine and he takes it.",
+          "zh": "医生给他药，他吃了。"
+        }
+      ],
+      "anchors": [
+        "Indirect object 'gli' (to him) vs. Direct object 'la' (it, feminine).",
+        "Reflexive daily habit: alzarsi (si alza) & riposarsi (si riposa)."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Gli fa male [X]",
+        "cue": "Visual: Grandpa holding his back; Audio: 'Ahi, la schiena!'"
+      },
+      "step1_hfChunks": [
+        {
+          "it": "gli fa male",
+          "en": "his ... hurts"
+        },
+        {
+          "it": "gli dà",
+          "en": "gives to him"
+        },
+        {
+          "it": "la prende",
+          "en": "takes it (f.)"
+        }
+      ],
+      "step2_singleSlot": {
+        "stem": "Oggi al nonno gli fa male",
+        "variables": [
+          "la schiena",
+          "la testa",
+          "la gola",
+          "lo stomaco"
+        ]
+      },
+      "step3_circling": [
+        {
+          "type": "Statement",
+          "q": "Al nonno gli fa male la schiena.",
+          "a": "Sì, gli fa male la schiena."
+        },
+        {
+          "type": "Yes/No",
+          "q": "Gli fa male la testa?",
+          "a": "No, non gli fa male la testa, gli fa male la schiena!"
+        },
+        {
+          "type": "Either/Or",
+          "q": "Il nonno prende un caffè o una medicina?",
+          "a": "Prende una medicina!"
+        },
+        {
+          "type": "Open Wh-",
+          "q": "Chi gli dà la medicina?",
+          "a": "Il dottore gli dà la medicina."
+        }
+      ],
+      "step4_scaffolding": {
+        "level1": "Il nonno sta male. Prende una medicina.",
+        "level2": "Oggi al nonno gli fa male la schiena, allora il dottore gli dà una medicina.",
+        "level3": "Anche se ogni mattina si alza presto, oggi al nonno gli fa male la schiena e il dottore gli dà una medicina che lui prende subito."
+      },
+      "step5_writeOutput": {
+        "prompt": "Summary Cloze: Il dottore ___ (to him) dà la medicina e il nonno ___ (it) prende."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "Quando ti fa male la testa, che cosa prendi?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "Notice how Italian keeps the object pronoun right in front of 'prendo' (S + O + V), rather than after the verb like English.",
+        "modelAnswer": "Quando mi fa male la testa, prendo un'aspirina e la prendo con acqua."
+      },
+      "personalStory": {
+        "prompt": "Write 2–3 sentences in 1st-person POV about how you keep healthy every morning."
+      }
+    }
+  },
+  "trackB": {
+    "stage1_rawInput": {
+      "title": "Ma che dici?",
+      "sourceUrl": "https://www.facebook.com/reel/1105854452153426",
+      "items": [
+        {
+          "it": "Aspetta un momentino, me lo devi spiegare perché io non ho capito proprio niente.",
+          "en": "Wait a moment, you have to explain it to me because I really didn't understand anything at all."
+        },
+        {
+          "it": "Ma come si fa?",
+          "en": "But how do you do it? / But how is it done?"
+        },
+        {
+          "it": "Perché gli italiani parlano con le mani?",
+          "en": "Why do Italians talk with their hands?"
+        },
+        {
+          "it": "Io faccio così.",
+          "en": "I do this."
+        },
+        {
+          "it": "Che confusione!",
+          "en": "What confusion! / What a mess!"
+        },
+        {
+          "it": "Parlare con le mani è bello, è divertentissimo.",
+          "en": "Talking with your hands is beautiful, it's really fun."
+        },
+        {
+          "it": "Ma che dici?",
+          "en": "But what are you saying? / What do you mean?"
+        },
+        {
+          "it": "Ma davvero davvero?",
+          "en": "But really, really?"
+        },
+        {
+          "it": "Mamma mia, non ci posso credere!",
+          "en": "Oh my goodness, I can't believe it!"
+        }
+      ],
+      "anchors": [
+        "Dropped subjects: Italian often omits subject pronouns (like 'I', 'you') when the verb conjugation makes it clear who is performing the action. E.g., 'Aspetta' (you wait), 'non ho capito' (I didn't understand), 'che dici' (you say), 'non ci posso credere' (I can't believe).",
+        "Imperatives: 'Aspetta' is an informal command ('wait!').",
+        "Pre-verb pronouns: 'me lo devi spiegare' literally means 'to me it you must explain'. Pronouns like 'me' (to me) and 'lo' (it) often come before the conjugated verb, especially with modal verbs like 'dovere' (to have to) + infinitive.",
+        "Double negation: 'non ho capito proprio niente' uses 'non' before the verb and 'niente' (nothing) after to emphasize 'not anything at all' or 'nothing at all'. 'Proprio' further strengthens the emphasis ('really nothing').",
+        "Impersonal 'si': 'Ma come si fa?' means 'But how does one do it?' or 'How is it done?'. The 'si' makes the action general or passive, similar to 'one' or 'it is'.",
+        "Infinitive as subject: 'Parlare con le mani è bello' uses the infinitive 'parlare' (to talk/talking) as the subject of the sentence, which is common in Italian.",
+        "Superlative suffix '-issimo': 'divertentissimo' means 'very fun' or 'extremely fun'. The suffix '-issimo' (or '-issima', '-issimi', '-issime') is used to form the absolute superlative.",
+        "Idiomatic expressions: 'Ma che dici?' is a very common way to say 'What are you saying?' or 'What do you mean?' (often implying disbelief or disagreement). 'Mamma mia!' is an exclamation similar to 'Oh my goodness!' or 'Wow!'.",
+        "Pronoun 'ci': 'non ci posso credere' uses 'ci' which often means 'to it/them' or 'there'. Here, it refers to the situation or statement, so it's 'I can't believe it'."
+      ]
+    },
+    "stage2_tprs": {
+      "step0_umbrella": {
+        "frame": "Asking 'What do you say/mean?' and expressing disbelief",
+        "cue": "Listen for expressions like 'Ma che dici?' and 'Non ci posso credere!' to express surprise or disagreement."
+      },
+      "step1_hfChunks": [
+        {
+          "it": "Aspetta un momentino",
+          "en": "Wait a moment"
+        },
+        {
+          "it": "me lo devi spiegare",
+          "en": "you have to explain it to me"
+        },
+        {
+          "it": "non ho capito proprio niente",
+          "en": "I really didn't understand anything at all"
+        },
+        {
+          "it": "Ma come si fa?",
+          "en": "But how do you do it?"
+        },
+        {
+          "it": "Parlano con le mani?",
+          "en": "Do they talk with their hands?"
+        },
+        {
+          "it": "Io faccio così",
+          "en": "I do this"
+        },
+        {
+          "it": "Che confusione!",
+          "en": "What a mess!"
+        },
+        {
+          "it": "Parlare con le mani è bello",
+          "en": "Talking with your hands is beautiful"
+        },
+        {
+          "it": "è divertentissimo",
+          "en": "it's really fun"
+        },
+        {
+          "it": "Ma che dici?",
+          "en": "But what are you saying? / What do you mean?"
+        },
+        {
+          "it": "Ma davvero davvero?",
+          "en": "But really, really?"
+        },
+        {
+          "it": "Mamma mia!",
+          "en": "Oh my goodness!"
+        },
+        {
+          "it": "non ci posso credere!",
+          "en": "I can't believe it!"
+        }
+      ],
+      "step2_singleSlot": {
+        "stem": "Ma che ",
+        "variables": [
+          "dici?",
+          "fai?",
+          "vuoi?"
+        ]
+      },
+      "step3_circling": [
+        {
+          "type": "Statement",
+          "q": "L'uomo ha detto che parlare con le mani è divertente.",
+          "a": "Sì, l'uomo ha detto che parlare con le mani è divertente."
+        },
+        {
+          "type": "Yes/No",
+          "q": "La donna ha capito subito perché gli italiani parlano con le mani?",
+          "a": "No, la donna non ha capito subito. Ha detto: \"non ho capito proprio niente\" e \"Ma che dici?\""
+        },
+        {
+          "type": "Open Wh-",
+          "q": "Cosa non riesce a credere la donna?",
+          "a": "La donna non riesce a credere che parlare con le mani sia divertentissimo."
+        }
+      ],
+      "step4_scaffolding": {
+        "level1": "Non ci posso credere! (I can't believe it!)",
+        "level2": "La donna non ci può credere. (The woman can't believe it.)",
+        "level3": "La donna dice: \"Mamma mia, non ci posso credere!\" (The woman says: \"Oh my goodness, I can't believe it!\")"
+      },
+      "step5_writeOutput": {
+        "prompt": "Imagine you are the woman. Write two sentences expressing your confusion and disbelief about talking with hands, using phrases from the transcript."
+      }
+    },
+    "stage3_output": {
+      "aliveQA": {
+        "question": "Hai mai visto qualcuno parlare con le mani in modo molto espressivo? Cosa hai pensato?"
+      },
+      "gentleFeedback": {
+        "thoughtSlice": "The learner might struggle with the natural flow and idiomatic expressions, especially 'Ma che dici?' and the double negation. They might also confuse the different uses of 'si'.",
+        "modelAnswer": "Benissimo! You've picked up on the key expressions of confusion and disbelief. When we say 'Ma che dici?', we're often expressing surprise or disagreement, much like 'What are you talking about?' or 'You're kidding!'. And 'non ci posso credere' is perfect for that strong disbelief. Remember how 'ci' adds that little 'to it' to 'believe' in Italian – 'credere a qualcosa' (to believe in something), so 'non ci posso credere' (I can't believe in it)."
+      },
+      "personalStory": {
+        "prompt": "Tell me about a time you were really confused or surprised by a cultural custom or a saying in another language. Use at least one new Italian phrase related to confusion or surprise if you can!"
+      }
+    }
+  }
+}
